@@ -1,4 +1,4 @@
-package pl.latusikl.trackerservice;
+package pl.latusikl.trackit.trackerservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
