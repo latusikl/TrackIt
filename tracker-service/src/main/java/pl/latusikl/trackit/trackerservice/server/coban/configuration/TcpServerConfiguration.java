@@ -13,7 +13,11 @@ import org.springframework.integration.ip.dsl.Tcp;
 import org.springframework.integration.ip.tcp.connection.AbstractServerConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionCloseEvent;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionExceptionEvent;
+
+import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactory;
+import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactoryChain;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
+import pl.latusikl.trackit.trackerservice.server.coban.interceptors.CobanConnectionLoginInterceptorFactory;
 
 
 import java.util.Set;
@@ -26,21 +30,35 @@ public class TcpServerConfiguration {
 	private final Set<String> clients = ConcurrentHashMap.newKeySet();
 
 	@Bean
-	AbstractServerConnectionFactory server(final ServerProperties serverProperties) {
-		return Tcp.netServer(serverProperties.getPort()).get();
+	CobanConnectionLoginInterceptorFactory loginInterceptorFactory(){
+		return new CobanConnectionLoginInterceptorFactory();
 	}
 
+	@Bean
+	AbstractServerConnectionFactory server(final ServerProperties serverProperties) {
+		return Tcp.netServer(serverProperties.getPort()).interceptorFactoryChain(interceptorFactoryChain()).get();
+	}
+
+	private TcpConnectionInterceptorFactoryChain interceptorFactoryChain (){
+		final TcpConnectionInterceptorFactoryChain interceptorFactoryChain = new TcpConnectionInterceptorFactoryChain();
+		final var TcpConnectionInterceptorFactories = new TcpConnectionInterceptorFactory[1];
+		TcpConnectionInterceptorFactories[0] = loginInterceptorFactory();
+		interceptorFactoryChain.setInterceptors(TcpConnectionInterceptorFactories);
+
+		return interceptorFactoryChain;
+	}
 
 	@Bean
-	public IntegrationFlow serverIn(AbstractServerConnectionFactory server) {
+	public IntegrationFlow serverIn(final AbstractServerConnectionFactory server) {
 		return IntegrationFlows.from(Tcp.inboundAdapter(server))
 				.transform(Transformers.objectToString())
+				.intercept()
 				.log(msg -> "server: " + msg.getPayload())
 				.get();
 	}
 
 	@Bean
-	public IntegrationFlow serverOut(AbstractServerConnectionFactory server) {
+	public IntegrationFlow serverOut(final AbstractServerConnectionFactory server) {
 		return IntegrationFlows.from(() -> "seed", e -> e.poller(Pollers.fixedDelay(5000)))
 				.split(this.clients, "iterator")
 				.enrichHeaders(h -> h.headerExpression(IpHeaders.CONNECTION_ID, "payload"))
@@ -50,19 +68,19 @@ public class TcpServerConfiguration {
 	}
 
 	@EventListener
-	public void open(TcpConnectionOpenEvent event) {
+	public void open(final TcpConnectionOpenEvent event) {
 		if (event.getConnectionFactoryName().equals("server")) {
 			this.clients.add(event.getConnectionId());
 		}
 	}
 
 	@EventListener
-	public void exception(TcpConnectionExceptionEvent exceptionEvent){
+	public void exception(final TcpConnectionExceptionEvent exceptionEvent){
 
 	}
 
 	@EventListener
-	public void close(TcpConnectionCloseEvent event) {
+	public void close(final TcpConnectionCloseEvent event) {
 		this.clients.remove(event.getConnectionId());
 	}
 }
