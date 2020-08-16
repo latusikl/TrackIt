@@ -3,10 +3,12 @@ package pl.latusikl.trackit.trackerservice.server.coban.interceptors;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorSupport;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.transformer.AbstractPayloadTransformer;
 import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessagingException;
 import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.validators.MessageValidators;
@@ -22,7 +24,7 @@ public class CobanConnectionLoginInterceptor extends TcpConnectionInterceptorSup
 	private volatile boolean startHandshakeDone;
 	private AbstractPayloadTransformer<?, String> payloadTransformer;
 
-	public CobanConnectionLoginInterceptor(final ApplicationEventPublisher applicationEventPublisher, final AbstractPayloadTransformer abstractPayloadTransformer) {
+	public CobanConnectionLoginInterceptor(final ApplicationEventPublisher applicationEventPublisher, final AbstractPayloadTransformer<?,String> abstractPayloadTransformer) {
 		super(applicationEventPublisher);
 		this.startHandshakeDone = false;
 		this.payloadTransformer = abstractPayloadTransformer;
@@ -31,29 +33,29 @@ public class CobanConnectionLoginInterceptor extends TcpConnectionInterceptorSup
 
 	@Override
 	public boolean onMessage(final Message<?> message) {
-		if (!this.startHandshakeDone) {
-			//Only one thread can access this block
-			synchronized (this) {
-				if (!this.startHandshakeDone) {
-					final String messagePayload = payloadTransformer.doTransform(message);
-					log.debug(this.toString() + "received " + messagePayload);
-					if (isMessageValid(messagePayload)){
-						log.error("Here imei should be saved or connection closed.");
-						try {
-							log.debug("Sending login confirmation. IMEI: {}", extractImei(messagePayload));
-							super.send(MessageBuilder.withPayload(LOGIN_HANDSHAKE_RESPONSE).build());
-							this.startHandshakeDone = true;
-							return true;
-						} catch (final Exception e) {
-							throw new MessagingException("Login error", e);
-						}
-					} else{
-						this.close();
-						throw new MessagingException("Login error, packet not as expected: '" + messagePayload + "'");
-					}
-				}
-			}
-		}
+//		if (!this.startHandshakeDone) {
+//			//Only one thread can access this block
+//			synchronized (this) {
+//				if (!this.startHandshakeDone) {
+//					final String messagePayload = payloadTransformer.doTransform(message);
+//					log.debug(this.toString() + "received " + messagePayload);
+//					if (isMessageValid(messagePayload)){
+//						log.error("Here imei should be saved or connection closed.");
+//						try {
+//							log.debug("Sending login confirmation. IMEI: {}", extractImei(messagePayload));
+//							super.send(MessageBuilder.withPayload(LOGIN_HANDSHAKE_RESPONSE).build());
+//							this.startHandshakeDone = true;
+//							return true;
+//						} catch (final Exception e) {
+//							throw new MessagingException("Login error", e);
+//						}
+//					} else{
+//						this.close();
+//						throw new MessagingException("Login error, packet not as expected: '" + messagePayload + "'");
+//					}
+//				}
+//			}
+//		}
 		return super.onMessage(message);
 	}
 

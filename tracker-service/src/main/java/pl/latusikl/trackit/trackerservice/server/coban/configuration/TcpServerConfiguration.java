@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
+import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.Pollers;
@@ -13,12 +14,15 @@ import org.springframework.integration.ip.dsl.Tcp;
 import org.springframework.integration.ip.tcp.connection.AbstractServerConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionCloseEvent;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionExceptionEvent;
-
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactoryChain;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
+import org.springframework.integration.router.AbstractMessageRouter;
+import org.springframework.integration.transformer.ObjectToStringTransformer;
+import org.springframework.messaging.MessageChannel;
+import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.InboundMessageRouter;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.CobanConnectionLoginInterceptorFactory;
-
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,7 +34,7 @@ public class TcpServerConfiguration {
 	private final Set<String> clients = ConcurrentHashMap.newKeySet();
 
 	@Bean
-	CobanConnectionLoginInterceptorFactory loginInterceptorFactory(){
+	CobanConnectionLoginInterceptorFactory loginInterceptorFactory() {
 		return new CobanConnectionLoginInterceptorFactory();
 	}
 
@@ -39,7 +43,7 @@ public class TcpServerConfiguration {
 		return Tcp.netServer(serverProperties.getPort()).interceptorFactoryChain(interceptorFactoryChain()).get();
 	}
 
-	private TcpConnectionInterceptorFactoryChain interceptorFactoryChain (){
+	private TcpConnectionInterceptorFactoryChain interceptorFactoryChain() {
 		final TcpConnectionInterceptorFactoryChain interceptorFactoryChain = new TcpConnectionInterceptorFactoryChain();
 		final var TcpConnectionInterceptorFactories = new TcpConnectionInterceptorFactory[1];
 		TcpConnectionInterceptorFactories[0] = loginInterceptorFactory();
@@ -49,13 +53,29 @@ public class TcpServerConfiguration {
 	}
 
 	@Bean
+	public AbstractMessageRouter serverRouter() {
+		return new InboundMessageRouter(new ObjectToStringTransformer());
+	}
+
+	@Bean
 	public IntegrationFlow serverIn(final AbstractServerConnectionFactory server) {
 		return IntegrationFlows.from(Tcp.inboundAdapter(server))
 				.transform(Transformers.objectToString())
-				.intercept()
 				.log(msg -> "server: " + msg.getPayload())
+				.route(serverRouter())
 				.get();
 	}
+
+	@Bean(name = CobanConstants.LOCALIZATION_CHANNEL)
+	MessageChannel serverInChannel1() {
+		return new DirectChannel();
+	}
+
+	@Bean(name = CobanConstants.COMMAND_CHANNEL)
+	MessageChannel serverInChannel2() {
+		return new DirectChannel();
+	}
+
 
 	@Bean
 	public IntegrationFlow serverOut(final AbstractServerConnectionFactory server) {
@@ -75,7 +95,7 @@ public class TcpServerConfiguration {
 	}
 
 	@EventListener
-	public void exception(final TcpConnectionExceptionEvent exceptionEvent){
+	public void exception(final TcpConnectionExceptionEvent exceptionEvent) {
 
 	}
 
