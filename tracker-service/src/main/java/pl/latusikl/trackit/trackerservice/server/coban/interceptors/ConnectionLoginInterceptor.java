@@ -3,14 +3,10 @@ package pl.latusikl.trackit.trackerservice.server.coban.interceptors;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.integration.dsl.MessageChannels;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorSupport;
-import org.springframework.integration.support.MessageBuilder;
 import org.springframework.integration.transformer.AbstractPayloadTransformer;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessagingException;
-import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.configuration.CobanConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.validators.MessageValidators;
 
 /**
@@ -18,13 +14,13 @@ import pl.latusikl.trackit.trackerservice.server.coban.validators.MessageValidat
  */
 @NoArgsConstructor
 @Slf4j
-public class CobanConnectionLoginInterceptor extends TcpConnectionInterceptorSupport {
+public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport {
 
-	public static final String LOGIN_HANDSHAKE_RESPONSE = "LOAD";
+	private static final String LOGIN_HANDSHAKE_RESPONSE = "LOAD";
 	private volatile boolean startHandshakeDone;
 	private AbstractPayloadTransformer<?, String> payloadTransformer;
 
-	public CobanConnectionLoginInterceptor(final ApplicationEventPublisher applicationEventPublisher, final AbstractPayloadTransformer<?,String> abstractPayloadTransformer) {
+	public ConnectionLoginInterceptor(final ApplicationEventPublisher applicationEventPublisher, final AbstractPayloadTransformer<?, String> abstractPayloadTransformer) {
 		super(applicationEventPublisher);
 		this.startHandshakeDone = false;
 		this.payloadTransformer = abstractPayloadTransformer;

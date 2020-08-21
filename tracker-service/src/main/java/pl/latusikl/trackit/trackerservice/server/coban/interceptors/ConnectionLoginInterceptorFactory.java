@@ -9,7 +9,7 @@ import org.springframework.integration.ip.tcp.connection.TcpConnectionIntercepto
 import org.springframework.integration.transformer.ObjectToStringTransformer;
 
 @NoArgsConstructor
-public class CobanConnectionLoginInterceptorFactory implements TcpConnectionInterceptorFactory, ApplicationEventPublisherAware {
+public class ConnectionLoginInterceptorFactory implements TcpConnectionInterceptorFactory, ApplicationEventPublisherAware {
 
 	private volatile ApplicationEventPublisher applicationEventPublisher;
 
@@ -20,6 +20,6 @@ public class CobanConnectionLoginInterceptorFactory implements TcpConnectionInte
 
 	@Override
 	public TcpConnectionInterceptorSupport getInterceptor() {
-		return new CobanConnectionLoginInterceptor(applicationEventPublisher, new ObjectToStringTransformer());
+		return new ConnectionLoginInterceptor(applicationEventPublisher, new ObjectToStringTransformer());
 	}
 }

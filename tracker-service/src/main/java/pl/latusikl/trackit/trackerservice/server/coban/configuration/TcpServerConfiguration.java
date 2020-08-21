@@ -3,104 +3,90 @@ package pl.latusikl.trackit.trackerservice.server.coban.configuration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.event.EventListener;
-import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
-import org.springframework.integration.dsl.Pollers;
 import org.springframework.integration.dsl.Transformers;
-import org.springframework.integration.ip.IpHeaders;
 import org.springframework.integration.ip.dsl.Tcp;
 import org.springframework.integration.ip.tcp.connection.AbstractServerConnectionFactory;
-import org.springframework.integration.ip.tcp.connection.TcpConnectionCloseEvent;
-import org.springframework.integration.ip.tcp.connection.TcpConnectionExceptionEvent;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactoryChain;
-import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
 import org.springframework.integration.router.AbstractMessageRouter;
-import org.springframework.integration.transformer.ObjectToStringTransformer;
 import org.springframework.messaging.MessageChannel;
-import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
-import pl.latusikl.trackit.trackerservice.server.coban.InboundMessageRouter;
-import pl.latusikl.trackit.trackerservice.server.coban.interceptors.CobanConnectionLoginInterceptorFactory;
+import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptor;
+import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptorFactory;
+import pl.latusikl.trackit.trackerservice.server.coban.services.InboundMessageRouter;
 
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
+/**
+ * Configuration class with tcp server configuration.
+ */
 @Slf4j
 @Configuration
 public class TcpServerConfiguration {
 
-	private final Set<String> clients = ConcurrentHashMap.newKeySet();
-
+	/**
+	 * Factory for login interceptor.
+	 *
+	 * @see ConnectionLoginInterceptorFactory
+	 * @see ConnectionLoginInterceptor
+	 */
 	@Bean
-	CobanConnectionLoginInterceptorFactory loginInterceptorFactory() {
-		return new CobanConnectionLoginInterceptorFactory();
+	public TcpConnectionInterceptorFactory loginInterceptorFactory() {
+		return new ConnectionLoginInterceptorFactory();
 	}
 
+	/**
+	 * Factory chain of server interceptors.
+	 * In this bean all interceptors should be added to array.
+	 */
 	@Bean
-	AbstractServerConnectionFactory server(final ServerProperties serverProperties) {
-		return Tcp.netServer(serverProperties.getPort()).interceptorFactoryChain(interceptorFactoryChain()).get();
-	}
-
-	private TcpConnectionInterceptorFactoryChain interceptorFactoryChain() {
-		final TcpConnectionInterceptorFactoryChain interceptorFactoryChain = new TcpConnectionInterceptorFactoryChain();
-		final var TcpConnectionInterceptorFactories = new TcpConnectionInterceptorFactory[1];
-		TcpConnectionInterceptorFactories[0] = loginInterceptorFactory();
-		interceptorFactoryChain.setInterceptors(TcpConnectionInterceptorFactories);
-
+	TcpConnectionInterceptorFactoryChain interceptorFactoryChain(final TcpConnectionInterceptorFactory loginInterceptorFactory) {
+		final var interceptorFactoryChain = new TcpConnectionInterceptorFactoryChain();
+		interceptorFactoryChain.setInterceptors(new TcpConnectionInterceptorFactory[]{loginInterceptorFactory});
 		return interceptorFactoryChain;
 	}
 
+	/**
+	 * Server bean with registered login interceptor.
+	 *
+	 * @see ServerProperties
+	 */
 	@Bean
-	public AbstractMessageRouter serverRouter() {
-		return new InboundMessageRouter(new ObjectToStringTransformer());
+	AbstractServerConnectionFactory server(final ServerProperties serverProperties, final TcpConnectionInterceptorFactoryChain interceptorFactoryChain) {
+		return Tcp.netServer(serverProperties.getPort()).interceptorFactoryChain(interceptorFactoryChain).get();
 	}
 
+	/**
+	 * Server inbound message router definition.
+	 *
+	 * @return
+	 * @see InboundMessageRouter
+	 */
 	@Bean
-	public IntegrationFlow serverIn(final AbstractServerConnectionFactory server) {
+	public AbstractMessageRouter serverInRouter() {
+		return new InboundMessageRouter(Transformers.objectToString());
+	}
+
+	/**
+	 * Java DSL configuration for inbound message flow from server.
+	 * Messages are from Tcp InboundAdapter are transformed and passed to router.
+	 * In router appropriate message channel is choosen.
+	 */
+	@Bean
+	public IntegrationFlow serverIn(final AbstractServerConnectionFactory server, final AbstractMessageRouter serverInRouter) {
 		return IntegrationFlows.from(Tcp.inboundAdapter(server))
 				.transform(Transformers.objectToString())
-				.log(msg -> "server: " + msg.getPayload())
-				.route(serverRouter())
+				.route(serverInRouter)
 				.get();
 	}
 
-	@Bean(name = CobanConstants.LOCALIZATION_CHANNEL)
-	MessageChannel serverInChannel1() {
-		return new DirectChannel();
-	}
-
-	@Bean(name = CobanConstants.COMMAND_CHANNEL)
-	MessageChannel serverInChannel2() {
-		return new DirectChannel();
-	}
-
-
+	/**
+	 * Java DSL configuration for outbound message flow.
+	 * Message from outbound channel are passed to server handler.
+	 */
 	@Bean
-	public IntegrationFlow serverOut(final AbstractServerConnectionFactory server) {
-		return IntegrationFlows.from(() -> "seed", e -> e.poller(Pollers.fixedDelay(5000)))
-				.split(this.clients, "iterator")
-				.enrichHeaders(h -> h.headerExpression(IpHeaders.CONNECTION_ID, "payload"))
-				.transform(p -> "Hello from server")
+	public IntegrationFlow serverOut(final AbstractServerConnectionFactory server, final MessageChannel serverOutChannel) {
+		return IntegrationFlows.from(serverOutChannel)
 				.handle(Tcp.outboundAdapter(server))
 				.get();
-	}
-
-	@EventListener
-	public void open(final TcpConnectionOpenEvent event) {
-		if (event.getConnectionFactoryName().equals("server")) {
-			this.clients.add(event.getConnectionId());
-		}
-	}
-
-	@EventListener
-	public void exception(final TcpConnectionExceptionEvent exceptionEvent) {
-
-	}
-
-	@EventListener
-	public void close(final TcpConnectionCloseEvent event) {
-		this.clients.remove(event.getConnectionId());
 	}
 }

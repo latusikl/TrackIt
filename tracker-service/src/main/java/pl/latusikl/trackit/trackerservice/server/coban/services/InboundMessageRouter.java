@@ -1,10 +1,11 @@
-package pl.latusikl.trackit.trackerservice.server.coban;
+package pl.latusikl.trackit.trackerservice.server.coban.services;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.channel.NullChannel;
 import org.springframework.integration.router.AbstractMappingMessageRouter;
 import org.springframework.integration.transformer.AbstractPayloadTransformer;
 import org.springframework.messaging.Message;
+import pl.latusikl.trackit.trackerservice.server.coban.configuration.CobanConstants;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,7 +35,7 @@ public class InboundMessageRouter extends AbstractMappingMessageRouter {
 		}
 
 		if (messagePayload.contains("test2")) {
-			channelName = CobanConstants.COMMAND_CHANNEL;
+			channelName = CobanConstants.OTHER_COMMAND_CHANNEL;
 		}
 		return Collections.singletonList(channelName);
 	}
