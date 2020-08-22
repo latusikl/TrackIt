@@ -19,12 +19,12 @@ public class InboundMessageRouter
 
     private AbstractPayloadTransformer<?,String> payloadTransformer;
 
-    public InboundMessageRouter(final AbstractPayloadTransformer<?,String> payloadTransformerr)
+    public InboundMessageRouter(final AbstractPayloadTransformer<?,String> payloadTransformer)
     {
         super();
         setDefaultOutputChannel(new NullChannel());
         setSendTimeout(CHANNEL_SEND_TIMEOUT);
-        this.payloadTransformer = payloadTransformerr;
+        this.payloadTransformer = payloadTransformer;
     }
 
     @Override

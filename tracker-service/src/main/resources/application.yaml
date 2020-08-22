@@ -4,5 +4,4 @@ spring:
 
 tcp:
   server:
-    coban:
-      port: 9000
+    cobanPort: 9000
