@@ -7,17 +7,20 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 
 @Slf4j
-public class LocalizationMessageHandler implements MessageHandler {
+public class LocalizationMessageHandler
+        implements MessageHandler
+{
 
+    final MessageChannel serverOut;
 
-	final MessageChannel serverOut;
+    public LocalizationMessageHandler(final MessageChannel serverOut)
+    {
+        this.serverOut = serverOut;
+    }
 
-	public LocalizationMessageHandler(final MessageChannel serverOut) {
-		this.serverOut = serverOut;
-	}
-
-	@Override
-	public void handleMessage(final Message<?> message) throws MessagingException {
-		log.warn("Message channel 1: {}", message.getPayload().toString());
-	}
+    @Override
+    public void handleMessage(final Message<?> message) throws MessagingException
+    {
+        log.warn("Message channel 1: {}", message.getPayload().toString());
+    }
 }

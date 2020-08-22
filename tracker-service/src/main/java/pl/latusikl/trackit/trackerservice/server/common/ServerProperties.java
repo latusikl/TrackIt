@@ -7,7 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("tcp.server")
 @Getter
 @Setter
-public class ServerProperties {
+public class ServerProperties
+{
 
-	private int cobanPort;
+    private int cobanPort;
 }

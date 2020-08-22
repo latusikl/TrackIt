@@ -7,9 +7,11 @@ import pl.latusikl.trackit.trackerservice.server.common.ServerProperties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(ServerProperties.class)
-public class TrackerServiceApplication {
+public class TrackerServiceApplication
+{
 
-	public static void main(final String[] args) {
-		SpringApplication.run(TrackerServiceApplication.class, args);
-	}
+    public static void main(final String[] args)
+    {
+        SpringApplication.run(TrackerServiceApplication.class, args);
+    }
 }
