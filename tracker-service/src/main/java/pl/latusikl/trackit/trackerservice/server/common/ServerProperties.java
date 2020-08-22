@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.trackerservice.server.coban.configuration;
+package pl.latusikl.trackit.trackerservice.server.common;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,5 +9,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 public class ServerProperties {
 
-	private int port;
+	private int cobanPort;
 }

@@ -15,13 +15,14 @@ import org.springframework.messaging.MessageChannel;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptor;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptorFactory;
 import pl.latusikl.trackit.trackerservice.server.coban.services.InboundMessageRouter;
+import pl.latusikl.trackit.trackerservice.server.common.ServerProperties;
 
 /**
  * Configuration class with tcp server configuration.
  */
 @Slf4j
 @Configuration
-public class TcpServerConfiguration {
+public class CobanTcpServerConfiguration {
 
 	/**
 	 * Factory for login interceptor.
@@ -30,7 +31,7 @@ public class TcpServerConfiguration {
 	 * @see ConnectionLoginInterceptor
 	 */
 	@Bean
-	public TcpConnectionInterceptorFactory loginInterceptorFactory() {
+	public TcpConnectionInterceptorFactory cobanLoginInterceptorFactory() {
 		return new ConnectionLoginInterceptorFactory();
 	}
 
@@ -39,9 +40,9 @@ public class TcpServerConfiguration {
 	 * In this bean all interceptors should be added to array.
 	 */
 	@Bean
-	TcpConnectionInterceptorFactoryChain interceptorFactoryChain(final TcpConnectionInterceptorFactory loginInterceptorFactory) {
+	TcpConnectionInterceptorFactoryChain cobanInterceptorFactoryChain(final TcpConnectionInterceptorFactory cobanLoginInterceptorFactory) {
 		final var interceptorFactoryChain = new TcpConnectionInterceptorFactoryChain();
-		interceptorFactoryChain.setInterceptors(new TcpConnectionInterceptorFactory[]{loginInterceptorFactory});
+		interceptorFactoryChain.setInterceptors(new TcpConnectionInterceptorFactory[]{cobanLoginInterceptorFactory});
 		return interceptorFactoryChain;
 	}
 
@@ -51,8 +52,8 @@ public class TcpServerConfiguration {
 	 * @see ServerProperties
 	 */
 	@Bean
-	AbstractServerConnectionFactory server(final ServerProperties serverProperties, final TcpConnectionInterceptorFactoryChain interceptorFactoryChain) {
-		return Tcp.netServer(serverProperties.getPort()).interceptorFactoryChain(interceptorFactoryChain).get();
+	AbstractServerConnectionFactory cobanServer(final ServerProperties serverProperties, final TcpConnectionInterceptorFactoryChain cobanInterceptorFactoryChain) {
+		return Tcp.netServer(serverProperties.getCobanPort()).interceptorFactoryChain(cobanInterceptorFactoryChain).get();
 	}
 
 	/**
@@ -67,13 +68,13 @@ public class TcpServerConfiguration {
 	}
 
 	/**
-	 * Java DSL configuration for inbound message flow from server.
+	 * Java DSL configuration for inbound message flow from cobanServer.
 	 * Messages are from Tcp InboundAdapter are transformed and passed to router.
 	 * In router appropriate message channel is choosen.
 	 */
 	@Bean
-	public IntegrationFlow serverIn(final AbstractServerConnectionFactory server, final AbstractMessageRouter serverInRouter) {
-		return IntegrationFlows.from(Tcp.inboundAdapter(server))
+	public IntegrationFlow serverIn(final AbstractServerConnectionFactory cobanServer, final AbstractMessageRouter serverInRouter) {
+		return IntegrationFlows.from(Tcp.inboundAdapter(cobanServer))
 				.transform(Transformers.objectToString())
 				.route(serverInRouter)
 				.get();
@@ -81,12 +82,12 @@ public class TcpServerConfiguration {
 
 	/**
 	 * Java DSL configuration for outbound message flow.
-	 * Message from outbound channel are passed to server handler.
+	 * Message from outbound channel are passed to cobanServer handler.
 	 */
 	@Bean
-	public IntegrationFlow serverOut(final AbstractServerConnectionFactory server, final MessageChannel serverOutChannel) {
-		return IntegrationFlows.from(serverOutChannel)
-				.handle(Tcp.outboundAdapter(server))
+	public IntegrationFlow serverOut(final AbstractServerConnectionFactory cobanServer, final MessageChannel cobanServerOutChannel) {
+		return IntegrationFlows.from(cobanServerOutChannel)
+				.handle(Tcp.outboundAdapter(cobanServer))
 				.get();
 	}
 }
