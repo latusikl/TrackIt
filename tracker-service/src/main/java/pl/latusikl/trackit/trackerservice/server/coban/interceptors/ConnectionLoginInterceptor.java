@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorSupport;
 import org.springframework.integration.transformer.AbstractPayloadTransformer;
 import org.springframework.messaging.Message;
-import pl.latusikl.trackit.trackerservice.server.coban.configuration.CobanConstants;
+import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.validators.MessageValidators;
 
 /**

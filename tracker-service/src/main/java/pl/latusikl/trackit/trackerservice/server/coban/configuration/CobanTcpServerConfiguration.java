@@ -12,10 +12,11 @@ import org.springframework.integration.ip.tcp.connection.TcpConnectionIntercepto
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactoryChain;
 import org.springframework.integration.router.AbstractMessageRouter;
 import org.springframework.messaging.MessageChannel;
+import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
+import pl.latusikl.trackit.trackerservice.properties.ServerProperties;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptor;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptorFactory;
 import pl.latusikl.trackit.trackerservice.server.coban.services.InboundMessageRouter;
-import pl.latusikl.trackit.trackerservice.properties.ServerProperties;
 
 /**
  * Configuration class with tcp server configuration.
@@ -54,7 +55,7 @@ public class CobanTcpServerConfiguration
      *
      * @see ServerProperties
      */
-    @Bean
+    @Bean(name = CobanConstants.COBAN_SERVER_BEAN_NAME)
     AbstractServerConnectionFactory cobanServer(final ServerProperties serverProperties, final TcpConnectionInterceptorFactoryChain cobanInterceptorFactoryChain)
     {
         return Tcp.netServer(serverProperties.getCobanPort()).interceptorFactoryChain(
