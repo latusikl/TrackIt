@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
 import pl.latusikl.trackit.trackerservice.properties.RedisProperties;
+import pl.latusikl.trackit.trackerservice.server.coban.validators.MessageValidators;
 
 import javax.annotation.PostConstruct;
 

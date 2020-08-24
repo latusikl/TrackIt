@@ -13,4 +13,9 @@ public class MessageValidators
         return new LoginMessageValidator();
     }
 
+    public static Predicate<String> locationMessageValidator()
+    {
+        return new LocationMessageValidator();
+    }
+
 }

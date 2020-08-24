@@ -22,7 +22,7 @@ public class TcpServerEventConfiguration
     @EventListener
     public void open(final TcpConnectionOpenEvent event)
     {
-        if (event.getConnectionFactoryName().equals(CobanConstants.COBAN_SERVER_BEAN_NAME)) {
+        if (event.getConnectionFactoryName().equals(CobanConstants.SERVER_BEAN_NAME)) {
             log.debug("Connection id: {}", event.getConnectionId());
             cobanEventService.handleConnectionOpen(event.getConnectionId());
         }
@@ -41,7 +41,7 @@ public class TcpServerEventConfiguration
     @EventListener
     public void close(final TcpConnectionCloseEvent event)
     {
-        if (event.getConnectionFactoryName().equals(CobanConstants.COBAN_SERVER_BEAN_NAME)) {
+        if (event.getConnectionFactoryName().equals(CobanConstants.SERVER_BEAN_NAME)) {
             log.debug("Removing connection with id: {}", event.getConnectionId());
             cobanEventService.handleConnectionClosed(event.getConnectionId());
         }
