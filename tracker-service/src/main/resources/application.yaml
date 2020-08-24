@@ -1,15 +1,23 @@
 spring:
+  profiles:
+    active: deva
   main:
     web-application-type: none
   application:
     name: tracker-service
   redis:
     client-name: tracker-service
-    host: localhost
 
+#Common custom properties
 redis:
   imei-set-name: ImeiAllowed
-
 tcp:
   server:
     coban-port: 9000
+
+---
+
+spring:
+  profiles: dev
+  redis:
+    host: localhost
