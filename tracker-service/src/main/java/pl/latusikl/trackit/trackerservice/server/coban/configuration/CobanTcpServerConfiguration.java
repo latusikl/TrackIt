@@ -15,7 +15,7 @@ import org.springframework.messaging.MessageChannel;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptor;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptorFactory;
 import pl.latusikl.trackit.trackerservice.server.coban.services.InboundMessageRouter;
-import pl.latusikl.trackit.trackerservice.server.common.ServerProperties;
+import pl.latusikl.trackit.trackerservice.properties.ServerProperties;
 
 /**
  * Configuration class with tcp server configuration.

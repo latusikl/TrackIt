@@ -1,14 +1,13 @@
-package pl.latusikl.trackit.trackerservice.server.common;
+package pl.latusikl.trackit.trackerservice.properties;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("tcp.server")
+@ConfigurationProperties(prefix = "tcp.server")
 @Getter
 @Setter
 public class ServerProperties
 {
-
     private int cobanPort;
 }

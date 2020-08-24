@@ -27,8 +27,10 @@ dependencies {
 	}
 
 //	Added by myself
-	compile "org.springframework.boot:spring-boot-starter-integration"
-	compile "org.springframework.integration:spring-integration-ip"
+	implementation 'org.springframework.boot:spring-boot-starter-integration'
+	implementation 'org.springframework.integration:spring-integration-ip'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
 }
 
 test {

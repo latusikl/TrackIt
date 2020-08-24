@@ -2,11 +2,10 @@ package pl.latusikl.trackit.trackerservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import pl.latusikl.trackit.trackerservice.server.common.ServerProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
-@EnableConfigurationProperties(ServerProperties.class)
+@ConfigurationPropertiesScan("pl.latusikl.trackit.trackerservice.properties")
 public class TrackerServiceApplication
 {
 

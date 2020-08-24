@@ -1,7 +1,15 @@
 spring:
   main:
     web-application-type: none
+  application:
+    name: tracker-service
+  redis:
+    client-name: tracker-service
+    host: localhost
+
+redis:
+  imei-set-name: ImeiAllowed
 
 tcp:
   server:
-    cobanPort: 9000
+    coban-port: 9000
