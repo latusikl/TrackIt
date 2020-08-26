@@ -12,6 +12,8 @@ import org.springframework.integration.ip.tcp.connection.TcpConnectionIntercepto
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactoryChain;
 import org.springframework.integration.router.AbstractMessageRouter;
 import org.springframework.messaging.MessageChannel;
+import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
+import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
 import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
 import pl.latusikl.trackit.trackerservice.properties.ServerProperties;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptor;
@@ -33,9 +35,9 @@ public class CobanTcpServerConfiguration
      * @see ConnectionLoginInterceptor
      */
     @Bean
-    public TcpConnectionInterceptorFactory cobanLoginInterceptorFactory()
+    public TcpConnectionInterceptorFactory cobanLoginInterceptorFactory(final ImeiRepository imeiRepository, final ConnectionRepository connectionRepository)
     {
-        return new ConnectionLoginInterceptorFactory();
+        return new ConnectionLoginInterceptorFactory(imeiRepository,connectionRepository);
     }
 
     /**

@@ -16,17 +16,21 @@ class LoginMessageValidator
     {
         final String[] splitMessage = s.trim().split(CobanConstants.PACKET_SPLIT_CHAR);
 
-        return isSplitLengthValid(splitMessage, CobanConstants.LoginPacket.PACKET_SIZE)
-                && isPacketPrefixValid(splitMessage[CobanConstants.LoginPacket.PREFIX_POSITION])
-                && isImeiPrefixed(splitMessage[CobanConstants.LoginPacket.IMEI_POSITION])
-                && isPacketSuffixValid(splitMessage[CobanConstants.LoginPacket.SUFFIX_POSITION]);
+        if (isSplitLengthValid(splitMessage, CobanConstants.LoginPacket.PACKET_SIZE) &&
+                isPacketPrefixValid(splitMessage[CobanConstants.LoginPacket.PREFIX_POSITION]) &&
+                isImeiPrefixed(splitMessage[CobanConstants.LoginPacket.IMEI_POSITION]) &&
+                isPacketSuffixValid(splitMessage[CobanConstants.LoginPacket.SUFFIX_POSITION]))
+        {
+            return true;
+        }
 
+        logValidationError(LoginMessageValidator.class, s);
+        return false;
     }
 
     private boolean isPacketPrefixValid(final String loginHeader)
     {
         return loginHeader.equals(CobanConstants.LoginPacket.HEADER);
-
     }
 
     private boolean isPacketSuffixValid(final String packetSuffix)

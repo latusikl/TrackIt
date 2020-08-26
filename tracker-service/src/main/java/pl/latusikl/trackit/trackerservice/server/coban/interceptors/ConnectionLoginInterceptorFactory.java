@@ -1,16 +1,21 @@
 package pl.latusikl.trackit.trackerservice.server.coban.interceptors;
 
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.integration.dsl.Transformers;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorSupport;
-import org.springframework.integration.transformer.ObjectToStringTransformer;
+import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
+import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
 
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class ConnectionLoginInterceptorFactory
         implements TcpConnectionInterceptorFactory, ApplicationEventPublisherAware
 {
+
+    private final ImeiRepository imeiRepository;
+    private final ConnectionRepository connectionRepository;
 
     private volatile ApplicationEventPublisher applicationEventPublisher;
 
@@ -23,6 +28,6 @@ public class ConnectionLoginInterceptorFactory
     @Override
     public TcpConnectionInterceptorSupport getInterceptor()
     {
-        return new ConnectionLoginInterceptor(applicationEventPublisher, new ObjectToStringTransformer());
+        return new ConnectionLoginInterceptor(applicationEventPublisher, Transformers.objectToString(), imeiRepository,connectionRepository);
     }
 }

@@ -12,28 +12,19 @@ abstract class AbstractMessageValidator
 
     boolean isSplitLengthValid(final String[] splitMessage, final int expectedLength)
     {
-        if (splitMessage.length != expectedLength) {
-            logValidationError("split length", String.valueOf(splitMessage.length),
-                               String.valueOf(CobanConstants.LoginPacket.PACKET_SIZE));
-            return true;
-        }
-        return false;
+        return splitMessage.length == expectedLength;
     }
 
     boolean isImeiPrefixed(final String partOfSplit){
-        if(partOfSplit.startsWith(CobanConstants.IMEI_PREFIX)){
-                logValidationError("imei prefix", partOfSplit, CobanConstants.IMEI_PREFIX + "<imei>");
-                return true;
-        }
-        return false;
+        return partOfSplit.startsWith(CobanConstants.IMEI_PREFIX);
     }
 
 
     @Override
     public abstract boolean test(final String s);
 
-    protected void logValidationError(final String cause, final String actual, final String expected)
+    protected void logValidationError(final Class clazz, final String actual)
     {
-        log.warn("Message validation failed. Caused by: {} Actual: {} . Expected: {} .", cause, actual, expected);
+        log.warn("Message validation failed. Validator: '{}'. Message: '{}'.", clazz.getName(), actual);
     }
 }

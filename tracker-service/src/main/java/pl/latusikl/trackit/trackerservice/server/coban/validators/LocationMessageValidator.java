@@ -14,12 +14,17 @@ class LocationMessageValidator
     @Override
     public boolean test(final String s)
     {
-        final String splitMessage[] = s.split(CobanConstants.PACKET_SPLIT_CHAR);
+        final String[] splitMessage = s.split(CobanConstants.PACKET_SPLIT_CHAR);
 
-        return isSplitLengthValid(splitMessage, CobanConstants.LocationPacket.PACKET_SIZE) &&
+        if( isSplitLengthValid(splitMessage, CobanConstants.LocationPacket.PACKET_SIZE) &&
                 isImeiPrefixed(splitMessage[CobanConstants.LocationPacket.IMEI_POSITION]) &&
                 containsPacketKeyWord(splitMessage[CobanConstants.LocationPacket.KEYWORD_POSITION]) &&
-                containsGpsStatus(splitMessage[CobanConstants.LocationPacket.GPS_STATUS_LOCATION]);
+                containsGpsStatus(splitMessage[CobanConstants.LocationPacket.GPS_STATUS_LOCATION]))
+        {
+            return true;
+        }
+        logValidationError(LoginMessageValidator.class,s);
+        return false;
     }
 
     private boolean containsPacketKeyWord(final String possibleKeyword)
