@@ -39,5 +39,4 @@ public class RedisConfiguration
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
-
 }
