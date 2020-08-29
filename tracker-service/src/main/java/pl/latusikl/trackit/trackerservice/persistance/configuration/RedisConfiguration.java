@@ -24,12 +24,6 @@ public class RedisConfiguration
     }
 
     @Bean
-    public LettuceConnectionFactory redisLettuceConnectionFactory()
-    {
-        return new LettuceConnectionFactory();
-    }
-
-    @Bean
     public RedisTemplate<String,Object> redisTemplate(final LettuceConnectionFactory redisLettuceConnectionFactory)
     {
         final RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();

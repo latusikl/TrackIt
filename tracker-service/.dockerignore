@@ -1,0 +1,11 @@
+.gradle
+Dockerfile
+build
+gradle
+!gradle/wrapper
+gradlew.bat
+*.iml
+.idea
+.settings
+.DS_STORE
+.git
