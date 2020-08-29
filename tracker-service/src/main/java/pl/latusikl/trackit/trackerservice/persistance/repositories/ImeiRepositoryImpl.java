@@ -29,7 +29,7 @@ public class ImeiRepositoryImpl
     @Override
     public void saveImeiToWhitelisted(final String... imei)
     {
-        setOperations.add(redisProperties.getImeiSetName(), imei);
+        setOperations.add(redisProperties.getImeiSetName(),(Object []) imei);
     }
 
     @Override
@@ -45,6 +45,6 @@ public class ImeiRepositoryImpl
     @Override
     public void removeImei(final String... imei)
     {
-        setOperations.remove(redisProperties.getImeiSetName(), imei);
+        setOperations.remove(redisProperties.getImeiSetName(),(Object []) imei);
     }
 }
