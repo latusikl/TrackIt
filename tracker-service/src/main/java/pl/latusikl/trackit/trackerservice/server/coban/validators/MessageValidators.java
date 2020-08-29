@@ -7,15 +7,33 @@ import java.util.function.Predicate;
 @Slf4j
 public class MessageValidators
 {
+    private static final Predicate<String> loginMessageValidatorObj = new LoginMessageValidator();
+
+    private static final Predicate<String> locationMessageValidatorObj = new LocationMessageValidator();
+
+    private MessageValidators()
+    {
+        //noop
+    }
 
     public static Predicate<String> loginMessageValidator()
     {
-        return new LoginMessageValidator();
+        return loginMessageValidatorObj;
+    }
+
+    public static boolean validateLoginMessage(final String message)
+    {
+        return loginMessageValidatorObj.test(message);
     }
 
     public static Predicate<String> locationMessageValidator()
     {
-        return new LocationMessageValidator();
+        return locationMessageValidatorObj;
+    }
+
+    public static boolean validateLocationMessage(final String message)
+    {
+        return locationMessageValidatorObj.test(message);
     }
 
 }

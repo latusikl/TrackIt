@@ -19,7 +19,6 @@ abstract class AbstractMessageValidator
         return partOfSplit.startsWith(CobanConstants.IMEI_PREFIX);
     }
 
-
     @Override
     public abstract boolean test(final String s);
 
