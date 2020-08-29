@@ -6,6 +6,7 @@ import org.springframework.integration.router.AbstractMappingMessageRouter;
 import org.springframework.integration.transformer.AbstractPayloadTransformer;
 import org.springframework.messaging.Message;
 import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.validators.MessageValidators;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,8 @@ public class InboundMessageRouter
 {
 
     private static final long CHANNEL_SEND_TIMEOUT = 600000; //10 minutes
+
+    private static final String NULL_CHANNEL = "nullChannel";
 
     private AbstractPayloadTransformer<?,String> payloadTransformer;
 
@@ -33,13 +36,11 @@ public class InboundMessageRouter
         final String messagePayload = payloadTransformer.doTransform(message);
         log.debug(this.toString() + "received " + messagePayload);
 
-        String channelName = null;
+        final String channelName;
 
-        if (messagePayload.contains("test1")) {
+        if (MessageValidators.validateLocationMessage(messagePayload)) {
             channelName = CobanConstants.LOCALIZATION_CHANNEL;
-        }
-
-        if (messagePayload.contains("test2")) {
+        } else {
             channelName = CobanConstants.OTHER_COMMAND_CHANNEL;
         }
         return Collections.singletonList(channelName);
