@@ -24,6 +24,6 @@ abstract class AbstractMessageValidator
 
     protected void logValidationError(final Class clazz, final String actual)
     {
-        log.warn("Message validation failed. Validator: '{}'. Message: '{}'.", clazz.getName(), actual);
+        log.debug("Message validation failed. Validator: '{}'. Message: '{}'.", clazz.getName(), actual);
     }
 }
