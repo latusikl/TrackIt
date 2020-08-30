@@ -10,12 +10,16 @@ import org.springframework.integration.ip.dsl.Tcp;
 import org.springframework.integration.ip.tcp.connection.AbstractServerConnectionFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactoryChain;
+import org.springframework.integration.ip.tcp.serializer.ByteArrayLfSerializer;
 import org.springframework.integration.router.AbstractMessageRouter;
 import org.springframework.messaging.MessageChannel;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
 import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
 import pl.latusikl.trackit.trackerservice.properties.ServerProperties;
+import pl.latusikl.trackit.trackerservice.server.coban.SerializerDeserializer;
+import pl.latusikl.trackit.trackerservice.server.coban.conversion.MessageDeserializer;
+import pl.latusikl.trackit.trackerservice.server.coban.conversion.MessageSerializer;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptor;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptorFactory;
 import pl.latusikl.trackit.trackerservice.server.coban.services.InboundMessageRouter;
@@ -53,7 +57,7 @@ public class CobanTcpServerConfiguration
     }
 
     /**
-     * Server bean with registered login interceptor.
+     * Server bean with registered login interceptor and custom serialization/deserialization.
      *
      * @see ServerProperties
      */
@@ -61,7 +65,7 @@ public class CobanTcpServerConfiguration
     AbstractServerConnectionFactory cobanServer(final ServerProperties serverProperties, final TcpConnectionInterceptorFactoryChain cobanInterceptorFactoryChain)
     {
         return Tcp.netServer(serverProperties.getCobanPort()).interceptorFactoryChain(
-                cobanInterceptorFactoryChain).get();
+                cobanInterceptorFactoryChain).serializer(new MessageSerializer()).deserializer(new MessageDeserializer()).get();
     }
 
     /**

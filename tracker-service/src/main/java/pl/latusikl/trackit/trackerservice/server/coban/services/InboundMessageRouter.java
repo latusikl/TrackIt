@@ -18,9 +18,7 @@ public class InboundMessageRouter
 
     private static final long CHANNEL_SEND_TIMEOUT = 600000; //10 minutes
 
-    private static final String NULL_CHANNEL = "nullChannel";
-
-    private AbstractPayloadTransformer<?,String> payloadTransformer;
+    private final AbstractPayloadTransformer<?,String> payloadTransformer;
 
     public InboundMessageRouter(final AbstractPayloadTransformer<?,String> payloadTransformer)
     {

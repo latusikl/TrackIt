@@ -14,6 +14,7 @@ import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.excpetions.InterceptorException;
 import pl.latusikl.trackit.trackerservice.server.coban.validators.MessageValidators;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -51,6 +52,13 @@ public class ConnectionLoginInterceptor
     {
         if (isServer() && handshakeState != HandshakeState.LOGGED) {
             //Only one thread can access this block
+            log.debug(message.toString());
+            log.debug("Payload type: {}",message.getPayload().getClass().toString());
+            if(message.getPayload() instanceof String && ((String) message.getPayload()).isBlank()){
+                return super.onMessage(message);
+            }
+            log.debug("Message received: '{}'",message.getPayload());
+            log.debug("Message after transforming: '{}'", payloadTransformer.doTransform(message));
             synchronized (this) {
                 try {
                     if (handshakeState == HandshakeState.NOT_STARTED) {
@@ -62,6 +70,7 @@ public class ConnectionLoginInterceptor
                     }
                 } catch (final Exception e) {
                     log.error(e.getMessage());
+                    log.debug(Arrays.toString(e.getStackTrace()));
                     return true;
                 }
             }
