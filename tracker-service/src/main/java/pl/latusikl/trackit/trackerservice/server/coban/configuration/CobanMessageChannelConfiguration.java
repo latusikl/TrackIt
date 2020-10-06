@@ -8,6 +8,7 @@ import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import pl.latusikl.trackit.trackerservice.server.coban.services.LocalizationMessageHandler;
+import pl.latusikl.trackit.trackerservice.server.coban.services.LocalizationMessageParser;
 import pl.latusikl.trackit.trackerservice.server.coban.services.OtherCommandsMessageHandler;
 
 @Configuration
@@ -27,9 +28,9 @@ public class CobanMessageChannelConfiguration
     }
 
     @Bean
-    public MessageHandler cobanLocalizationChannelHandler(final MessageChannel cobanServerOutChannel)
+    public MessageHandler cobanLocalizationChannelHandler(final MessageChannel cobanServerOutChannel, final LocalizationMessageParser localizationMessageParser)
     {
-        return new LocalizationMessageHandler(cobanServerOutChannel);
+        return new LocalizationMessageHandler(cobanServerOutChannel,localizationMessageParser);
     }
 
     @Bean

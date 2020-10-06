@@ -34,7 +34,7 @@ class LocationMessageValidator
     }
 
     private boolean containsGpsStatus(final String possibleStatus){
-        return possibleStatus.equals(CobanConstants.LocationPacket.GPS_STATUS_1) ||
-                possibleStatus.equals(CobanConstants.LocationPacket.GPS_STATUS_2);
+        return possibleStatus.equals(CobanConstants.LocationPacket.GPS_STATUS_OK) ||
+                possibleStatus.equals(CobanConstants.LocationPacket.GPS_STATUS_LOW);
     }
 }

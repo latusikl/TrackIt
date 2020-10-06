@@ -145,7 +145,7 @@ public class ConnectionLoginInterceptor
     private void closeConnectionWithError(final String errorMessage)
     {
         closeConnection(true);
-        throw InterceptorException.createInstance(errorMessage, ConnectionLoginInterceptor.class);
+        throw new InterceptorException(errorMessage, ConnectionLoginInterceptor.class);
     }
 
     private void sendMessage(final String messagePayload)
