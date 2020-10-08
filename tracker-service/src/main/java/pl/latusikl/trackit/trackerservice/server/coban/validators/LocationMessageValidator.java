@@ -1,7 +1,7 @@
 package pl.latusikl.trackit.trackerservice.server.coban.validators;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
 
 /**
  * Expected format: imei:864926030089768,tracker,200815104703,,F,104703.00,A,5126.54672,N,01258.35332,E,0.069,0;

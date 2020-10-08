@@ -1,7 +1,7 @@
 package pl.latusikl.trackit.trackerservice.server.coban.validators;
 
 import lombok.extern.slf4j.Slf4j;
-import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
 
 import java.util.function.Predicate;
 

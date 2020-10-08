@@ -8,7 +8,7 @@ import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import pl.latusikl.trackit.trackerservice.server.coban.services.LocalizationMessageHandler;
-import pl.latusikl.trackit.trackerservice.server.coban.services.LocalizationMessageParser;
+import pl.latusikl.trackit.trackerservice.server.coban.services.parsers.LocalizationMessageParser;
 import pl.latusikl.trackit.trackerservice.server.coban.services.OtherCommandsMessageHandler;
 
 @Configuration

@@ -7,6 +7,7 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Service;
+import pl.latusikl.trackit.trackerservice.server.coban.services.parsers.LocalizationMessageParser;
 
 @Slf4j
 @RequiredArgsConstructor

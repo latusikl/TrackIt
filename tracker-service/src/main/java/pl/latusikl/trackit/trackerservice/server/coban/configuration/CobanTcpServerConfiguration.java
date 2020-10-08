@@ -14,7 +14,7 @@ import org.springframework.integration.router.AbstractMessageRouter;
 import org.springframework.messaging.MessageChannel;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
-import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
 import pl.latusikl.trackit.trackerservice.properties.ServerProperties;
 import pl.latusikl.trackit.trackerservice.server.coban.conversion.MessageDeserializer;
 import pl.latusikl.trackit.trackerservice.server.coban.conversion.MessageSerializer;

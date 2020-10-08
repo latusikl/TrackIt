@@ -5,7 +5,7 @@ import org.springframework.integration.channel.NullChannel;
 import org.springframework.integration.router.AbstractMappingMessageRouter;
 import org.springframework.integration.transformer.AbstractPayloadTransformer;
 import org.springframework.messaging.Message;
-import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.validators.MessageValidators;
 
 import java.util.Collections;

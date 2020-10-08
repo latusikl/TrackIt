@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.trackerservice.properties;
+package pl.latusikl.trackit.trackerservice.server.coban;
 
 /**
  * Constants for tcp server prepared for Coban GPS trackers.

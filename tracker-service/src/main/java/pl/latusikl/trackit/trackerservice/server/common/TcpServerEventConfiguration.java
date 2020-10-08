@@ -8,7 +8,7 @@ import org.springframework.integration.ip.tcp.connection.TcpConnectionCloseEvent
 import org.springframework.integration.ip.tcp.connection.TcpConnectionExceptionEvent;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
 import org.springframework.integration.ip.tcp.serializer.SoftEndOfStreamException;
-import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.services.CobanEventService;
 
 @Slf4j

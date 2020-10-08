@@ -10,7 +10,7 @@ import org.springframework.messaging.Message;
 import pl.latusikl.trackit.trackerservice.persistance.entities.ConnectionEntity;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
-import pl.latusikl.trackit.trackerservice.properties.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.excpetions.InterceptorException;
 import pl.latusikl.trackit.trackerservice.server.coban.validators.MessageValidators;
 
