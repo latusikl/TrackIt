@@ -6,24 +6,20 @@ import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
 import java.util.function.Predicate;
 
 @Slf4j
-abstract class AbstractMessageValidator
-        implements Predicate<String>
-{
+abstract class AbstractMessageValidator implements Predicate<String> {
 
-    boolean isSplitLengthValid(final String[] splitMessage, final int expectedLength)
-    {
-        return splitMessage.length == expectedLength;
-    }
+	boolean isSplitLengthValid(final String[] splitMessage, final int expectedLength) {
+		return splitMessage.length == expectedLength;
+	}
 
-    boolean isImeiPrefixed(final String partOfSplit){
-        return partOfSplit.startsWith(CobanConstants.IMEI_PREFIX);
-    }
+	boolean isImeiPrefixed(final String partOfSplit) {
+		return partOfSplit.startsWith(CobanConstants.IMEI_PREFIX);
+	}
 
-    @Override
-    public abstract boolean test(final String s);
+	@Override
+	public abstract boolean test(final String s);
 
-    protected void logValidationError(final Class clazz, final String actual)
-    {
-        log.debug("Message validation failed. Validator: '{}'. Message: '{}'.", clazz.getName(), actual);
-    }
+	protected void logValidationError(final Class clazz, final String actual) {
+		log.debug("Message validation failed. Validator: '{}'. Message: '{}'.", clazz.getName(), actual);
+	}
 }

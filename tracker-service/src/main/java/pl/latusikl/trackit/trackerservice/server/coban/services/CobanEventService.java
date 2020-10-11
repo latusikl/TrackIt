@@ -10,18 +10,17 @@ import pl.latusikl.trackit.trackerservice.properties.ServiceConstants;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CobanEventService
-{
-    private final ConnectionRepository connectionRepository;
+public class CobanEventService {
+	private final ConnectionRepository connectionRepository;
 
-    public void handleConnectionOpen(final String conenctionId)
-    {
-        connectionRepository.save(ConnectionEntity.builder().connectionId(conenctionId).deviceImei(
-                ServiceConstants.EMPTY_STRING).build());
-    }
+	public void handleConnectionOpen(final String conenctionId) {
+		connectionRepository.save(ConnectionEntity.builder()
+												  .connectionId(conenctionId)
+												  .deviceImei(ServiceConstants.EMPTY_STRING)
+												  .build());
+	}
 
-    public void handleConnectionClosed(final String connectionId)
-    {
-        connectionRepository.deleteById(connectionId);
-    }
+	public void handleConnectionClosed(final String connectionId) {
+		connectionRepository.deleteById(connectionId);
+	}
 }

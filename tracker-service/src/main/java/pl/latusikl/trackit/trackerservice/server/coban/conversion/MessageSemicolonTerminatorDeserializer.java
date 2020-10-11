@@ -24,16 +24,17 @@ public class MessageSemicolonTerminatorDeserializer implements Deserializer<Stri
 			checkIfReadable(charNumber);
 			messageBuilder.append((char) charNumber);
 			checkIfLengthNotExceeded(messageBuilder);
-		}
-		while ((char) charNumber != TERMINATOR);
+		} while ((char) charNumber != TERMINATOR);
 
-		return messageBuilder.toString().trim();
+		return messageBuilder.toString()
+							 .trim();
 	}
 
 	private void checkIfReadable(final int charNumber) {
 		if (charNumber < 0) {
 			throw new DeserializationException("Unable to finish message serialization.", MessageSemicolonTerminatorDeserializer.class,
-					"Socket was closed during deserialization", String.format("Received byte with number: %s", charNumber));
+											   "Socket was closed during deserialization",
+											   String.format("Received byte with number: %s", charNumber));
 		}
 	}
 

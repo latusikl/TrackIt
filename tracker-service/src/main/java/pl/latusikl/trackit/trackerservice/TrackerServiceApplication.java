@@ -6,11 +6,9 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan("pl.latusikl.trackit.trackerservice.properties")
-public class TrackerServiceApplication
-{
+public class TrackerServiceApplication {
 
-    public static void main(final String[] args)
-    {
-        SpringApplication.run(TrackerServiceApplication.class, args);
-    }
+	public static void main(final String[] args) {
+		SpringApplication.run(TrackerServiceApplication.class, args);
+	}
 }

@@ -12,35 +12,32 @@ import java.util.Collections;
 import java.util.List;
 
 @Slf4j
-public class InboundMessageRouter
-        extends AbstractMappingMessageRouter
-{
+public class InboundMessageRouter extends AbstractMappingMessageRouter {
 
-    private static final long CHANNEL_SEND_TIMEOUT = 600000; //10 minutes
+	private static final long CHANNEL_SEND_TIMEOUT = 600000; //10 minutes
 
-    private final AbstractPayloadTransformer<?,String> payloadTransformer;
+	private final AbstractPayloadTransformer<?, String> payloadTransformer;
 
-    public InboundMessageRouter(final AbstractPayloadTransformer<?,String> payloadTransformer)
-    {
-        super();
-        setDefaultOutputChannel(new NullChannel());
-        setSendTimeout(CHANNEL_SEND_TIMEOUT);
-        this.payloadTransformer = payloadTransformer;
-    }
+	public InboundMessageRouter(final AbstractPayloadTransformer<?, String> payloadTransformer) {
+		super();
+		setDefaultOutputChannel(new NullChannel());
+		setSendTimeout(CHANNEL_SEND_TIMEOUT);
+		this.payloadTransformer = payloadTransformer;
+	}
 
-    @Override
-    protected List<Object> getChannelKeys(final Message<?> message)
-    {
-        final String messagePayload = payloadTransformer.doTransform(message);
-        log.debug(this.toString() + "received " + messagePayload);
+	@Override
+	protected List<Object> getChannelKeys(final Message<?> message) {
+		final String messagePayload = payloadTransformer.doTransform(message);
+		log.debug(this.toString() + "received " + messagePayload);
 
-        final String channelName;
+		final String channelName;
 
-        if (MessageValidators.validateLocationMessage(messagePayload)) {
-            channelName = CobanConstants.LOCALIZATION_CHANNEL;
-        } else {
-            channelName = CobanConstants.OTHER_COMMAND_CHANNEL;
-        }
-        return Collections.singletonList(channelName);
-    }
+		if (MessageValidators.validateLocationMessage(messagePayload)) {
+			channelName = CobanConstants.LOCALIZATION_CHANNEL;
+		}
+		else {
+			channelName = CobanConstants.OTHER_COMMAND_CHANNEL;
+		}
+		return Collections.singletonList(channelName);
+	}
 }

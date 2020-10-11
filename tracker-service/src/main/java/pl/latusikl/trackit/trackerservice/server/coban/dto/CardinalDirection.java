@@ -17,16 +17,16 @@ public enum CardinalDirection {
 
 	public static Optional<CardinalDirection> fromSymbol(final String symbol) {
 		switch (symbol) {
-		case SHORT_NORTH:
-			return Optional.of(NORTH);
-		case SHORT_SOUTH:
-			return Optional.of(SOUTH);
-		case SHORT_EAST:
-			return Optional.of(EAST);
-		case SHORT_WEST:
-			return Optional.of(WEST);
-		default:
-			return Optional.empty();
+			case SHORT_NORTH:
+				return Optional.of(NORTH);
+			case SHORT_SOUTH:
+				return Optional.of(SOUTH);
+			case SHORT_EAST:
+				return Optional.of(EAST);
+			case SHORT_WEST:
+				return Optional.of(WEST);
+			default:
+				return Optional.empty();
 		}
 	}
 

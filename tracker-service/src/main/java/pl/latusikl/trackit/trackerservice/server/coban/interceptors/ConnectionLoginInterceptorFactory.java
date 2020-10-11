@@ -10,24 +10,21 @@ import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRep
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
 
 @RequiredArgsConstructor
-public class ConnectionLoginInterceptorFactory
-        implements TcpConnectionInterceptorFactory, ApplicationEventPublisherAware
-{
+public class ConnectionLoginInterceptorFactory implements TcpConnectionInterceptorFactory, ApplicationEventPublisherAware {
 
-    private final ImeiRepository imeiRepository;
-    private final ConnectionRepository connectionRepository;
+	private final ImeiRepository imeiRepository;
+	private final ConnectionRepository connectionRepository;
 
-    private volatile ApplicationEventPublisher applicationEventPublisher;
+	private volatile ApplicationEventPublisher applicationEventPublisher;
 
-    @Override
-    public void setApplicationEventPublisher(final ApplicationEventPublisher applicationEventPublisher)
-    {
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
+	@Override
+	public void setApplicationEventPublisher(final ApplicationEventPublisher applicationEventPublisher) {
+		this.applicationEventPublisher = applicationEventPublisher;
+	}
 
-    @Override
-    public TcpConnectionInterceptorSupport getInterceptor()
-    {
-        return new ConnectionLoginInterceptor(applicationEventPublisher, Transformers.objectToString(), imeiRepository,connectionRepository);
-    }
+	@Override
+	public TcpConnectionInterceptorSupport getInterceptor() {
+		return new ConnectionLoginInterceptor(applicationEventPublisher, Transformers.objectToString(), imeiRepository,
+											  connectionRepository);
+	}
 }

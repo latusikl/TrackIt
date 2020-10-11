@@ -11,7 +11,7 @@ import static pl.latusikl.trackit.trackerservice.server.coban.CobanConstants.Loc
 import static pl.latusikl.trackit.trackerservice.server.coban.CobanConstants.PACKET_SPLIT_CHAR;
 
 /**
- * Message validation should be done before usage
+ Message validation should be done before usage
  */
 @Slf4j
 @Service

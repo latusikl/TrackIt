@@ -12,6 +12,6 @@ public class LongitudeParser extends AbstractLocationParser {
 	@Override
 	public CoordinatesDto parse(final String[] splitMessage) {
 		return super.parse(splitMessage, CobanConstants.LocationPacket.LONGITUDE_POSITION,
-				CobanConstants.LocationPacket.LONGITUDE_DIRECTION, LONGITUDE_LENGTH);
+						   CobanConstants.LocationPacket.LONGITUDE_DIRECTION, LONGITUDE_LENGTH);
 	}
 }

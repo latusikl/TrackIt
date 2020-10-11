@@ -8,12 +8,10 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class OtherCommandsMessageHandler
-        implements MessageHandler
-{
-    @Override
-    public void handleMessage(final Message<?> message) throws MessagingException
-    {
-        log.warn("Message channel 2: {}", message.getPayload().toString());
-    }
+public class OtherCommandsMessageHandler implements MessageHandler {
+	@Override
+	public void handleMessage(final Message<?> message) throws MessagingException {
+		log.warn("Message channel 2: {}", message.getPayload()
+												 .toString());
+	}
 }

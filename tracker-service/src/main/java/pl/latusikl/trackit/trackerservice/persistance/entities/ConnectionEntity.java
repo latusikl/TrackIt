@@ -9,12 +9,11 @@ import org.springframework.data.redis.core.index.Indexed;
 @RedisHash("connection")
 @Data
 @Builder
-public class ConnectionEntity
-{
-    @Id
-    private String connectionId;
+public class ConnectionEntity {
+	@Id
+	private String connectionId;
 
-    @Indexed
-    private String deviceImei;
+	@Indexed
+	private String deviceImei;
 
 }

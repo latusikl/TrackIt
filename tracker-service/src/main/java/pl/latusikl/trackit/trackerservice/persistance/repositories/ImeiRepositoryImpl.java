@@ -36,10 +36,7 @@ public class ImeiRepositoryImpl
     public Boolean isImeiWhitelisted(final String imei)
     {
         final Boolean value = setOperations.isMember(redisProperties.getImeiSetName(), imei);
-        if (value == null || !value) {
-            return false;
-        }
-        return true;
+        return value != null && value;
     }
 
     @Override

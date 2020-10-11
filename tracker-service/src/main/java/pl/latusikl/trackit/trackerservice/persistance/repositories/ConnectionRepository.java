@@ -5,10 +5,8 @@ import pl.latusikl.trackit.trackerservice.persistance.entities.ConnectionEntity;
 
 import java.util.Optional;
 
-public interface ConnectionRepository
-        extends CrudRepository<ConnectionEntity,String>
-{
-    Optional<ConnectionEntity> findByDeviceImei(String deviceImei);
+public interface ConnectionRepository extends CrudRepository<ConnectionEntity, String> {
+	Optional<ConnectionEntity> findByDeviceImei(String deviceImei);
 
-    void deleteByConnectionId(String connectionId);
+	void deleteByConnectionId(String connectionId);
 }

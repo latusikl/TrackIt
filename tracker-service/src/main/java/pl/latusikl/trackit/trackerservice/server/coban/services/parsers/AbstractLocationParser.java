@@ -7,7 +7,7 @@ import pl.latusikl.trackit.trackerservice.server.coban.excpetions.MessageParsing
 public abstract class AbstractLocationParser implements LocationParser {
 
 	protected CoordinatesDto parse(final String[] splitMessage, final int coordinateIndex, final int directionSymbolIndex,
-			final int degreesSigns) {
+								   final int degreesSigns) {
 		final String longitude = splitMessage[coordinateIndex];
 		final String directionSymbol = splitMessage[directionSymbolIndex];
 

@@ -15,19 +15,17 @@ import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
 @Profile("dev")
 @Slf4j
-public class RedisDevLoad
-{
-    private final RedisTemplate<String,Object> redisTemplate;
+public class RedisDevLoad {
+	private final RedisTemplate<String, Object> redisTemplate;
 
-    private final RedisProperties redisProperties;
+	private final RedisProperties redisProperties;
 
-    private final ConnectionRepository connectionRepository;
+	private final ConnectionRepository connectionRepository;
 
-    private final ImeiRepository imeiRepository;
+	private final ImeiRepository imeiRepository;
 
-    @PostConstruct
-    public void loadDevDataToRedis()
-    {
-        imeiRepository.saveImeiToWhitelisted("864926030089768");
-    }
+	@PostConstruct
+	public void loadDevDataToRedis() {
+		imeiRepository.saveImeiToWhitelisted("864926030089768");
+	}
 }

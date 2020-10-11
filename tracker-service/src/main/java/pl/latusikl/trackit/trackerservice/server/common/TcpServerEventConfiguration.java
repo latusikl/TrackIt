@@ -14,38 +14,39 @@ import pl.latusikl.trackit.trackerservice.server.coban.services.CobanEventServic
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class TcpServerEventConfiguration
-{
+public class TcpServerEventConfiguration {
 
-    private final CobanEventService cobanEventService;
+	private final CobanEventService cobanEventService;
 
-    @EventListener
-    public void open(final TcpConnectionOpenEvent event)
-    {
-        if (event.getConnectionFactoryName().equals(CobanConstants.SERVER_BEAN_NAME)) {
-            log.debug("Connection id: {}", event.getConnectionId());
-            cobanEventService.handleConnectionOpen(event.getConnectionId());
-        }
-    }
+	@EventListener
+	public void open(final TcpConnectionOpenEvent event) {
+		if (event.getConnectionFactoryName()
+				 .equals(CobanConstants.SERVER_BEAN_NAME)) {
+			log.debug("Connection id: {}", event.getConnectionId());
+			cobanEventService.handleConnectionOpen(event.getConnectionId());
+		}
+	}
 
-    //TODO Improve
-    @EventListener
-    public void exception(final TcpConnectionExceptionEvent exceptionEvent)
-    {
-        if (exceptionEvent.getCause() instanceof SoftEndOfStreamException) {
-            log.debug(exceptionEvent.getCause().getMessage());
-        } else {
-            log.error(exceptionEvent.getCause().getMessage());
-        }
-    }
+	//TODO Improve
+	@EventListener
+	public void exception(final TcpConnectionExceptionEvent exceptionEvent) {
+		if (exceptionEvent.getCause() instanceof SoftEndOfStreamException) {
+			log.debug(exceptionEvent.getCause()
+									.getMessage());
+		}
+		else {
+			log.error(exceptionEvent.getCause()
+									.getMessage());
+		}
+	}
 
-    @EventListener
-    public void close(final TcpConnectionCloseEvent event)
-    {
-        if (event.getConnectionFactoryName().equals(CobanConstants.SERVER_BEAN_NAME)) {
-            log.debug("Removing connection with id: {}", event.getConnectionId());
-            cobanEventService.handleConnectionClosed(event.getConnectionId());
-        }
-    }
+	@EventListener
+	public void close(final TcpConnectionCloseEvent event) {
+		if (event.getConnectionFactoryName()
+				 .equals(CobanConstants.SERVER_BEAN_NAME)) {
+			log.debug("Removing connection with id: {}", event.getConnectionId());
+			cobanEventService.handleConnectionClosed(event.getConnectionId());
+		}
+	}
 
 }

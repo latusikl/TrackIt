@@ -23,44 +23,43 @@ import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLo
 import pl.latusikl.trackit.trackerservice.server.coban.services.InboundMessageRouter;
 
 /**
- * Configuration class with tcp server configuration.
+ Configuration class with tcp server configuration.
  */
 @Slf4j
 @Configuration
 public class CobanTcpServerConfiguration {
 
 	/**
-	 * Factory for login interceptor.
-	 *
-	 * @see ConnectionLoginInterceptorFactory
-	 * @see ConnectionLoginInterceptor
+	 Factory for login interceptor.
+
+	 @see ConnectionLoginInterceptorFactory
+	 @see ConnectionLoginInterceptor
 	 */
 	@Bean
 	public TcpConnectionInterceptorFactory cobanLoginInterceptorFactory(final ImeiRepository imeiRepository,
-			final ConnectionRepository connectionRepository) {
+																		final ConnectionRepository connectionRepository) {
 		return new ConnectionLoginInterceptorFactory(imeiRepository, connectionRepository);
 	}
 
 	/**
-	 * Factory chain of server interceptors.
-	 * In this bean all interceptors should be added to array.
+	 Factory chain of server interceptors. In this bean all interceptors should be added to array.
 	 */
 	@Bean
 	TcpConnectionInterceptorFactoryChain cobanInterceptorFactoryChain(
 			final TcpConnectionInterceptorFactory cobanLoginInterceptorFactory) {
 		final var interceptorFactoryChain = new TcpConnectionInterceptorFactoryChain();
-		interceptorFactoryChain.setInterceptors(new TcpConnectionInterceptorFactory[] { cobanLoginInterceptorFactory });
+		interceptorFactoryChain.setInterceptors(new TcpConnectionInterceptorFactory[] {cobanLoginInterceptorFactory});
 		return interceptorFactoryChain;
 	}
 
 	/**
-	 * Server bean with registered login interceptor and custom serialization/deserialization.
-	 *
-	 * @see ServerProperties
+	 Server bean with registered login interceptor and custom serialization/deserialization.
+
+	 @see ServerProperties
 	 */
 	@Bean(name = CobanConstants.SERVER_BEAN_NAME)
 	AbstractServerConnectionFactory cobanServer(final ServerProperties serverProperties,
-			final TcpConnectionInterceptorFactoryChain cobanInterceptorFactoryChain) {
+												final TcpConnectionInterceptorFactoryChain cobanInterceptorFactoryChain) {
 		return Tcp.netServer(serverProperties.getCobanPort())
 				  .interceptorFactoryChain(cobanInterceptorFactoryChain)
 				  .serializer(new MessageSerializer())
@@ -69,9 +68,9 @@ public class CobanTcpServerConfiguration {
 	}
 
 	/**
-	 * Server inbound message router definition.
-	 *
-	 * @see InboundMessageRouter
+	 Server inbound message router definition.
+
+	 @see InboundMessageRouter
 	 */
 	@Bean
 	public AbstractMessageRouter serverInRouter() {
@@ -79,9 +78,8 @@ public class CobanTcpServerConfiguration {
 	}
 
 	/**
-	 * Java DSL configuration for inbound message flow from cobanServer.
-	 * Messages are from Tcp InboundAdapter are transformed and passed to router.
-	 * In router appropriate message channel is choosen.
+	 Java DSL configuration for inbound message flow from cobanServer. Messages are from Tcp InboundAdapter are transformed and passed
+	 to router. In router appropriate message channel is choosen.
 	 */
 	@Bean
 	public IntegrationFlow serverIn(final AbstractServerConnectionFactory cobanServer, final AbstractMessageRouter serverInRouter) {
@@ -92,8 +90,7 @@ public class CobanTcpServerConfiguration {
 	}
 
 	/**
-	 * Java DSL configuration for outbound message flow.
-	 * Message from outbound channel are passed to cobanServer handler.
+	 Java DSL configuration for outbound message flow. Message from outbound channel are passed to cobanServer handler.
 	 */
 	@Bean
 	public IntegrationFlow serverOut(final AbstractServerConnectionFactory cobanServer, final MessageChannel cobanServerOutChannel) {

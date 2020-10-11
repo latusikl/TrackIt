@@ -22,10 +22,11 @@ public class LocalizationDateTimeParser {
 	public LocalDateTime extractDateAndTime(final String[] splitMessage) {
 		final String rawDateAndTime = splitMessage[CobanConstants.LocationPacket.DATE_TIME_POSITION];
 		final LocalDate localDate = LocalDate.of(extractYear(rawDateAndTime), extractMonth(rawDateAndTime),
-				extractDay(rawDateAndTime));
-		final LocalTime localTime = LocalTime.of(extractHour(rawDateAndTime),extractMinute(rawDateAndTime),extractSecond(rawDateAndTime));
+												 extractDay(rawDateAndTime));
+		final LocalTime localTime = LocalTime.of(extractHour(rawDateAndTime), extractMinute(rawDateAndTime),
+												 extractSecond(rawDateAndTime));
 
-		return LocalDateTime.of(localDate,localTime);
+		return LocalDateTime.of(localDate, localTime);
 	}
 
 	private int extractYear(final String dateAndTime) {

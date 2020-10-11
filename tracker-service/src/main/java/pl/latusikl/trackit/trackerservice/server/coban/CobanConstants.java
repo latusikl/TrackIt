@@ -1,7 +1,7 @@
 package pl.latusikl.trackit.trackerservice.server.coban;
 
 /**
- * Constants for tcp server prepared for Coban GPS trackers.
+ Constants for tcp server prepared for Coban GPS trackers.
  */
 public class CobanConstants {
 	public static final String IMEI_PREFIX = "imei:";
