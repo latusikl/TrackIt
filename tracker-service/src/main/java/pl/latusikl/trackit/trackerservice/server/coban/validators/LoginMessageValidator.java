@@ -1,23 +1,29 @@
 package pl.latusikl.trackit.trackerservice.server.coban.validators;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
+import org.springframework.stereotype.Component;
+import pl.latusikl.trackit.trackerservice.server.coban.constatns.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.constatns.LoginPacketConstants;
 
 /**
- Expected format: ##,imei:123456789123456,A;
+ Validates if message is login message by checking parts of its format. Expected format: ##,imei:123456789123456,A;
  */
-@Slf4j
+@Component
+@RequiredArgsConstructor
 class LoginMessageValidator extends AbstractMessageValidator {
+
+	private final LoginPacketConstants loginPacketConstants;
 
 	@Override
 	public boolean test(final String s) {
 		final String[] splitMessage = s.trim()
-									   .split(CobanConstants.PACKET_SPLIT_CHAR);
+									   .split(loginPacketConstants.getPacketSplitChar());
 
-		if (isSplitLengthValid(splitMessage, CobanConstants.LoginPacket.PACKET_SIZE) && isPacketPrefixValid(
-				splitMessage[CobanConstants.LoginPacket.PREFIX_POSITION]) && isImeiPrefixed(
-				splitMessage[CobanConstants.LoginPacket.IMEI_POSITION]) && isPacketSuffixValid(
-				splitMessage[CobanConstants.LoginPacket.SUFFIX_POSITION])) {
+		if (isSplitLengthValid(splitMessage, loginPacketConstants.getPacketSize()) && isPacketPrefixValid(
+				splitMessage[loginPacketConstants.getPrefixPosition()]) && isImeiPrefixed(
+				splitMessage[loginPacketConstants.getImeiPosition()],loginPacketConstants.getImeiPrefix()) && isPacketSuffixValid(
+				splitMessage[loginPacketConstants.getSuffixPosition()])) {
 			return true;
 		}
 
@@ -26,11 +32,11 @@ class LoginMessageValidator extends AbstractMessageValidator {
 	}
 
 	private boolean isPacketPrefixValid(final String loginHeader) {
-		return loginHeader.equals(CobanConstants.LoginPacket.HEADER);
+		return loginHeader.equals(loginPacketConstants.getHeader());
 	}
 
 	private boolean isPacketSuffixValid(final String packetSuffix) {
-		return packetSuffix.equals(CobanConstants.LoginPacket.SUFFIX);
+		return packetSuffix.equals(loginPacketConstants.getSuffix());
 	}
 
 }

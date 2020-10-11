@@ -1,22 +1,29 @@
 package pl.latusikl.trackit.trackerservice.server.coban.validators;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
+import org.springframework.stereotype.Component;
+import pl.latusikl.trackit.trackerservice.server.coban.constatns.LocationPacketConstants;
 
 /**
  Expected format: imei:864926030089768,tracker,200815104703,,F,104703.00,A,5126.54672,N,01258.35332,E,0.069,0; To make validation faster
  not all is validated. Only 4 conditions are taken into account.
  */
 @Slf4j
+@Component
+@RequiredArgsConstructor
 class LocationMessageValidator extends AbstractMessageValidator {
+
+	private final LocationPacketConstants locationPacketConstants;
+
 	@Override
 	public boolean test(final String s) {
-		final String[] splitMessage = s.split(CobanConstants.PACKET_SPLIT_CHAR);
+		final String[] splitMessage = s.split(locationPacketConstants.getPacketSplitChar());
 
-		if (isSplitLengthValid(splitMessage, CobanConstants.LocationPacket.PACKET_SIZE) && isImeiPrefixed(
-				splitMessage[CobanConstants.LocationPacket.IMEI_POSITION]) && containsPacketKeyWord(
-				splitMessage[CobanConstants.LocationPacket.KEYWORD_POSITION]) && containsGpsStatus(
-				splitMessage[CobanConstants.LocationPacket.GPS_STATUS_LOCATION])) {
+		if (isSplitLengthValid(splitMessage, locationPacketConstants.getPacketSize()) && isImeiPrefixed(
+				splitMessage[locationPacketConstants.getImeiPosition()],locationPacketConstants.getImeiPrefix()) && containsPacketKeyWord(
+				splitMessage[locationPacketConstants.getKeywordPosition()]) && containsGpsStatus(
+				splitMessage[locationPacketConstants.getGpsStatusLocation()])) {
 			return true;
 		}
 		logValidationError(LoginMessageValidator.class, s);
@@ -24,12 +31,12 @@ class LocationMessageValidator extends AbstractMessageValidator {
 	}
 
 	private boolean containsPacketKeyWord(final String possibleKeyword) {
-		return possibleKeyword.equals(CobanConstants.LocationPacket.KEYWORD_VER_1) || possibleKeyword.equals(
-				CobanConstants.LocationPacket.KEYWORD_VER_2);
+		return possibleKeyword.equals(locationPacketConstants.getKeywordVer1()) || possibleKeyword.equals(
+				locationPacketConstants.getKeywordVer2());
 	}
 
 	private boolean containsGpsStatus(final String possibleStatus) {
-		return possibleStatus.equals(CobanConstants.LocationPacket.GPS_STATUS_OK) || possibleStatus.equals(
-				CobanConstants.LocationPacket.GPS_STATUS_LOW);
+		return possibleStatus.equals(locationPacketConstants.getGpsStatusOk()) || possibleStatus.equals(
+				locationPacketConstants.getGpsStatusOff());
 	}
 }

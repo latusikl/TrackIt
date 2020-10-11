@@ -11,34 +11,19 @@ import org.springframework.integration.ip.tcp.connection.AbstractServerConnectio
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactory;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionInterceptorFactoryChain;
 import org.springframework.integration.router.AbstractMessageRouter;
+import org.springframework.integration.transformer.ObjectToStringTransformer;
 import org.springframework.messaging.MessageChannel;
-import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
-import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
 import pl.latusikl.trackit.trackerservice.properties.ServerProperties;
-import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
-import pl.latusikl.trackit.trackerservice.server.coban.conversion.MessageSemicolonTerminatorDeserializer;
-import pl.latusikl.trackit.trackerservice.server.coban.conversion.MessageSerializer;
-import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptor;
-import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptorFactory;
-import pl.latusikl.trackit.trackerservice.server.coban.services.InboundMessageRouter;
+import pl.latusikl.trackit.trackerservice.server.coban.services.conversion.CustomSerializer;
+import pl.latusikl.trackit.trackerservice.server.coban.services.conversion.SemicolonTerminatorDeserializer;
 
-/**
- Configuration class with tcp server configuration.
- */
 @Slf4j
 @Configuration
 public class CobanTcpServerConfiguration {
 
-	/**
-	 Factory for login interceptor.
-
-	 @see ConnectionLoginInterceptorFactory
-	 @see ConnectionLoginInterceptor
-	 */
 	@Bean
-	public TcpConnectionInterceptorFactory cobanLoginInterceptorFactory(final ImeiRepository imeiRepository,
-																		final ConnectionRepository connectionRepository) {
-		return new ConnectionLoginInterceptorFactory(imeiRepository, connectionRepository);
+	ObjectToStringTransformer objectToString() {
+		return Transformers.objectToString();
 	}
 
 	/**
@@ -56,30 +41,21 @@ public class CobanTcpServerConfiguration {
 	 Server bean with registered login interceptor and custom serialization/deserialization.
 
 	 @see ServerProperties
+	 @see TcpConnectionInterceptorFactoryChain
 	 */
-	@Bean(name = CobanConstants.SERVER_BEAN_NAME)
+	@Bean(name = "#{@cobanConstants.getServerBeanName()}")
 	AbstractServerConnectionFactory cobanServer(final ServerProperties serverProperties,
 												final TcpConnectionInterceptorFactoryChain cobanInterceptorFactoryChain) {
 		return Tcp.netServer(serverProperties.getCobanPort())
 				  .interceptorFactoryChain(cobanInterceptorFactoryChain)
-				  .serializer(new MessageSerializer())
-				  .deserializer(new MessageSemicolonTerminatorDeserializer())
+				  .serializer(new CustomSerializer())
+				  .deserializer(new SemicolonTerminatorDeserializer())
 				  .get();
 	}
 
 	/**
-	 Server inbound message router definition.
-
-	 @see InboundMessageRouter
-	 */
-	@Bean
-	public AbstractMessageRouter serverInRouter() {
-		return new InboundMessageRouter(Transformers.objectToString());
-	}
-
-	/**
-	 Java DSL configuration for inbound message flow from cobanServer. Messages are from Tcp InboundAdapter are transformed and passed
-	 to router. In router appropriate message channel is choosen.
+	 Java DSL configuration for inbound message flow from cobanServer. Messages from TcpInboundAdapter are transformed and passed to
+	 router. In router appropriate message channel is chosen.
 	 */
 	@Bean
 	public IntegrationFlow serverIn(final AbstractServerConnectionFactory cobanServer, final AbstractMessageRouter serverInRouter) {

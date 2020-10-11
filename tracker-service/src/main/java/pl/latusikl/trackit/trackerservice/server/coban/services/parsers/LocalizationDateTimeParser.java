@@ -1,13 +1,16 @@
 package pl.latusikl.trackit.trackerservice.server.coban.services.parsers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.constatns.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.constatns.LocationPacketConstants;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Component
+@RequiredArgsConstructor
 public class LocalizationDateTimeParser {
 
 	private static final int YEAR_END_INDEX = 2;
@@ -19,8 +22,10 @@ public class LocalizationDateTimeParser {
 
 	private static final String YEAR_PREFIX = "20";
 
+	private final LocationPacketConstants locationPacketConstants;
+
 	public LocalDateTime extractDateAndTime(final String[] splitMessage) {
-		final String rawDateAndTime = splitMessage[CobanConstants.LocationPacket.DATE_TIME_POSITION];
+		final String rawDateAndTime = splitMessage[locationPacketConstants.getDateTimePosition()];
 		final LocalDate localDate = LocalDate.of(extractYear(rawDateAndTime), extractMonth(rawDateAndTime),
 												 extractDay(rawDateAndTime));
 		final LocalTime localTime = LocalTime.of(extractHour(rawDateAndTime), extractMinute(rawDateAndTime),

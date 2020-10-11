@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.trackerservice.server.coban.conversion;
+package pl.latusikl.trackit.trackerservice.server.coban.services.conversion;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.serializer.Deserializer;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Slf4j
-public class MessageSemicolonTerminatorDeserializer implements Deserializer<String> {
+public class SemicolonTerminatorDeserializer implements Deserializer<String> {
 
 	private static final char TERMINATOR = ';';
 	private static final int MAX_MESSAGE_SIZE = 2048;
@@ -32,7 +32,7 @@ public class MessageSemicolonTerminatorDeserializer implements Deserializer<Stri
 
 	private void checkIfReadable(final int charNumber) {
 		if (charNumber < 0) {
-			throw new DeserializationException("Unable to finish message serialization.", MessageSemicolonTerminatorDeserializer.class,
+			throw new DeserializationException("Unable to finish message serialization.", SemicolonTerminatorDeserializer.class,
 											   "Socket was closed during deserialization",
 											   String.format("Received byte with number: %s", charNumber));
 		}
@@ -42,7 +42,7 @@ public class MessageSemicolonTerminatorDeserializer implements Deserializer<Stri
 		if (messageBuilder.length() == MAX_MESSAGE_SIZE) {
 			throw new DeserializationException(
 					String.format("Message serialization failed - message is to long. Max message size: %s", MAX_MESSAGE_SIZE),
-					MessageSemicolonTerminatorDeserializer.class);
+					SemicolonTerminatorDeserializer.class);
 		}
 	}
 }

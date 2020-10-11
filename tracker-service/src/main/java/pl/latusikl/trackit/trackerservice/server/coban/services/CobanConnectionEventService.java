@@ -10,7 +10,7 @@ import pl.latusikl.trackit.trackerservice.properties.ServiceConstants;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CobanEventService {
+public class CobanConnectionEventService {
 	private final ConnectionRepository connectionRepository;
 
 	public void handleConnectionOpen(final String conenctionId) {
