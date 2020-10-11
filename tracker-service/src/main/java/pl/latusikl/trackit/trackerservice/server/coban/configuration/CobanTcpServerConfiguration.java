@@ -14,9 +14,9 @@ import org.springframework.integration.router.AbstractMessageRouter;
 import org.springframework.messaging.MessageChannel;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
-import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
 import pl.latusikl.trackit.trackerservice.properties.ServerProperties;
-import pl.latusikl.trackit.trackerservice.server.coban.conversion.MessageDeserializer;
+import pl.latusikl.trackit.trackerservice.server.coban.CobanConstants;
+import pl.latusikl.trackit.trackerservice.server.coban.conversion.MessageSemicolonTerminatorDeserializer;
 import pl.latusikl.trackit.trackerservice.server.coban.conversion.MessageSerializer;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptor;
 import pl.latusikl.trackit.trackerservice.server.coban.interceptors.ConnectionLoginInterceptorFactory;
@@ -64,7 +64,7 @@ public class CobanTcpServerConfiguration {
 		return Tcp.netServer(serverProperties.getCobanPort())
 				  .interceptorFactoryChain(cobanInterceptorFactoryChain)
 				  .serializer(new MessageSerializer())
-				  .deserializer(new MessageDeserializer())
+				  .deserializer(new MessageSemicolonTerminatorDeserializer())
 				  .get();
 	}
 

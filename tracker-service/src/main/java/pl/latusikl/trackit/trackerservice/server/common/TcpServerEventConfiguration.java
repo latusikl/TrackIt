@@ -28,6 +28,7 @@ public class TcpServerEventConfiguration
         }
     }
 
+    //TODO Improve
     @EventListener
     public void exception(final TcpConnectionExceptionEvent exceptionEvent)
     {
