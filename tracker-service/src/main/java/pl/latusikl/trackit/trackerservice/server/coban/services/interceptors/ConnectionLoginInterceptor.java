@@ -16,9 +16,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-/**
- TcpConnectionInterceptor
- */
 @Slf4j
 public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport {
 
@@ -49,15 +46,10 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 	@Override
 	public boolean onMessage(final Message<?> message) {
 		if (isServer() && handshakeState != HandshakeState.LOGGED) {
-			log.debug(message.toString());
-			log.debug("Payload type: {}", message.getPayload()
-												 .getClass()
-												 .toString());
 			if (message.getPayload() instanceof String && ((String) message.getPayload()).isBlank()) {
+				log.debug("Message was empty or payload was not String.");
 				return super.onMessage(message);
 			}
-			log.debug("Message received: '{}'", message.getPayload());
-			log.debug("Message after transforming: '{}'", payloadTransformer.doTransform(message));
 			synchronized (this) {
 				try {
 					if (handshakeState == HandshakeState.NOT_STARTED) {
@@ -72,30 +64,27 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 				}
 				catch (final Exception e) {
 					log.error(e.getMessage());
-					log.debug(Arrays.toString(e.getStackTrace()));
+					log.error(Arrays.toString(e.getStackTrace()));
 					return true;
 				}
 			}
 		}
 		return super.onMessage(message);
-
 	}
 
 	private void handleNotStartedStatus(final Message<?> message) {
 		final String messagePayload = payloadTransformer.doTransform(message);
-		logReceivedMessage(messagePayload);
+		logDebugReceivedMessage(messagePayload);
 
-		if (isLoginMessageValid(messagePayload) && isImeiWhitelisted(messagePayload)) {
+		if (loginMessageValidator.test(messagePayload) && isImeiWhitelisted(messagePayload)) {
 
 			final String imei = extractImei(messagePayload);
 			saveImeiToConnectionEntity(imei);
 
 			try {
 				log.debug("Sending login confirmation. IMEI: {}", imei);
-
 				sendMessage(loginPacketConstants.getServerResponse());
 				handshakeState = HandshakeState.LOGIN_RESPONSE_SEND;
-
 			}
 			catch (final Exception e) {
 				closeConnectionWithError("Login interceptor error. Connection closed. Error message: " + e.getMessage());
@@ -106,13 +95,9 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 		}
 	}
 
-	private void logReceivedMessage(final String messagePayload) {
+	private void logDebugReceivedMessage(final String messagePayload) {
 		log.debug("Handshake state: '{}'. Connection id: '{}'. Revieved message: {}", this.handshakeState, this.getConnectionId(),
 				  messagePayload);
-	}
-
-	private boolean isLoginMessageValid(final String messagePayload) {
-		return loginMessageValidator.test(messagePayload);
 	}
 
 	private boolean isImeiWhitelisted(final String messagePayload) {
@@ -152,9 +137,9 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 	private void handleLoginResponseSendStatus(final Message<?> message) {
 		final String messagePayload = payloadTransformer.doTransform(message);
 
-		logReceivedMessage(messagePayload);
+		logDebugReceivedMessage(messagePayload);
 
-		if (isLocationMessageValid(messagePayload)) {
+		if (locationMessageValidator.test(messagePayload)) {
 			handshakeState = HandshakeState.LOGGED;
 		}
 		else {
@@ -163,17 +148,13 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 		}
 	}
 
-	private boolean isLocationMessageValid(final String messagePayload) {
-		return locationMessageValidator.test(messagePayload);
-	}
-
 	private void handleLoginFailed(final Message<?> message) {
 		final String messagePayload = payloadTransformer.doTransform(message);
 
-		if (isLocationMessageValid(messagePayload)) {
+		if (locationMessageValidator.test(messagePayload)) {
 			handshakeState = HandshakeState.LOGGED;
 		}
-		else if (isLoginMessageValid(messagePayload)) {
+		else if (loginMessageValidator.test(messagePayload)) {
 			if (loginRetryCounter == MAX_LOGIN_RETRY) {
 				closeConnectionWithError("Login interceptor error. Login failed after retry.");
 			}
