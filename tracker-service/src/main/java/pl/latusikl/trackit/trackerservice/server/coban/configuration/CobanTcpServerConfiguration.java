@@ -43,7 +43,7 @@ public class CobanTcpServerConfiguration {
 	 @see ServerProperties
 	 @see TcpConnectionInterceptorFactoryChain
 	 */
-	@Bean(name = "#{@cobanConstants.getServerBeanName()}")
+	@Bean
 	AbstractServerConnectionFactory cobanServer(final ServerProperties serverProperties,
 												final TcpConnectionInterceptorFactoryChain cobanInterceptorFactoryChain) {
 		return Tcp.netServer(serverProperties.getCobanPort())

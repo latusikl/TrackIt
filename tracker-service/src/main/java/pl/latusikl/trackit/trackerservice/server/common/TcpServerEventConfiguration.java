@@ -10,6 +10,7 @@ import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
 import org.springframework.integration.ip.tcp.serializer.SoftEndOfStreamException;
 import pl.latusikl.trackit.trackerservice.server.coban.constatns.CobanConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.services.CobanConnectionEventService;
+import pl.latusikl.trackit.trackerservice.server.coban.services.CobanExceptionEventService;
 
 @Slf4j
 @Configuration
@@ -17,6 +18,7 @@ import pl.latusikl.trackit.trackerservice.server.coban.services.CobanConnectionE
 public class TcpServerEventConfiguration
 {
 
+    private final CobanExceptionEventService cobanExceptionEventService;
     private final CobanConnectionEventService cobanConnectionEventService;
     private final CobanConstants cobanConstants;
 
@@ -24,7 +26,7 @@ public class TcpServerEventConfiguration
     public void open(final TcpConnectionOpenEvent event)
     {
         if (event.getConnectionFactoryName().equals(cobanConstants.getServerBeanName())) {
-            log.debug("Connection id: {}", event.getConnectionId());
+            log.debug("New connection established Connection id: {}", event.getConnectionId());
             cobanConnectionEventService.handleConnectionOpen(event.getConnectionId());
         }
     }
@@ -35,16 +37,17 @@ public class TcpServerEventConfiguration
     {
         if (exceptionEvent.getCause() instanceof SoftEndOfStreamException) {
             log.debug(exceptionEvent.getCause().getMessage());
-        } else {
-            log.error(exceptionEvent.getCause().getMessage());
         }
+        if (exceptionEvent.getConnectionFactoryName().equals(cobanConstants.getServerBeanName())) {
+            cobanExceptionEventService.handleExceptionEvent(exceptionEvent);
+        }
+
     }
 
     @EventListener
     public void close(final TcpConnectionCloseEvent event)
     {
         if (event.getConnectionFactoryName().equals(cobanConstants.getServerBeanName())) {
-            log.debug("Removing connection with id: {}", event.getConnectionId());
             cobanConnectionEventService.handleConnectionClosed(event.getConnectionId());
         }
     }

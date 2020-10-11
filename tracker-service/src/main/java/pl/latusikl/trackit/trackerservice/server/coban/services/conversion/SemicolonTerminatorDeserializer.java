@@ -14,7 +14,6 @@ public class SemicolonTerminatorDeserializer implements Deserializer<String> {
 	private static final int MAX_MESSAGE_SIZE = 2048;
 	private static final int AVERAGE_MESSAGE_SIZE = 95;
 
-	//TODO CRLF only for tries with telnet remove or make switch
 	@Override
 	public String deserialize(final InputStream inputStream) throws IOException {
 		final StringBuilder messageBuilder = new StringBuilder(AVERAGE_MESSAGE_SIZE);
@@ -40,9 +39,8 @@ public class SemicolonTerminatorDeserializer implements Deserializer<String> {
 
 	private void checkIfLengthNotExceeded(final StringBuilder messageBuilder) {
 		if (messageBuilder.length() == MAX_MESSAGE_SIZE) {
-			throw new DeserializationException(
-					String.format("Message serialization failed - message is to long. Max message size: %s", MAX_MESSAGE_SIZE),
-					SemicolonTerminatorDeserializer.class);
+			throw new DeserializationException("Message serialization failed", SemicolonTerminatorDeserializer.class,
+											   "Message is to long", String.format("Max message size: %s", MAX_MESSAGE_SIZE));
 		}
 	}
 }

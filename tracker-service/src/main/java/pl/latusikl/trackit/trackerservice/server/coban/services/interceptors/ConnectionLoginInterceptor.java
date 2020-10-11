@@ -126,7 +126,7 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 
 	private void closeConnectionWithError(final String errorMessage) {
 		closeConnection(true);
-		throw new InterceptorException(errorMessage, ConnectionLoginInterceptor.class);
+		throw new InterceptorException(errorMessage, ConnectionLoginInterceptor.class,"","");
 	}
 
 	private void sendMessage(final String messagePayload) {

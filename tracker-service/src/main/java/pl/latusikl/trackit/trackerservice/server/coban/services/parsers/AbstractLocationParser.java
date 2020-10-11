@@ -20,6 +20,6 @@ public abstract class AbstractLocationParser implements LocationParser {
 	}
 
 	private MessageParsingException directionSymbolException() {
-		return new MessageParsingException("Unable to read for direction one of coordinates ", LongitudeParser.class);
+		return new MessageParsingException("Unable to read one of coordinates", LongitudeParser.class, "Wrong coordinates format", "");
 	}
 }

@@ -21,6 +21,7 @@ public class CobanConnectionEventService {
 	}
 
 	public void handleConnectionClosed(final String connectionId) {
+		log.debug("Removing connection with id: {}", connectionId);
 		connectionRepository.deleteById(connectionId);
 	}
 }

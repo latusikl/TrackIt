@@ -32,7 +32,7 @@ public class LocalizationMessageParser {
 										 .build();
 		}
 		catch (final RuntimeException e) {
-			throw new MessageParsingException("Unable to process recieved message", LocalizationMessageParser.class);
+			throw new MessageParsingException("Unable to process recieved message", LocalizationMessageParser.class,"Other runtime exception occured.", String.format("Type: %s. Issue: %s",e.getClass().getSimpleName(),e.getMessage()));
 		}
 	}
 
