@@ -7,15 +7,12 @@ import org.springframework.integration.dsl.IntegrationFlow;
 import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
-import pl.latusikl.trackit.trackerservice.server.coban.services.LocalizationMessageHandler;
-import pl.latusikl.trackit.trackerservice.server.coban.services.OtherCommandsMessageHandler;
-import pl.latusikl.trackit.trackerservice.server.coban.services.parsers.LocalizationMessageParser;
 
 @Configuration
 public class CobanMessageChannelConfiguration {
 
 	@Bean
-	public MessageChannel cobanLocalizationChannel() {
+	public MessageChannel cobanLocationChannel() {
 		return new DirectChannel();
 	}
 
@@ -25,30 +22,23 @@ public class CobanMessageChannelConfiguration {
 	}
 
 	@Bean
-	public MessageHandler cobanLocalizationChannelHandler(final MessageChannel cobanServerOutChannel,
-			final LocalizationMessageParser localizationMessageParser) {
-		return new LocalizationMessageHandler(cobanServerOutChannel, localizationMessageParser);
-	}
-
-	@Bean
-	public MessageHandler cobanOtherCommandsChannelHandler() {
-		return new OtherCommandsMessageHandler();
-	}
-
-	@Bean
 	public MessageChannel cobanServerOutChannel() {
 		return new DirectChannel();
 	}
 
 	@Bean
-	public IntegrationFlow cobanLocalizationChannelFlow(final MessageChannel cobanLocalizationChannel,
-			final MessageHandler cobanLocalizationChannelHandler) {
-		return IntegrationFlows.from(cobanLocalizationChannel).handle(cobanLocalizationChannelHandler).get();
+	public IntegrationFlow cobanLocalizationChannelFlow(final MessageChannel cobanLocationChannel,
+														final MessageHandler cobanLocationMessageHandler) {
+		return IntegrationFlows.from(cobanLocationChannel)
+							   .handle(cobanLocationMessageHandler)
+							   .get();
 	}
 
 	@Bean
 	public IntegrationFlow cobanOtherCommandsChannelFlow(final MessageChannel cobanOtherCommandsChannel,
-			final MessageHandler cobanOtherCommandsChannelHandler) {
-		return IntegrationFlows.from(cobanOtherCommandsChannel).handle(cobanOtherCommandsChannelHandler).get();
+														 final MessageHandler cobanOtherCommandsMessageHandler) {
+		return IntegrationFlows.from(cobanOtherCommandsChannel)
+							   .handle(cobanOtherCommandsMessageHandler)
+							   .get();
 	}
 }

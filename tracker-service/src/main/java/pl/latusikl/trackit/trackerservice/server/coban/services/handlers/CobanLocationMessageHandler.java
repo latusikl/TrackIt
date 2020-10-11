@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.trackerservice.server.coban.services;
+package pl.latusikl.trackit.trackerservice.server.coban.services.handlers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 import pl.latusikl.trackit.trackerservice.server.coban.services.parsers.LocalizationMessageParser;
 
 @Slf4j
-@RequiredArgsConstructor
 @Service
-public class LocalizationMessageHandler implements MessageHandler {
+@RequiredArgsConstructor
+public class CobanLocationMessageHandler implements MessageHandler {
 
-	private final MessageChannel cobanLocalizationChannel;
+	private final MessageChannel cobanLocationChannel;
 	private final LocalizationMessageParser localizationMessageParser;
 
 	@Override

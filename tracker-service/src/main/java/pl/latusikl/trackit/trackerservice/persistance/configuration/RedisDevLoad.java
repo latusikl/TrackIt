@@ -13,7 +13,7 @@ import javax.annotation.PostConstruct;
 
 /**
  Allows to inject values to Redis Container during service startup.
- Only for development purposes. 
+ Only for development purposes.
  */
 @Component
 @RequiredArgsConstructor
