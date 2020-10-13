@@ -1,0 +1,33 @@
+server:
+  port: 8090
+spring:
+  profiles:
+    active: dev
+    application:
+      name: location-service
+
+---
+
+spring:
+  profiles: dev
+  redis:
+    host: localhost
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      bindings:
+        locationChannel:
+          destination: location
+          group: location-services
+
+logging:
+  level:
+    pl.latusikl.trackit.locationservice: DEBUG
+
+---
+spring:
+  profiles: test
