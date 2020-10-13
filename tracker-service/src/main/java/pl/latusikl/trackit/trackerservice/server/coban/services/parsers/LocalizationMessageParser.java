@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import pl.latusikl.trackit.trackerservice.server.coban.constatns.LocationPacketConstants;
-import pl.latusikl.trackit.trackerservice.server.coban.dto.LocalizationMessageDto;
+import pl.latusikl.trackit.trackerservice.server.common.dto.LocalizationMessageDto;
 import pl.latusikl.trackit.trackerservice.server.coban.excpetions.MessageParsingException;
 
 /**

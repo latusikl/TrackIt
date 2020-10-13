@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import pl.latusikl.trackit.trackerservice.messaging.OutboundLocationProcessor;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
 import pl.latusikl.trackit.trackerservice.properties.RedisProperties;
@@ -27,6 +28,8 @@ public class RedisDevLoad {
 	private final ConnectionRepository connectionRepository;
 
 	private final ImeiRepository imeiRepository;
+
+	private final OutboundLocationProcessor locationSource;
 
 	@PostConstruct
 	public void loadDevDataToRedis() {

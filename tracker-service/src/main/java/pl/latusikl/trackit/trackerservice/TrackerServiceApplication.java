@@ -12,3 +12,4 @@ public class TrackerServiceApplication {
 		SpringApplication.run(TrackerServiceApplication.class, args);
 	}
 }
+

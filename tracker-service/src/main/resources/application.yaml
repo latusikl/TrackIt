@@ -21,6 +21,16 @@ spring:
   profiles: dev
   redis:
     host: localhost
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    stream:
+      bindings:
+        locationChannel:
+          destination: location
 
 logging:
   level:

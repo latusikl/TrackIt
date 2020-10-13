@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.trackerservice.server.coban.dto;
+package pl.latusikl.trackit.trackerservice.server.common.dto;
 
 import lombok.AllArgsConstructor;
 
