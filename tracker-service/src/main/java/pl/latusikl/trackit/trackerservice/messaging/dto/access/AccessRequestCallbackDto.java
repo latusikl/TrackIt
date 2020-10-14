@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class AccessRequestCallbackStatusDto {
+public class AccessRequestCallbackDto {
 
 	String requestInformation;
 	AccessRequestStatus accessRequestStatus;

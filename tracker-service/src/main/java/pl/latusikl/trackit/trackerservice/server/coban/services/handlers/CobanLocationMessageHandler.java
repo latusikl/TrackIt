@@ -7,7 +7,7 @@ import org.springframework.messaging.MessageHandler;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
-import pl.latusikl.trackit.trackerservice.messaging.OutboundProcessor;
+import pl.latusikl.trackit.trackerservice.messaging.OutboundSender;
 import pl.latusikl.trackit.trackerservice.server.coban.services.parsers.LocationMessageParser;
 
 @Slf4j
@@ -16,18 +16,14 @@ import pl.latusikl.trackit.trackerservice.server.coban.services.parsers.Location
 public class CobanLocationMessageHandler implements MessageHandler {
 
 	private final LocationMessageParser locationMessageParser;
-	private final OutboundProcessor locationSource;
+	private final OutboundSender outboundSender;
 
 	@Override
 	public void handleMessage(final Message<?> message) throws MessagingException {
 		final var locationMessageDto = locationMessageParser.parse(message.getPayload()
 																		  .toString());
 
-		final var outboundMessage = MessageBuilder.withPayload(locationMessageDto)
-												  .build();
-
-		locationSource.locationChannel()
-					  .send(outboundMessage);
+		outboundSender.sendDeviceLocationToLocationService(locationMessageDto);
 		log.debug(locationMessageDto.toString());
 	}
 }

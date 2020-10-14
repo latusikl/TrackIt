@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import pl.latusikl.trackit.locationservice.locationservice.messaging.InboundProcessor;
-import pl.latusikl.trackit.locationservice.locationservice.messaging.dto.access.AccessRequestCallbackStatusDto;
+import pl.latusikl.trackit.locationservice.locationservice.messaging.dto.access.AccessRequestCallbackDto;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -13,7 +13,7 @@ import pl.latusikl.trackit.locationservice.locationservice.messaging.dto.access.
 public class AccessCallbackMessageHandler {
 
 	@StreamListener(InboundProcessor.ALLOW_LIST_CALLBACK)
-	public void handleAccessMessageCallback(final AccessRequestCallbackStatusDto accessRequestCallbackStatusDto) {
+	public void handleAccessMessageCallback(final AccessRequestCallbackDto accessRequestCallbackStatusDto) {
 		log.error(accessRequestCallbackStatusDto.toString());
 	}
 }

@@ -2,8 +2,8 @@ package pl.latusikl.trackit.trackerservice.server.coban.services.parsers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import pl.latusikl.trackit.trackerservice.messaging.dto.location.CoordinatesDto;
 import pl.latusikl.trackit.trackerservice.server.coban.constatns.LocationPacketConstants;
-import pl.latusikl.trackit.trackerservice.server.common.dto.CoordinatesDto;
 
 @Component
 @RequiredArgsConstructor

@@ -3,8 +3,8 @@ package pl.latusikl.trackit.trackerservice.server.coban.services.parsers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pl.latusikl.trackit.trackerservice.messaging.dto.location.LocationMessageDto;
 import pl.latusikl.trackit.trackerservice.server.coban.constatns.LocationPacketConstants;
-import pl.latusikl.trackit.trackerservice.server.common.dto.LocationMessageDto;
 import pl.latusikl.trackit.trackerservice.server.coban.excpetions.MessageParsingException;
 
 /**
@@ -32,7 +32,10 @@ public class LocationMessageParser {
 									 .build();
 		}
 		catch (final RuntimeException e) {
-			throw new MessageParsingException("Unable to process recieved message", LocationMessageParser.class, "Other runtime exception occured.", String.format("Type: %s. Issue: %s", e.getClass().getSimpleName(), e.getMessage()));
+			throw new MessageParsingException("Unable to process recieved message", LocationMessageParser.class,
+											  "Other runtime exception occured.", String.format("Type: %s. Issue: %s", e.getClass()
+																														.getSimpleName(),
+																								e.getMessage()));
 		}
 	}
 

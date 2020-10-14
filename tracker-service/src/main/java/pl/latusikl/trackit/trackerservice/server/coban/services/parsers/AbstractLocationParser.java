@@ -1,7 +1,7 @@
 package pl.latusikl.trackit.trackerservice.server.coban.services.parsers;
 
-import pl.latusikl.trackit.trackerservice.server.common.dto.CardinalDirection;
-import pl.latusikl.trackit.trackerservice.server.common.dto.CoordinatesDto;
+import pl.latusikl.trackit.trackerservice.messaging.dto.location.CardinalDirection;
+import pl.latusikl.trackit.trackerservice.messaging.dto.location.CoordinatesDto;
 import pl.latusikl.trackit.trackerservice.server.coban.excpetions.MessageParsingException;
 
 public abstract class AbstractLocationParser implements LocationParser {
