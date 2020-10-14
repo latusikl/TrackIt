@@ -2,9 +2,10 @@ version: "3.7"
 networks:
   tracker-network:
     driver: bridge
-
+  location-network:
+    driver: bridge
 services:
-  redis-service:
+  trackit-redis:
     image: "redis:alpine"
     command: redis-server --appendonly yes
     volumes:
@@ -14,7 +15,15 @@ services:
     networks:
       - tracker-network
     restart: on-failure
-
+  trackit-rabbit:
+      image: "rabbitmq:3-management"
+      ports:
+          - "5672:5672"
+          - "8000:15672"
+      networks:
+        - tracker-network
+        - location-network
+      restart: on-failure
   tracker-service:
     build:
       context: ./tracker-service
@@ -24,7 +33,22 @@ services:
     networks:
       - tracker-network
     depends_on:
-      - redis-service
+      - trackit-redis
+      - trackit-rabbit
     restart: on-failure
     environment:
-      - SPRING_REDIS_HOST=redis-service
+      - SPRING_REDIS_HOST=trackit-redis
+      - SPRING_RABBITMQ_HOST=trackit-rabbit
+  location-service:
+    build:
+      context: ./location-service
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    networks:
+      - location-network
+    depends_on:
+      - trackit-rabbit
+    restart: on-failure
+    environment:
+      - SPRING_RABBITMQ_HOST=trackit-rabbit
