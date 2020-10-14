@@ -2,7 +2,6 @@ package pl.latusikl.trackit.trackerservice.server.coban.services.parsers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import pl.latusikl.trackit.trackerservice.server.coban.constatns.CobanConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.constatns.LocationPacketConstants;
 
 import java.time.LocalDate;
@@ -11,7 +10,7 @@ import java.time.LocalTime;
 
 @Component
 @RequiredArgsConstructor
-public class LocalizationDateTimeParser {
+public class LocationDateTimeParser {
 
 	private static final int YEAR_END_INDEX = 2;
 	private static final int MONTH_END_INDEX = 4;

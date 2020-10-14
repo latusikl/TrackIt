@@ -1,15 +1,15 @@
-package pl.latusikl.trackit.trackerservice.server.common.dto;
+package pl.latusikl.trackit.trackerservice.messaging.dto.location;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
 import java.time.LocalDateTime;
 
-@Data
+@Value
 @Builder
-public class LocalizationMessageDto {
+public class LocationMessageDto {
 
-	private String imei;
+	private String id;
 	private LocalDateTime dateTime;
 	private boolean gpsConnectionStatus;
 	private CoordinatesDto latitude;

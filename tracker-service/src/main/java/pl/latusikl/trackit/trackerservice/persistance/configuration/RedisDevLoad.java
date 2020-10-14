@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-import pl.latusikl.trackit.trackerservice.messaging.OutboundLocationProcessor;
+import pl.latusikl.trackit.trackerservice.messaging.OutboundProcessor;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
 import pl.latusikl.trackit.trackerservice.properties.RedisProperties;
@@ -13,8 +13,7 @@ import pl.latusikl.trackit.trackerservice.properties.RedisProperties;
 import javax.annotation.PostConstruct;
 
 /**
- Allows to inject values to Redis Container during service startup.
- Only for development purposes.
+ Allows to inject values to Redis Container during service startup. Only for development purposes.
  */
 @Component
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class RedisDevLoad {
 
 	private final ImeiRepository imeiRepository;
 
-	private final OutboundLocationProcessor locationSource;
+	private final OutboundProcessor locationSource;
 
 	@PostConstruct
 	public void loadDevDataToRedis() {

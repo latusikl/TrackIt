@@ -31,6 +31,12 @@ spring:
       bindings:
         locationChannel:
           destination: location
+          group: tracker-services
+        accessListChannel:
+          destination: accessList
+          group: tracker-services
+        accessListCallbackChannel:
+          destination: accessListCallback
 
 logging:
   level:

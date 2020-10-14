@@ -31,8 +31,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-integration'
 	implementation 'org.springframework.integration:spring-integration-ip'
 
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-//	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	implementation 'org.springframework.boot:spring-boot-starter-logging'
 
 }
