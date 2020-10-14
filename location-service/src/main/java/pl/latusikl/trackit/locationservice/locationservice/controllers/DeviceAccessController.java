@@ -10,16 +10,21 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.latusikl.trackit.locationservice.locationservice.service.DeviceAccessService;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/devices/access")
 @RequiredArgsConstructor
 public class DeviceAccessController {
 
 	private final DeviceAccessService deviceAccessService;
 
-	@PostMapping
+	@PostMapping("/activate")
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public void addAccessToDevice(@RequestBody final String id) {
-		deviceAccessService.sendTrackingDeviceAccessRequest(id);
+	public void addAccessForDevice(@RequestBody final String deviceId) {
+		deviceAccessService.sendActivateAccessRequest(deviceId);
 	}
 
+	@PostMapping("/deactivate")
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public void revokeAccessForDevice(@RequestBody final String deviceId){
+		deviceAccessService.sendRevokeAccessRequest(deviceId);
+	}
 }

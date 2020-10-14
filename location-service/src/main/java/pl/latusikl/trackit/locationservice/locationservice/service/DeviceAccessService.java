@@ -12,11 +12,20 @@ public class DeviceAccessService {
 
 	private final OutboundSender outboundSender;
 
-	public void sendTrackingDeviceAccessRequest(final String id) {
+	public void sendActivateAccessRequest(final String deviceId) {
 		final var accessRequest = AccessRequestDto.builder()
 												  .requestType(AccessRequestType.ADD)
-												  .imei(id)
+												  .imei(deviceId)
 												  .build();
+		outboundSender.sendDeviceAccessRequest(accessRequest);
+	}
+
+	public void sendRevokeAccessRequest(final String deviceId) {
+		final var accessRequest = AccessRequestDto.builder()
+												  .requestType(AccessRequestType.REMOVE)
+												  .imei(deviceId)
+												  .build();
+
 		outboundSender.sendDeviceAccessRequest(accessRequest);
 	}
 }
