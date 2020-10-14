@@ -1,0 +1,25 @@
+package pl.latusikl.trackit.locationservice.locationservice.controllers;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import pl.latusikl.trackit.locationservice.locationservice.service.DeviceAccessService;
+
+@RestController
+@RequestMapping("/test")
+@RequiredArgsConstructor
+public class DeviceAccessController {
+
+	private final DeviceAccessService deviceAccessService;
+
+	@PostMapping
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public void addAccessToDevice(@RequestBody final String id) {
+		deviceAccessService.sendTrackingDeviceAccessRequest(id);
+	}
+
+}

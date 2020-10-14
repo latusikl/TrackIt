@@ -23,7 +23,11 @@ spring:
         locationChannel:
           destination: location
           group: location-services
-
+        accessListChannel:
+          destination: accessList
+          group: location-services
+        accessListCallbackChannel:
+          destination: accessListCallback
 logging:
   level:
     pl.latusikl.trackit.locationservice: DEBUG

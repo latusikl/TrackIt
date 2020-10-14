@@ -28,6 +28,9 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-stream'
 	implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
 
+	//Added
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
