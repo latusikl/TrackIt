@@ -7,11 +7,10 @@ spring:
       name: location-service
 
 ---
-
 spring:
   profiles: dev
-  redis:
-    host: localhost
+
+#Rabbit and Spring Cloud Streams
   rabbitmq:
     host: localhost
     port: 5672
@@ -28,6 +27,18 @@ spring:
           group: location-services
         accessListCallbackChannel:
           destination: accessListCallback
+
+#Database
+  jpa:
+    hibernate:
+      ddl-auto: none
+      dialect: PostgreSQL9Dialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/TrackItDB
+    username: user
+    password: pass
+    initialization-mode: always
+
 logging:
   level:
     pl.latusikl.trackit.locationservice: DEBUG
