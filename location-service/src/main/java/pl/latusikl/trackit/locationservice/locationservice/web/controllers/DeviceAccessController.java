@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.locationservice.locationservice.controllers;
+package pl.latusikl.trackit.locationservice.locationservice.web.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.latusikl.trackit.locationservice.locationservice.service.DeviceAccessService;
+import pl.latusikl.trackit.locationservice.locationservice.web.service.DeviceAccessService;
 
 @RestController
 @RequestMapping("/devices/access")

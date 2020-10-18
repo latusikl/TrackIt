@@ -8,7 +8,7 @@ import pl.latusikl.trackit.locationservice.locationservice.persistance.entity.De
 import pl.latusikl.trackit.locationservice.locationservice.persistance.entity.InfoLevel;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.repository.DeviceErrorRepository;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.repository.LocationRepository;
-import pl.latusikl.trackit.locationservice.locationservice.service.conversion.LocationMessageDtoConverter;
+import pl.latusikl.trackit.locationservice.locationservice.web.service.conversion.LocationMessageDtoConverter;
 
 import java.time.LocalDateTime;
 

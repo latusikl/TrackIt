@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.locationservice.locationservice.service;
+package pl.latusikl.trackit.locationservice.locationservice.web.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

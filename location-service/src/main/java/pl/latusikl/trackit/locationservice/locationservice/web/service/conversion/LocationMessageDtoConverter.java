@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.locationservice.locationservice.service.conversion;
+package pl.latusikl.trackit.locationservice.locationservice.web.service.conversion;
 
 import org.springframework.stereotype.Component;
 import pl.latusikl.trackit.locationservice.locationservice.messaging.dto.location.CardinalDirection;
