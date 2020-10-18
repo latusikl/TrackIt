@@ -7,12 +7,17 @@ Server which allows You to save information from Your tracker and display them o
 
 ### Ports
 
-Tracker-Service: 9000 (TCP Server)
-Location-Service: 8090 (Tomcat)
-RabbitMq:
+**Tracker-Service:** 9000 (TCP Server)
+
+**Location-Service:** 8090 (Tomcat)
+
+**RabbitMq:**
+
     - 5672 (Rabbit) 
     - 8000 (Management)
-PostgreSQL:
+
+**PostgreSQL:**
+
     - 5432 (Database)
     - 7000 (Management)
 
