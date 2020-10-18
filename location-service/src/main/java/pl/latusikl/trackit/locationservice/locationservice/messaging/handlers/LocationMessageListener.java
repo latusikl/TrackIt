@@ -10,10 +10,13 @@ import pl.latusikl.trackit.locationservice.locationservice.messaging.dto.locatio
 @Slf4j
 @RequiredArgsConstructor
 @EnableBinding(InboundProcessor.class)
-public class LocationMessageHandler {
+public class LocationMessageListener {
+
+	private final LocationMessageProcessingService locationMessagePersistanceService;
 
 	@StreamListener(InboundProcessor.LOCATION_INPUT)
 	public void handleLocationMessage(final LocationMessageDto locationMessageDto) {
-		log.error(locationMessageDto.toString());
+		log.debug("Location message received: {}", locationMessageDto.toString());
+		locationMessagePersistanceService.persistOrRecordError(locationMessageDto);
 	}
 }

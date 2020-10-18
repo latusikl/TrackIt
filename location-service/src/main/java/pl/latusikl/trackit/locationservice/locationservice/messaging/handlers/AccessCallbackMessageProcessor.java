@@ -10,7 +10,7 @@ import pl.latusikl.trackit.locationservice.locationservice.messaging.dto.access.
 @Slf4j
 @RequiredArgsConstructor
 @EnableBinding(InboundProcessor.class)
-public class AccessCallbackMessageHandler {
+public class AccessCallbackMessageProcessor {
 
 	@StreamListener(InboundProcessor.ALLOW_LIST_CALLBACK)
 	public void handleAccessMessageCallback(final AccessRequestCallbackDto accessRequestCallbackStatusDto) {
