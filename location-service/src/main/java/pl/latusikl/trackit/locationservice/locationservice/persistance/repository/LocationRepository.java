@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface LocationRepository extends CrudRepository<LocationEntity, Long> {
 
 	Optional<LocationEntity> findByDeviceIdAndAndDateTimeStart(String deviceId, LocalDateTime dateTimeStart);
+
+	Optional<LocationEntity> findFirstByDeviceIdOrderByDateTimeStartDesc(String deviceId);
 }
