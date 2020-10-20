@@ -35,3 +35,24 @@ out/
 
 ### Custom ###
 redis_data
+
+# Other editor types
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+.DS_Store
+node_modules
+/dist
+
+# local env files 
+.env.local
+.env.*.local
+
+# Log files - NPM
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
