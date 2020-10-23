@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :style="{ background: $vuetify.theme.themes['light'].background }">
     <v-card>
       <v-app-bar rounded="0" color="primary" flat>
         <h1>TrackIt</h1>
@@ -20,13 +20,18 @@
         </v-btn>
       </v-app-bar>
     </v-card>
-
     <v-main>
       <!-- Provides the application the proper gutter -->
-      <v-container fluid>
+      <v-container
+        fill-height
+        class="components align-content-md-start rounded-0"
+        style="max-width: 75%"
+      >
         <!-- If using vue-router -->
         <router-view></router-view>
       </v-container>
     </v-main>
   </v-app>
 </template>
+
+<style></style>

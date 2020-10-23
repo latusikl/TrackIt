@@ -8,12 +8,13 @@ const vuetify = new Vuetify({
         themes: {
             light: {
                 primary: "#009688",
-                secondary: "#00bcd4",
+                secondary: "#eeeeee",
                 accent: "#3f51b5",
                 error: "#f44336",
                 warning: "#ff9800",
                 info: "#607d8b",
-                success: "#8bc34a"
+                success: "#8bc34a",
+                background: "#eeeeee"
             },
         },
     },
