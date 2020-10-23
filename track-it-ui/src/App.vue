@@ -15,7 +15,7 @@
             DEVICES
           </v-tab>
         </v-tabs>
-        <v-btn center flat elevation="2" text to="/">
+        <v-btn center elevation="2" text to="/">
           LOG IN
         </v-btn>
       </v-app-bar>

@@ -1,10 +1,14 @@
 <template>
-  <label for="deviceId">Enter device ID</label>
-  <br />
-  <label for="deviceId">{{ deviceId }}</label>
-  <br />
-  <input id="deviceId" type="text" v-model="deviceId" />
-  <button @click="activateDevice">Activate</button>
+  <v-card>
+    <div class="text-h5">Add new device</div>
+
+    <!--    <label class="text-h5" for="deviceId">Add new device</label>-->
+    <!--    <br />-->
+    <!--    <label for="deviceId">{{ deviceId }}</label>-->
+    <!--    <br />-->
+    <!--    <input id="deviceId" type="text" v-model="deviceId" />-->
+    <!--    <button @click="activateDevice">Activate</button>-->
+  </v-card>
 </template>
 
 <script lang="ts">
