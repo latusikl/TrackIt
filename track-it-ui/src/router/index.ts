@@ -12,20 +12,35 @@ const routes: Array<RouteConfig> = [
         component: Home
     },
     {
-        path: "/devices",
-        name: "Devices",
+        path: "/devices/manager",
+        name: "DevicesManager",
       component: () =>
-          import( "../views/Devices.vue")
+          import( "../views/devices/DevicesManager.vue")
+    },
+    {
+        path: "/devices/last",
+        name: "DevicesLast",
+        component: () =>
+            import( "../views/devices/DevicesLast.vue")
+    },
+    {
+        path: "/devices/interval",
+        name: "DevicesInterval",
+        component: () =>
+            import( "../views/devices/DevicesInterval.vue")
+    },
+    {
+        path: "/devices/logs",
+        name: "DevicesLogs",
+        component: () =>
+            import( "../views/devices/DevicesLogs.vue")
+    },
+    {
+        path: "/devices/live",
+        name: "DevicesLive",
+        component: () =>
+            import( "../views/devices/DevicesLive.vue")
     }
-    // {
-    //   path: "/about",
-    //   name: "About",
-    //   // route level code-splitting
-    //   // this generates a separate chunk (about.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () =>
-    //     import(/* webpackChunkName: "about" */ "../views/About.vue")
-    // }
 ];
 
 

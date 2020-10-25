@@ -11,7 +11,7 @@
           <v-tab to="/account">
             ACCOUNT
           </v-tab>
-          <v-tab to="/devices">
+          <v-tab to="/devices/manager">
             DEVICES
           </v-tab>
         </v-tabs>
@@ -21,15 +21,10 @@
       </v-app-bar>
     </v-card>
     <v-main>
-      <!-- Provides the application the proper gutter -->
-      <v-container
-        fill-height
-        class="components align-content-md-start rounded-0"
-        style="max-width: 75%"
-      >
-        <!-- If using vue-router -->
-        <router-view></router-view>
-      </v-container>
+      <!--      <v-container fluid class="fill-height rounded-0 pink">-->
+      <!-- If using vue-router -->
+      <router-view></router-view>
+      <!--      </v-container>-->
     </v-main>
   </v-app>
 </template>

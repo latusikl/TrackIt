@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mb-15">
+  <v-container class="container mb-15">
     <Welcome></Welcome>
     <v-card class="background d-flex flex-column" flat tile>
       <div class="text-h2 pa-10 mb-10">Try it out!</div>
@@ -31,8 +31,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import Welcome from "@/components/Welcome.vue";
-import VcardSubtitle from "@/components/VcardSubtitle.vue";
+import Welcome from "@/components/home/Welcome.vue";
+import VcardSubtitle from "@/components/home/VcardSubtitle.vue";
 
 @Component({
   components: {
@@ -42,3 +42,9 @@ import VcardSubtitle from "@/components/VcardSubtitle.vue";
 })
 export default class Home extends Vue {}
 </script>
+
+<style scoped type="scss">
+.container {
+  max-width: 80%;
+}
+</style>

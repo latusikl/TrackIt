@@ -6,7 +6,7 @@
     <v-img
       max-height="200"
       max-width="150"
-      v-bind:src="require('../assets/' + imgPath)"
+      v-bind:src="require('../../assets/' + imgPath)"
     ></v-img>
   </div>
 </template>
