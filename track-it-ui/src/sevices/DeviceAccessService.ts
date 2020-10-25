@@ -1,7 +1,8 @@
 import http from "../http-commons";
+import {AccessDto} from "@/dto/AccessDto";
 
 class DeviceAccessService {
-  activate(deviceId: string) {
+  activate(deviceId: AccessDto) {
     return http.post("/devices/access/activate", deviceId);
   }
 

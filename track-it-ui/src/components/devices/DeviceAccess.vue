@@ -1,10 +1,25 @@
 <template>
-  <v-container class="grey access-container">
+  <v-container class="secondary access-container">
+    <success-alert
+      :message="successMessage"
+      :is-visible="isSuccessVisible"
+      alert-type="success"
+      @invisible-event="makeSuccessInvisible"
+    ></success-alert>
+
+    <success-alert
+      :message="errorMessage"
+      :is-visible="isFailedVisible"
+      alert-type="error"
+      @invisible-event="makeFailedInvisible"
+    ></success-alert>
+
     <v-row justify="space-between">
       <v-col cols="12" md="4">
         <div class="text-h5">Add device</div>
       </v-col>
     </v-row>
+
     <v-row justify="space-between">
       <v-col cols="12" md="4">
         <v-form ref="form" v-model="accessForm.valid">
@@ -23,30 +38,42 @@
         </v-form>
       </v-col>
     </v-row>
-    <v-row>
-      <v-btn>Add</v-btn>
+
+    <v-row justify="end" class="pa-5">
+      <v-btn
+        elevation="2"
+        outlined
+        color="accent"
+        @click="activateDevice"
+        :disabled="!accessForm.valid"
+      >
+        Add new device
+      </v-btn>
     </v-row>
   </v-container>
-
-  <!--    <label class="text-h5" for="deviceId">Add new device</label>-->
-  <!--    <br />-->
-  <!--    <label for="deviceId">{{ deviceId }}</label>-->
-  <!--    <br />-->
-  <!--    <input id="deviceId" type="text" v-model="deviceId" />-->
-  <!--    <button @click="activateDevice">Activate</button>-->
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import DeviceAccessService from "@/sevices/DeviceAccessService";
+import SuccessAlert from "@/components/SuccessAlert.vue";
 import { AccessForm } from "@/scripts/forms/AccessForm.ts";
 import { maxLength, requiredField } from "@/scripts/forms/FormValidators";
 import { AccessDto } from "@/dto/AccessDto";
 
-@Component
+@Component({
+  components: { SuccessAlert },
+  SuccessAlert
+})
 export default class DeviceAccess extends Vue {
   private maxDeviceIdLength = 36;
   private maxDeviceNameLength = 30;
+  private isSuccessVisible = true;
+  private isFailedVisible = false;
+  private successMessage =
+    "Request is in progress. Device with name:  should be visible on list within few minutes.";
+  private errorMessage =
+    "We are sorry. There some errors on server side. Please try again later or contact administrator.";
 
   accessForm: AccessForm = {
     valid: false,
@@ -66,15 +93,46 @@ export default class DeviceAccess extends Vue {
     }
   };
 
-  activateDevice() {
+  private successVisible() {
+    this.isSuccessVisible = true;
+  }
+
+  private errorVisible() {
+    this.isFailedVisible = true;
+  }
+
+  private makeSuccessInvisible() {
+    this.isSuccessVisible = false;
+  }
+
+  private makeFailedInvisible() {
+    this.isFailedVisible = false;
+  }
+
+  private clearStatuses() {
+    this.makeSuccessInvisible();
+    this.makeFailedInvisible();
+  }
+
+  private buildSuccessMessage(id: string) {
+    this.successMessage = "Device ID: " + id + " " + this.successMessage;
+  }
+
+  private activateDevice() {
+    this.clearStatuses();
     const accessDto: AccessDto = {
       deviceId: this.accessForm.fields.deviceId,
       deviceName: this.accessForm.fields.deviceName
     };
     DeviceAccessService.activate(accessDto).then(response => {
-      console.log(response.data);
-      console.log(response.status);
-      console.log(response.statusText);
+      if (response.status == 202) {
+        this.buildSuccessMessage(accessDto.deviceId);
+        this.clearStatuses();
+        this.successVisible();
+      } else {
+        this.clearStatuses();
+        this.errorVisible();
+      }
     });
   }
 }

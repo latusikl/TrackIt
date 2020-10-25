@@ -2,7 +2,7 @@
   <div class="background fill-height d-flex flex-row">
     <device-submenu></device-submenu>
     <v-container>
-      <v-row no-gutters>
+      <v-row>
         <vcard-subtitle
           class="justify-start"
           img-path="manager.svg"
