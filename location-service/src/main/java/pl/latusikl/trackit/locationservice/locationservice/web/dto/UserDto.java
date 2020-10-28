@@ -3,17 +3,19 @@ package pl.latusikl.trackit.locationservice.locationservice.web.dto;
 import lombok.Value;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
-@Value(staticConstructor = "of")
-public class DeviceAccessDto {
+@Value
+public class UserDto {
 
 	@NotEmpty
-	@Length(min = 1, max = 30)
-	private String deviceId;
+	@Email
+	@Length(max = 150)
+	private String userEmail;
 
 	@NotEmpty
-	@Length(min = 1, max = 25)
-	private String deviceName;
+	@Length(max = 250)
+	private String password;
+
 }
-

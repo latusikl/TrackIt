@@ -24,9 +24,7 @@ public class DeviceAccessController {
 	@PostMapping("/activate")
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public void addAccessForDevice(@RequestBody final DeviceAccessDto deviceAccessDto) {
-		//TODO Handle device name as well
-		log.error(deviceAccessDto.toString());
-		deviceAccessService.sendActivateAccessRequest(deviceAccessDto.getDeviceId());
+		deviceAccessService.sendActivateAccessRequest(deviceAccessDto);
 	}
 
 	@PostMapping("/deactivate")
