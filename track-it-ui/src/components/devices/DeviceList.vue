@@ -60,7 +60,7 @@ import Alert from "@/components/Alert.vue";
 export default class DeviceList extends Vue {
   @Prop(String) minWidth!: string;
 
-  alertType = "ifo";
+  alertType = "info";
   alertMessage = "";
   isAlertVisible = false;
 

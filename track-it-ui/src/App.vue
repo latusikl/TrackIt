@@ -29,4 +29,8 @@
   </v-app>
 </template>
 
-<style></style>
+<style>
+.container-width {
+  max-width: 70%;
+}
+</style>

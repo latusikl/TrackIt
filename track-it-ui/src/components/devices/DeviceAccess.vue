@@ -1,5 +1,5 @@
 <template>
-  <v-container class="secondary access-container">
+  <v-container class="secondary container-width">
     <alert
       :message="successMessage"
       :is-visible="isSuccessVisible"
@@ -142,9 +142,3 @@ export default class DeviceAccess extends Vue {
   }
 }
 </script>
-
-<style scoped type="scss">
-.access-container {
-  max-width: 70%;
-}
-</style>

@@ -18,7 +18,7 @@
         <v-list-item link to="/devices/manager">
           Device manager
         </v-list-item>
-
+        <v-divider></v-divider>
         <v-list-item link to="/devices/last">
           Last known location
         </v-list-item>
