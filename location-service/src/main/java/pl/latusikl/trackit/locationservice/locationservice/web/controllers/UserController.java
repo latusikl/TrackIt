@@ -36,7 +36,6 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public void addUser(@RequestBody final UserDto userDto) {
 		userService.addUser(userDto);
-
 	}
 
 	@DeleteMapping("/{userId}")

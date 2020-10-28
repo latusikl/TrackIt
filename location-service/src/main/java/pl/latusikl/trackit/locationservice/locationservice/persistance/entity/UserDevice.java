@@ -1,5 +1,6 @@
 package pl.latusikl.trackit.locationservice.locationservice.persistance.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,9 +18,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Data
+@Builder
 @Entity
 @Table(name = "user_devices")
 @NoArgsConstructor
+@AllArgsConstructor
 public class UserDevice {
 
 	@Id
@@ -31,17 +34,10 @@ public class UserDevice {
 
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id", referencedColumnName = "user_id", updatable = false)
+	@JoinColumn(name = "user_id", referencedColumnName = "user_id")
 	private UserData userData;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "device_status", nullable = false)
 	private DeviceStatus deviceStatus;
-
-	@Builder
-	public UserDevice(final String deviceId, final String deviceName, final DeviceStatus deviceStatus) {
-		this.deviceId = deviceId;
-		this.deviceName = deviceName;
-		this.deviceStatus = deviceStatus;
-	}
 }
