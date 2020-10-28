@@ -12,9 +12,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class SuccessAlert extends Vue {
-  @Prop({ default: false }) readonly isVisible: boolean;
-  @Prop({ default: "" }) readonly message: string;
-  @Prop(String) readonly alertType: string;
+  @Prop({ default: false }) readonly isVisible!: boolean;
+  @Prop({ default: "" }) readonly message!: string;
+  @Prop(String) readonly alertType!: string;
+
   emitInvisible() {
     this.$emit("invisible-event");
   }

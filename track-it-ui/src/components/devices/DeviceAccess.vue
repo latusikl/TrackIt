@@ -1,18 +1,18 @@
 <template>
   <v-container class="secondary access-container">
-    <success-alert
+    <alert
       :message="successMessage"
       :is-visible="isSuccessVisible"
       alert-type="success"
       @invisible-event="makeSuccessInvisible"
-    ></success-alert>
+    ></alert>
 
-    <success-alert
+    <alert
       :message="errorMessage"
       :is-visible="isFailedVisible"
       alert-type="error"
       @invisible-event="makeFailedInvisible"
-    ></success-alert>
+    ></alert>
 
     <v-row justify="space-between">
       <v-col cols="12" md="4">
@@ -56,22 +56,21 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import DeviceAccessService from "@/sevices/DeviceAccessService";
-import SuccessAlert from "@/components/SuccessAlert.vue";
+import Alert from "@/components/Alert.vue";
 import { AccessForm } from "@/scripts/forms/AccessForm.ts";
 import { maxLength, requiredField } from "@/scripts/forms/FormValidators";
 import { AccessDto } from "@/dto/AccessDto";
 
 @Component({
-  components: { SuccessAlert },
-  SuccessAlert
+  components: { Alert, SuccessAlert: Alert }
 })
 export default class DeviceAccess extends Vue {
   private maxDeviceIdLength = 36;
   private maxDeviceNameLength = 30;
-  private isSuccessVisible = true;
+  private isSuccessVisible = false;
   private isFailedVisible = false;
   private successMessage =
-    "Request is in progress. Device with name:  should be visible on list within few minutes.";
+    "Request is in progress. Device should be added within few minutes. Refresh device list to check.";
   private errorMessage =
     "We are sorry. There some errors on server side. Please try again later or contact administrator.";
 
@@ -124,16 +123,22 @@ export default class DeviceAccess extends Vue {
       deviceId: this.accessForm.fields.deviceId,
       deviceName: this.accessForm.fields.deviceName
     };
-    DeviceAccessService.activate(accessDto).then(response => {
-      if (response.status == 202) {
-        this.buildSuccessMessage(accessDto.deviceId);
-        this.clearStatuses();
-        this.successVisible();
-      } else {
+    DeviceAccessService.activate(accessDto)
+      .then(response => {
+        if (response.status == 202) {
+          this.buildSuccessMessage(accessDto.deviceId);
+          this.clearStatuses();
+          this.successVisible();
+        } else {
+          this.clearStatuses();
+          this.errorVisible();
+        }
+      })
+      .catch(reason => {
+        console.warn("Error in device activation. Value: " + reason);
         this.clearStatuses();
         this.errorVisible();
-      }
-    });
+      });
   }
 }
 </script>

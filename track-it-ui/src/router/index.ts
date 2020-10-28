@@ -14,35 +14,29 @@ const routes: Array<RouteConfig> = [
     {
         path: "/devices/manager",
         name: "DevicesManager",
-      component: () =>
-          import( "@/views/devices/DevicesManager.vue")
+        component: () => import( "@/views/devices/DevicesManager.vue")
     },
     {
         path: "/devices/last",
         name: "DevicesLast",
-        component: () =>
-            import( "@/views/devices/DevicesLast.vue")
+        component: () => import( "@/views/devices/DevicesLast.vue")
     },
     {
         path: "/devices/interval",
         name: "DevicesInterval",
-        component: () =>
-            import( "@/views/devices/DevicesInterval.vue")
+        component: () => import( "@/views/devices/DevicesInterval.vue")
     },
     {
         path: "/devices/logs",
         name: "DevicesLogs",
-        component: () =>
-            import( "@/views/devices/DevicesLogs.vue")
+        component: () => import( "@/views/devices/DevicesLogs.vue")
     },
     {
         path: "/devices/live",
         name: "DevicesLive",
-        component: () =>
-            import( "@/views/devices/DevicesLive.vue")
+        component: () => import( "@/views/devices/DevicesLive.vue")
     }
 ];
-
 
 const router = new VueRouter({
     routes
