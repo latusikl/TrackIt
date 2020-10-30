@@ -35,6 +35,16 @@ const routes: Array<RouteConfig> = [
         path: "/devices/live",
         name: "DevicesLive",
         component: () => import( "@/views/devices/DevicesLive.vue")
+    },
+    {
+        path: "/sign-in",
+        name: "SignIn",
+        component: () => import( "@/views/devices/SignIn.vue")
+    },
+    {
+        path: "/sign-up",
+        name: "SignUp",
+        component: () => import( "@/views/devices/SignUp.vue")
     }
 ];
 

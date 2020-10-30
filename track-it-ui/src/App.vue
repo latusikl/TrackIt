@@ -15,8 +15,11 @@
             DEVICES
           </v-tab>
         </v-tabs>
-        <v-btn center elevation="2" text to="/">
-          LOG IN
+        <v-btn center elevation="2" class="mr-5" text to="/sign-up">
+          SIGN UP
+        </v-btn>
+        <v-btn center elevation="2" class="mr-5" text to="/sign-in">
+          SIGN IN
         </v-btn>
       </v-app-bar>
     </v-card>
