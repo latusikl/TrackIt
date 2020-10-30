@@ -17,10 +17,10 @@ import { Component, Emit, Vue } from "vue-property-decorator";
 import { UserDeviceDto } from "@/dto/UserDeviceDto";
 import UserService from "@/sevices/UserService";
 
-@Component()
+@Component
 export default class DeviceChoice extends Vue {
   userDeviceDtoList: Array<UserDeviceDto> = [];
-  chosenDevice: string = null;
+  chosenDevice = "";
 
   constructor() {
     super();

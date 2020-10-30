@@ -16,7 +16,7 @@
         ></device-choice>
       </v-row>
       <v-row>
-        <last-location></last-location>
+        <last-location :device-id="chosenDeviceId"></last-location>
       </v-row>
     </v-container>
   </div>
@@ -26,7 +26,7 @@
 import { Component, Vue } from "vue-property-decorator";
 import DeviceSubmenu from "@/components/devices/DeviceSubmenu.vue";
 import VcardSubtitle from "@/components/home/VcardSubtitle.vue";
-import DeviceChoice from "@/components/DeviceChoice.vue";
+import DeviceChoice from "@/components/devices/DeviceChoice.vue";
 import LastLocation from "@/components/location/LastLocation.vue";
 
 @Component({
@@ -38,8 +38,9 @@ import LastLocation from "@/components/location/LastLocation.vue";
   }
 })
 export default class DevicesLast extends Vue {
+  chosenDeviceId = "";
   handleDeviceChosenEvent(userDeviceId: string) {
-    console.log(userDeviceId);
+    this.chosenDeviceId = userDeviceId;
   }
 }
 </script>

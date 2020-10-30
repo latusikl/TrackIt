@@ -1,12 +1,14 @@
 <template>
   <v-container class="green container-width">
-    MAP HERE
+    {{ deviceId }}
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class DevicesLast extends Vue {}
+export default class DevicesLast extends Vue {
+  @Prop() deviceId!: string;
+}
 </script>
