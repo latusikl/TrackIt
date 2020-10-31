@@ -39,6 +39,7 @@ import LastLocation from "@/components/location/LastLocation.vue";
 })
 export default class DevicesLast extends Vue {
   chosenDeviceId = "";
+
   handleDeviceChosenEvent(userDeviceId: string) {
     this.chosenDeviceId = userDeviceId;
   }
