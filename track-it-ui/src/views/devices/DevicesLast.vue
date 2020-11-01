@@ -15,7 +15,7 @@
           v-on:device-chosen="handleDeviceChosenEvent"
         ></device-choice>
       </v-row>
-      <v-row>
+      <v-row class="map-row justify-center">
         <last-location :device-id="chosenDeviceId"></last-location>
       </v-row>
     </v-container>
@@ -45,3 +45,10 @@ export default class DevicesLast extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.map-row {
+  min-width: 100%;
+  height: 70%;
+}
+</style>
