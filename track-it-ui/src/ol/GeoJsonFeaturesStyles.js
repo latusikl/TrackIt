@@ -4,7 +4,7 @@ import Style from "ol/style/Style";
 import Fill from "ol/style/Fill";
 
 const image = new CircleStyle({
-  radius: 4,
+  radius: 3,
   fill: new Fill({
     color: "red"
   }),

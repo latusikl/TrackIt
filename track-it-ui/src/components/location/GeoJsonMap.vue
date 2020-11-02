@@ -21,6 +21,7 @@ export default class GeoJsonMap extends Vue {
   @Prop({ default: 5 }) readonly minZoom!: number;
   @Prop({ default: 0 }) readonly startLongitude!: number;
   @Prop({ default: 0 }) readonly startLatitude!: number;
+  @Prop({ default: false }) readonly shouldFit!: boolean;
   @Prop() mapData!: FeatureCollection;
   @Ref("map-root")
   readonly mapDiv!: HTMLDivElement;
@@ -84,7 +85,9 @@ export default class GeoJsonMap extends Vue {
     source.clear();
     source.addFeatures(newFeatures);
 
-    view.fit(source.getExtent());
+    if (this.shouldFit) {
+      view.fit(source.getExtent());
+    }
   }
 }
 </script>
