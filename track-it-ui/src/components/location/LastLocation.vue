@@ -38,6 +38,18 @@ export default class DevicesLast extends Vue {
           },
           properties: [],
           id: "133"
+        },
+        {
+          type: "Feature",
+          geometry: {
+            type: "LineString",
+            coordinates: [
+              [18.8, 50.1566],
+              [18.9845, 50.1266]
+            ]
+          },
+          properties: [],
+          id: "1323"
         }
       ]
     };

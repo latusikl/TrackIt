@@ -13,6 +13,7 @@ import VectorLayer from "ol/layer/Vector";
 import { FeatureCollection } from "geojson";
 import GeoJSON from "ol/format/GeoJSON";
 import VectorSource from "ol/source/Vector";
+import styleFunction from "@/ol/GeoJsonFeaturesStyles.js";
 
 @Component
 export default class GeoJsonMap extends Vue {
@@ -27,14 +28,16 @@ export default class GeoJsonMap extends Vue {
   private dataLayer!: VectorLayer;
 
   mounted() {
-    console.log("Inside mounted");
     this.dataLayer = this.initDataLayer();
     this.olMap = this.initMap(this.dataLayer);
     this.updateMapData(this.mapData);
   }
 
   private initDataLayer(): VectorLayer {
-    return new VectorLayer({ source: new VectorSource({ features: [] }) });
+    return new VectorLayer({
+      style: styleFunction,
+      source: new VectorSource({ features: [] })
+    });
   }
 
   private initMap(dataLayer: VectorLayer): Map {
@@ -78,7 +81,6 @@ export default class GeoJsonMap extends Vue {
     const newFeatures = new GeoJSON({
       featureProjection: "EPSG:3857"
     }).readFeatures(JSON.stringify(mapData));
-
     source.clear();
     source.addFeatures(newFeatures);
 
