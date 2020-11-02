@@ -1,48 +1,63 @@
 <template>
-  <div ref="map-div" style="width: 100%; height: 100%"></div>
+  <v-container>
+    <v-btn @click="change">click</v-btn>
+    <geo-json-map
+      start-longitude="18.9845"
+      start-latitude="50.1266"
+      :map-data="mapFeatureCollection"
+      v-on:mapUpdate="echoChange"
+    ></geo-json-map>
+  </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Ref, Vue } from "vue-property-decorator";
-import TileLayer from "ol/layer/Tile";
-import OSM from "ol/source/OSM";
-import Map from "ol/Map";
-import View from "ol/View";
-import { transform } from "ol/proj.js";
-
-@Component
+import { Component, Prop, Vue } from "vue-property-decorator";
+import GeoJsonMap from "@/components/location/GeoJsonMap.vue";
+import { FeatureCollection } from "geojson";
+@Component({
+  components: { GeoJsonMap }
+})
 export default class DevicesLast extends Vue {
   @Prop() deviceId!: string;
-  @Ref("map-div") readonly mapDiv!: HTMLDivElement;
 
-  private START_ZOOM = 10;
-  private MIN_ZOOM = 5;
+  private mapFeatureCollection: FeatureCollection = DevicesLast.prepareMapData();
 
-  mounted() {
-    this.initMap();
+  private echoChange() {
+    console.warn("Change received");
   }
 
-  private initMap() {
-    return new Map({
-      target: this.mapDiv,
-      layers: [this.prepareOsmLayer()],
-      view: this.prepareView()
-    });
+  private change() {
+    this.mapFeatureCollection = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [18.8, 50.1566]
+          },
+          properties: [],
+          id: "133"
+        }
+      ]
+    };
   }
 
-  private prepareOsmLayer() {
-    return new TileLayer({
-      source: new OSM()
-    });
-  }
-
-  private prepareView() {
-    return new View({
-      zoom: this.START_ZOOM,
-      center: transform([18.9845, 50.1266], "EPSG:4326", "EPSG:3857"),
-      constrainResolution: true,
-      minZoom: this.MIN_ZOOM
-    });
+  static prepareMapData(): FeatureCollection {
+    return {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [18.9845, 50.1266]
+          },
+          properties: [],
+          id: "123"
+        }
+      ]
+    };
   }
 }
 </script>
