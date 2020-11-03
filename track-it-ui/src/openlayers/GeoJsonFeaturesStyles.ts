@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Stroke from "ol/style/Stroke";
 import CircleStyle from "ol/style/Circle";
 import Style from "ol/style/Style";
@@ -31,7 +32,8 @@ const styles = {
     image: image
   })
 };
-
+// @ts-ignore
 export default function styleFunction(feature) {
+  // @ts-ignore
   return styles[feature.getGeometry().getType()];
 }

@@ -13,7 +13,7 @@ import VectorLayer from "ol/layer/Vector";
 import { FeatureCollection } from "geojson";
 import GeoJSON from "ol/format/GeoJSON";
 import VectorSource from "ol/source/Vector";
-import styleFunction from "@/ol/GeoJsonFeaturesStyles.js";
+import styleFunction from "@/openlayers/GeoJsonFeaturesStyles";
 
 @Component
 export default class GeoJsonMap extends Vue {
