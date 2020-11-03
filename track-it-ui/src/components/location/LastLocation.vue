@@ -1,59 +1,40 @@
 <template>
   <v-container>
-    <v-btn @click="change">click</v-btn>
+    <last-location-info
+      v-if="isVisible"
+      latitude="50.1266"
+      longitude="18.9845"
+      date-time="25.10.2020 15:00"
+    ></last-location-info>
     <geo-json-map
+      v-if="isVisible"
       start-longitude="18.9845"
       start-latitude="50.1266"
       :map-data="mapFeatureCollection"
-      v-on:mapUpdate="echoChange"
     ></geo-json-map>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import GeoJsonMap from "@/components/location/GeoJsonMap.vue";
 import { FeatureCollection } from "geojson";
+import LastLocationInfo from "@/components/location/LastLocationInfo.vue";
+
 @Component({
-  components: { GeoJsonMap }
+  components: { LastLocationInfo, GeoJsonMap }
 })
 export default class DevicesLast extends Vue {
   @Prop() deviceId!: string;
+  private isVisible = false;
+
+  @Watch("deviceId")
+  private onDeviceChange(deviceId: string) {
+    console.error(deviceId);
+    this.isVisible = true;
+  }
 
   private mapFeatureCollection: FeatureCollection = DevicesLast.prepareMapData();
-
-  private echoChange() {
-    console.warn("Change received");
-  }
-
-  private change() {
-    this.mapFeatureCollection = {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [18.8, 50.1566]
-          },
-          properties: [],
-          id: "133"
-        },
-        {
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: [
-              [18.8, 50.1566],
-              [18.9845, 50.1266]
-            ]
-          },
-          properties: [],
-          id: "1323"
-        }
-      ]
-    };
-  }
 
   static prepareMapData(): FeatureCollection {
     return {
@@ -73,7 +54,3 @@ export default class DevicesLast extends Vue {
   }
 }
 </script>
-
-<style scoped lang="scss">
-@import "~ol/ol.css";
-</style>
