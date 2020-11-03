@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.latusikl.trackit.locationservice.locationservice.web.dto.LastLocationDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.LocationDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.service.LocationControllerService;
 
@@ -24,7 +25,7 @@ public class LocationController {
 
 	@GetMapping("/{deviceId}/last")
 	@ResponseStatus(HttpStatus.OK)
-	public LocationDto getLastKnownDeviceLocation(@PathVariable final String deviceId) {
+	public LastLocationDto getLastKnownDeviceLocation(@PathVariable final String deviceId) {
 		return locationControllerService.getLastKnown(deviceId);
 	}
 
