@@ -1,16 +1,22 @@
 <template>
   <v-container>
+    <alert
+      :is-visible="isAlertVisible"
+      :message="alertMessage"
+      :alert-type="alertType"
+      @invisible-event="makeInvisible"
+    ></alert>
     <last-location-info
-      v-if="isVisible"
-      latitude="50.1266"
-      longitude="18.9845"
-      date-time="25.10.2020 15:00"
+      v-if="isMapVisible"
+      :latitude="latitude"
+      :longitude="longitude"
+      :date-time="dateTime"
     ></last-location-info>
     <geo-json-map
-      v-if="isVisible"
-      start-longitude="18.9845"
-      start-latitude="50.1266"
-      :map-data="mapFeatureCollection"
+      v-if="isMapVisible"
+      :start-longitude="longitude"
+      :start-latitude="latitude"
+      :map-data="mapData"
     ></geo-json-map>
   </v-container>
 </template>
@@ -20,37 +26,62 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import GeoJsonMap from "@/components/location/GeoJsonMap.vue";
 import { FeatureCollection } from "geojson";
 import LastLocationInfo from "@/components/location/LastLocationInfo.vue";
+import LocationService from "@/sevices/LocationService";
+import { LastLocationDto } from "@/dto/LastLocationDto";
+import Alert from "@/components/Alert.vue";
 
 @Component({
-  components: { LastLocationInfo, GeoJsonMap }
+  components: { Alert, LastLocationInfo, GeoJsonMap }
 })
 export default class DevicesLast extends Vue {
   @Prop() deviceId!: string;
-  private isVisible = false;
+  private isMapVisible = false;
+  private isAlertVisible = false;
+  private alertMessage = "";
+  private alertType = "info";
+
+  private mapData!: FeatureCollection;
+  private latitude = "";
+  private longitude = "";
+  private dateTime = "";
 
   @Watch("deviceId")
   private onDeviceChange(deviceId: string) {
-    console.error(deviceId);
-    this.isVisible = true;
+    this.makeInvisible();
+    this.updateLocation(deviceId);
   }
 
-  private mapFeatureCollection: FeatureCollection = DevicesLast.prepareMapData();
-
-  static prepareMapData(): FeatureCollection {
-    return {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [18.9845, 50.1266]
-          },
-          properties: [],
-          id: "123"
+  private updateLocation(deviceId: string) {
+    LocationService.getLastLocation(deviceId)
+      .then(response => {
+        if (response.status == 200) {
+          this.assignData(response.data);
+          this.isMapVisible = true;
+        } else {
+          this.showError();
         }
-      ]
-    };
+      })
+      .catch(reason => {
+        console.warn(reason);
+        this.showError();
+      });
+  }
+
+  private assignData(responseData: LastLocationDto) {
+    this.latitude = responseData.locationData.latitude;
+    this.longitude = responseData.locationData.longitude;
+    this.dateTime = responseData.locationData.positionTimestamp;
+    this.mapData = responseData.mapFeatures;
+  }
+
+  private makeInvisible() {
+    this.isAlertVisible = false;
+  }
+
+  private showError() {
+    this.alertMessage = "Unable to get location data for chosen device";
+    this.alertType = "warning";
+    this.isAlertVisible = true;
   }
 }
 </script>
