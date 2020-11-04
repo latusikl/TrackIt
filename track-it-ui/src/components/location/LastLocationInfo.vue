@@ -30,7 +30,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import DecimalDegreesConverter from "@/sevices/DecimalDegreesConverter";
 
 @Component
-export default class DevicesLast extends Vue {
+export default class LastLocationInfo extends Vue {
   @Prop()
   longitude!: string;
   @Prop()
