@@ -8,8 +8,15 @@
 
         <v-divider></v-divider>
 
-        <v-stepper-step :complete="stepNumber > 2" step="2">
+        <v-stepper-step
+          :complete="stepNumber > 2"
+          step="2"
+          :rules="[startEndDateRule()]"
+        >
           Choose end timestamp
+          <small v-if="isStartBiggerThanEnd()"
+            >Start date is bigger than end date</small
+          >
         </v-stepper-step>
       </v-stepper-header>
 
@@ -51,7 +58,7 @@
           <v-btn color="primary" @click="stepNumber = 2">
             Next
           </v-btn>
-          <v-btn text @click="stepNumber = 1">
+          <v-btn text @click="cancelStepper()" class="float-right">
             Cancel
           </v-btn>
         </v-stepper-content>
@@ -90,11 +97,18 @@
             </v-container>
           </v-card>
 
-          <v-btn color="primary" @click="stepNumber = 1">
+          <v-btn
+            :disabled="isStartBiggerThanEnd()"
+            color="primary"
+            @click="emitRange()"
+          >
             Get data
           </v-btn>
           <v-btn text @click="stepNumber = 1">
             Back
+          </v-btn>
+          <v-btn text @click="cancelStepper()" class="float-right">
+            Cancel
           </v-btn>
         </v-stepper-content>
       </v-stepper-items>
@@ -103,7 +117,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Emit, Vue } from "vue-property-decorator";
 
 @Component
 export default class DeviceRangeStepper extends Vue {
@@ -113,12 +127,51 @@ export default class DeviceRangeStepper extends Vue {
   private endDatePicker = this.getCurrentDate();
   private endTime = this.getCurrentTime();
 
+  @Emit("range-chosen")
+  private emitRange() {
+    return (
+      this.convertToDateTimeIsoString(this.startDatePicker, this.startTime) +
+      "_" +
+      this.convertToDateTimeIsoString(this.endDatePicker, this.endTime)
+    );
+  }
+
   private getCurrentDate(): string {
     return new Date().toISOString().substr(0, 10);
   }
 
   private getCurrentTime(): string {
     return new Date().toISOString().substr(11, 5);
+  }
+
+  private cancelStepper() {
+    this.endTime = this.getCurrentTime();
+    this.startTime = this.getCurrentTime();
+    this.startDatePicker = this.getCurrentDate();
+    this.endDatePicker = this.getCurrentDate();
+    this.stepNumber = 1;
+  }
+
+  private convertToDateTimeIsoString(
+    dateString: string,
+    timeString: string
+  ): string {
+    return dateString + "T" + timeString + ":00";
+  }
+
+  private startEndDateRule(): (value: unknown) => boolean | string {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return value => !this.isStartBiggerThanEnd();
+  }
+
+  private isStartBiggerThanEnd(): boolean {
+    const startDate = new Date(
+      this.convertToDateTimeIsoString(this.startDatePicker, this.startTime)
+    );
+    const endDate = new Date(
+      this.convertToDateTimeIsoString(this.endDatePicker, this.endTime)
+    );
+    return startDate > endDate;
   }
 }
 </script>

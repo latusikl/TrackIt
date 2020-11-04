@@ -24,7 +24,7 @@
         </v-list-item>
 
         <v-list-item link to="/devices/interval">
-          Location from time interval
+          Location from interval
         </v-list-item>
 
         <v-list-item link to="/devices/logs">
