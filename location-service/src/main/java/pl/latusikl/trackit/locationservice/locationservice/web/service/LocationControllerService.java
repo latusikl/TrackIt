@@ -78,6 +78,7 @@ public class LocationControllerService {
 																							   .collect(Collectors.toList()));
 
 		return LocationRangeDto.builder()
+							   .mapStart(PointDto.of(firstLocationEntity.getLatitude(),firstLocationEntity.getLongitude()))
 							   .rangeStart(firstLocationEntity.getDateTimeStart())
 							   .rangeEnd(lastLocationEntity.getDateTimeStart())
 							   .mapData(new MapFeatureCollectionDto(List.of(mapPointFeatureDto, mapFeatureLineString)))

@@ -12,6 +12,7 @@ public class LocationRangeDto {
 
 	private LocalDateTime rangeStart;
 	private LocalDateTime rangeEnd;
+	private PointDto mapStart;
 	private MapFeatureCollectionDto mapData;
 
 }

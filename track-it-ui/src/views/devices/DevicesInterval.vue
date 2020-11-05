@@ -1,42 +1,55 @@
 <template>
   <div class="background fill-height d-flex flex-row">
     <device-submenu></device-submenu>
-    <v-container>
-      <v-row>
-        <vcard-subtitle
-          class="justify-start"
-          img-path="logo.svg"
-          subtitle="Check location from interval"
-        ></vcard-subtitle>
-      </v-row>
-      <v-divider></v-divider>
-      <v-row class="align-center justify-center mt-5">
-        <v-alert type="info" width="68.5%">
-          Please remember! <br />
-          Date range will be limited if there is for full range.
-        </v-alert>
-      </v-row>
-      <v-row class="mb-15">
-        <date-range-stepper
-          v-on:range-chosen="handleRangeChoice"
-        ></date-range-stepper>
-      </v-row>
-      <v-divider class="mb-15"></v-divider>
-      <v-row class="align-center justify-center" v-if="isMapVisible">
-        <range-info-row
-          style="width: 100%"
-          start-range-date="2020-11-11T20:15"
-          end-range-date="2020-11-11T22:15"
-        ></range-info-row>
-      </v-row>
-      <v-row class="map-row" v-if="isMapVisible">
-        <geo-json-map
-          :map-data="mapData"
-          start-latitude="50.110611614863444"
-          start-longitude="18.97786714476294"
-        ></geo-json-map>
-      </v-row>
-    </v-container>
+    <div class="scroll-container" id="main-container">
+      <v-container>
+        <v-row>
+          <vcard-subtitle
+            class="justify-start"
+            img-path="logo.svg"
+            subtitle="Check location from interval"
+          ></vcard-subtitle>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row class="align-center justify-center mt-5">
+          <v-alert type="info" width="68.5%">
+            Please remember! <br />
+            Date range will be limited if there is not enough data for full
+            range.
+          </v-alert>
+        </v-row>
+        <v-row class="align-center justify-center">
+          <alert
+            style="width: 68.5%;"
+            message="Unable to get location data"
+            alert-type="error"
+            :is-visible="isErrorAlertVisible"
+            @invisible-event="makeErrorInvisible"
+          ></alert>
+          <device-choice
+            v-on:device-chosen="handleDeviceChosenEvent"
+          ></device-choice>
+          <date-range-stepper
+            v-if="isStepperActive"
+            v-on:range-chosen="handleRangeChoice"
+          ></date-range-stepper>
+        </v-row>
+        <v-row class="align-center justify-center" v-if="isMapVisible">
+          <range-info-row
+            style="width: 100%"
+            :start-range-date="rangeStart"
+            :end-range-date="rangeEnd"
+          ></range-info-row>
+        </v-row>
+        <v-row class="map-row" v-if="isMapVisible">
+          <geo-json-map
+            :map-data="mapData"
+            :start-longitude="this.mapStartLongitude"
+            :start-latitude="this.mapStartLatitude"
+          ></geo-json-map>
+        </v-row>
+      </v-container>
+    </div>
   </div>
 </template>
 
@@ -49,6 +62,8 @@ import Alert from "@/components/Alert.vue";
 import { FeatureCollection } from "geojson";
 import GeoJsonMap from "@/components/location/GeoJsonMap.vue";
 import RangeInfoRow from "@/components/location/RangeInfoRow.vue";
+import DeviceChoice from "@/components/devices/DeviceChoice.vue";
+import LocationService from "@/sevices/LocationService";
 
 @Component({
   components: {
@@ -57,47 +72,57 @@ import RangeInfoRow from "@/components/location/RangeInfoRow.vue";
     Alert,
     DateRangeStepper,
     DeviceSubmenu,
-    VcardSubtitle
+    VcardSubtitle,
+    DeviceChoice
   }
 })
 export default class DevicesInterval extends Vue {
   private isMapVisible = false;
-  private mapData: FeatureCollection;
+  private isStepperActive = false;
+  private isErrorAlertVisible = false;
+  private rangeStart = "";
+  private rangeEnd = "";
+  private chosenDeviceId = "";
+  private mapData: FeatureCollection | undefined = undefined;
+  private mapStartLongitude = 0.0;
+  private mapStartLatitude = 0.0;
+
+  private handleDeviceChosenEvent(userDeviceId: string) {
+    this.chosenDeviceId = userDeviceId;
+    this.isStepperActive = true;
+  }
 
   private handleRangeChoice(range: string) {
     const rangeSplit = range.split("_");
     this.fetchData(rangeSplit[0], rangeSplit[1]);
+    this.scrollDown();
   }
 
-  fetchData(rangeStart: string, rangeEnd: string) {
-    this.mapData = {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [18.97786714476294, 50.110611614863444]
-          },
-          id: "1",
-          properties: []
-        },
-        {
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: [
-              [18.97786714476294, 50.110611614863444],
-              [18.9703723998913, 50.111070081467105],
-              [18.9693368265111, 50.11780012229904]
-            ]
-          },
-          id: "2",
-          properties: []
-        }
-      ]
-    };
-    this.isMapVisible = true;
+  private scrollDown() {
+    // eslint-disable-next-line
+    window.scrollTo(0, document.querySelector("#main-container")!.scrollHeight);
+  }
+
+  private makeErrorInvisible() {
+    this.isErrorAlertVisible = false;
+  }
+
+  private fetchData(rangeStart: string, rangeEnd: string) {
+    LocationService.getLocationRange(this.chosenDeviceId, rangeStart, rangeEnd)
+      .then(response => {
+        const data = response.data;
+        this.rangeStart = data.rangeStart;
+        this.rangeEnd = data.rangeEnd;
+        this.mapData = data.mapData;
+        this.mapStartLongitude = data.mapStart[0];
+        this.mapStartLatitude = data.mapStart[1];
+        this.isMapVisible = true;
+      })
+      .catch(reason => {
+        this.isErrorAlertVisible = true;
+        this.isMapVisible = false;
+        console.warn(reason);
+      });
   }
 }
 </script>
@@ -108,5 +133,12 @@ export default class DevicesInterval extends Vue {
   height: 700px;
   margin-top: 5px;
   margin-bottom: 20px;
+}
+
+.scroll-container {
+  width: 100%;
+  max-height: 100vh;
+  overflow-y: scroll;
+  padding-bottom: 10px;
 }
 </style>

@@ -96,7 +96,9 @@
               </v-row>
             </v-container>
           </v-card>
-
+          <v-btn text @click="stepNumber = 1">
+            Back
+          </v-btn>
           <v-btn
             :disabled="isStartBiggerThanEnd()"
             color="primary"
@@ -104,9 +106,7 @@
           >
             Get data
           </v-btn>
-          <v-btn text @click="stepNumber = 1">
-            Back
-          </v-btn>
+
           <v-btn text @click="cancelStepper()" class="float-right">
             Cancel
           </v-btn>
