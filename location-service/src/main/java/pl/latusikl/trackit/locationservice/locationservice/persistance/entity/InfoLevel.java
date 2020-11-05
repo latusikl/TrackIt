@@ -1,5 +1,5 @@
 package pl.latusikl.trackit.locationservice.locationservice.persistance.entity;
 
 public enum InfoLevel {
-	INFO, ERROR, WARNING
+	INFO, ERROR, WARN
 }

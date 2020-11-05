@@ -1,6 +1,6 @@
 package pl.latusikl.trackit.locationservice.locationservice.persistance.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.entity.DeviceInfoEntity;
 
-public interface DeviceErrorRepository extends CrudRepository<DeviceInfoEntity, Long> {}
+public interface DeviceInfoRepository extends PagingAndSortingRepository<DeviceInfoEntity, Long> {}
