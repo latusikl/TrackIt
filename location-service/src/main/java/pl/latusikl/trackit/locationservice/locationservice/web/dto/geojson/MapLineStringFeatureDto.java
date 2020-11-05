@@ -4,14 +4,15 @@ import lombok.Builder;
 import lombok.Value;
 
 @Value
-public class MapPointFeatureDto {
+@Builder
+public class MapLineStringFeatureDto {
 
 	private String type = "Feature";
-	private PointGeometry geometry;
+	private LineStringGeometry geometry;
 	private String id;
 
 	@Builder
-	public MapPointFeatureDto(final PointGeometry geometry, final String id) {
+	public MapLineStringFeatureDto(final LineStringGeometry geometry, final String id) {
 		this.geometry = geometry;
 		this.id = id;
 	}

@@ -1,5 +1,6 @@
 package pl.latusikl.trackit.locationservice.locationservice.persistance.repository;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.entity.LocationEntity;
 
@@ -15,6 +16,6 @@ public interface LocationRepository extends CrudRepository<LocationEntity, Long>
 
 	Optional<LocationEntity> findFirstByDeviceId(String deviceId);
 
-	Collection<LocationEntity> findAllByDeviceIdAndDateTimeStartBetween(String deviceId, LocalDateTime rangeStart,
-																		LocalDateTime rangeEnd);
+	@Query("SELECT location FROM LocationEntity AS location WHERE location.deviceId = ?1 and location.dateTimeStart >= ?2 and location.dateTimeStart < ?3 ORDER BY location.dateTimeStart")
+	Collection<LocationEntity> findInRange(String deviceId, LocalDateTime rangeStart, LocalDateTime rangeEnd);
 }

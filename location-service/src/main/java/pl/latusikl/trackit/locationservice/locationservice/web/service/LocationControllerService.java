@@ -3,15 +3,19 @@ package pl.latusikl.trackit.locationservice.locationservice.web.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.latusikl.trackit.locationservice.locationservice.exception.DeviceNotFoundException;
 import pl.latusikl.trackit.locationservice.locationservice.exception.LocationNotFoundException;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.entity.LocationEntity;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.repository.LocationRepository;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.LastLocationDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.LocationDto;
+import pl.latusikl.trackit.locationservice.locationservice.web.dto.LocationRangeDto;
+import pl.latusikl.trackit.locationservice.locationservice.web.dto.PointDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.geojson.MapFeatureCollectionDto;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +28,7 @@ public class LocationControllerService {
 	private final LocationRepository locationRepository;
 	private final MapFeatureCreator mapFeatureCreator;
 
+	@Transactional(readOnly = true)
 	public LastLocationDto getLastKnown(final String deviceId) {
 		checkIfDeviceIdInDatabaseOrThrow(deviceId);
 
@@ -39,28 +44,44 @@ public class LocationControllerService {
 											   locationEntity.getDateTimeStart());
 		final JsonNode mapPointFeature = mapFeatureCreator.createPoint(locationEntity.getLatitude(), locationEntity.getLongitude());
 
-		final var mapFeatureCollectionDto = MapFeatureCollectionDto.builder()
-																   .features(List.of(mapPointFeature))
-																   .build();
+		final var mapFeatureCollectionDto = new MapFeatureCollectionDto(List.of(mapPointFeature));
 
 		return LastLocationDto.of(locationDto, mapFeatureCollectionDto);
 	}
 
-	public Collection<LocationDto> getFromRange(final String deviceId, final LocalDateTime rangeStart, final LocalDateTime rangeEnd) {
+	@Transactional(readOnly = true)
+	public LocationRangeDto getFromRange(final String deviceId, final LocalDateTime rangeStart, final LocalDateTime rangeEnd) {
 		checkIfDeviceIdInDatabaseOrThrow(deviceId);
 
-		final Collection<LocationEntity> locationEntitiesFromRange = locationRepository.findAllByDeviceIdAndDateTimeStartBetween(
-				deviceId, rangeStart, rangeEnd);
-		if (locationEntitiesFromRange.isEmpty()) {
+		final Collection<LocationEntity> orderedLocationEntitiesFromRange = locationRepository.findInRange(deviceId, rangeStart,
+																										   rangeEnd);
+		if (orderedLocationEntitiesFromRange.isEmpty()) {
 			throw new LocationNotFoundException("None location has been saved in given range",
 												"No location data was registered so far.");
 		}
 
-		return locationEntitiesFromRange.stream()
-										.map(locationEntity -> LocationDto.of(locationEntity.getLongitude(),
-																			  locationEntity.getLatitude(),
-																			  locationEntity.getDateTimeStart()))
-										.collect(Collectors.toList());
+		return prepareDtoResponse(orderedLocationEntitiesFromRange);
+	}
+
+	private LocationRangeDto prepareDtoResponse(final Collection<LocationEntity> orderedLocationEntitiesFromRange) {
+		final List<LocationEntity> orderedLocationList = new ArrayList<>(orderedLocationEntitiesFromRange);
+
+		final var firstLocationEntity = orderedLocationList.get(0);
+		final var lastLocationEntity = orderedLocationList.get(orderedLocationList.size() - 1);
+
+		final var mapPointFeatureDto = mapFeatureCreator.createPoint(firstLocationEntity.getLatitude(),
+																	 firstLocationEntity.getLongitude());
+		final var mapFeatureLineString = mapFeatureCreator.createLineString(orderedLocationList.stream()
+																							   .map(locationEntity -> PointDto.of(
+																									   locationEntity.getLatitude(),
+																									   locationEntity.getLongitude()))
+																							   .collect(Collectors.toList()));
+
+		return LocationRangeDto.builder()
+							   .rangeStart(firstLocationEntity.getDateTimeStart())
+							   .rangeEnd(lastLocationEntity.getDateTimeStart())
+							   .mapData(new MapFeatureCollectionDto(List.of(mapPointFeatureDto, mapFeatureLineString)))
+							   .build();
 	}
 
 	private void checkIfDeviceIdInDatabaseOrThrow(final String deviceId) {
