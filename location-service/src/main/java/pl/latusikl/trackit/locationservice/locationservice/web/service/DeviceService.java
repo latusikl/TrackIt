@@ -56,8 +56,8 @@ public class DeviceService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<DeviceInfoDto> getDeviceLogsPage(final Pageable pageable) {
-		return deviceInfoRepository.findAll(pageable)
+	public Page<DeviceInfoDto> getDeviceLogsPage(final Pageable pageable, final String deviceId) {
+		return deviceInfoRepository.findAllByDeviceId(pageable, deviceId)
 								   .map(deviceInfoConverter::convert);
 	}
 }

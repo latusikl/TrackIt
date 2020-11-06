@@ -41,7 +41,8 @@ public class DeviceController {
 
 	@GetMapping("/{deviceId}/logs")
 	@ResponseStatus(HttpStatus.OK)
-	public Page<DeviceInfoDto> getDeviceLogs(@PageableDefault(size = 15, sort = {"serverDateTime"}) final Pageable pageable) {
-		return deviceService.getDeviceLogsPage(pageable);
+	public Page<DeviceInfoDto> getDeviceLogs(@PathVariable final String deviceId,
+											 @PageableDefault(size = 15, sort = {"serverDateTime"}) final Pageable pageable) {
+		return deviceService.getDeviceLogsPage(pageable, deviceId);
 	}
 }
