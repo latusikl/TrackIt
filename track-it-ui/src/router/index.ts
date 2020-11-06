@@ -39,12 +39,12 @@ const routes: Array<RouteConfig> = [
     {
         path: "/sign-in",
         name: "SignIn",
-        component: () => import( "@/views/devices/SignIn.vue")
+        component: () => import( "@/views/SignIn.vue")
     },
     {
         path: "/sign-up",
         name: "SignUp",
-        component: () => import( "@/views/devices/SignUp.vue")
+        component: () => import( "@/views/SignUp.vue")
     }
 ];
 
