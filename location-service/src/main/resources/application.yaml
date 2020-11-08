@@ -43,6 +43,11 @@ logging:
   level:
     pl.latusikl.trackit.locationservice: DEBUG
 
+security:
+  secret: p@@@XN8pFfG^Av473oM2@!HJRyQR#gWR7r^OAN&wAfn!*r54KDfzN#vzVYH5fbbg3Z81%^fp*h%FQ&feU43J$5S02NAAeUqU8CB
+  allowed-hosts:
+    - '*'
+  expiration-time: 1800000
 ---
 spring:
   profiles: test

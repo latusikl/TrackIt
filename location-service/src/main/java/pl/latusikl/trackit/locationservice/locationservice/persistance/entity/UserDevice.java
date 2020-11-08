@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Data
 @Builder
 @Entity
-@Table(name = "user_devices")
+@Table(name = "user_devices", schema = "track_it")
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDevice {

@@ -15,11 +15,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "user_data")
+@Table(name = "user_data",schema = "track_it")
 @NoArgsConstructor
 @TypeDefs({@TypeDef(name = "pg-id-uuid", typeClass = PostgresIdAsUuid.class)})
 public class UserData {
@@ -29,16 +30,17 @@ public class UserData {
 	@Column(name = "user_id", insertable = false, updatable = false, unique = true)
 	@Type(type = "pg-id-uuid", parameters = @Parameter(name = "column", value = "user_id"))
 	private UUID userId;
-
 	@Column(name = "user_email", nullable = false, length = 100)
 	private String userEmail;
-
 	@Column(name = "password", nullable = false, length = 250)
 	private String password;
+	@Column(name = "account_creation_date_time", nullable = false)
+	private LocalDateTime accountCreation;
 
 	@Builder
-	public UserData(final String userEmail, final String password) {
+	public UserData(final String userEmail, final String password, final LocalDateTime accountCreation) {
 		this.userEmail = userEmail;
 		this.password = password;
+		this.accountCreation = accountCreation;
 	}
 }

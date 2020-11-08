@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "device_info")
+@Table(name = "device_info", schema = "track_it")
 @NoArgsConstructor
 public class DeviceInfoEntity {
 

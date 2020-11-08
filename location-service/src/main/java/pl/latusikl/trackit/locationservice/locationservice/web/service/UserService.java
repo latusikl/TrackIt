@@ -3,6 +3,7 @@ package pl.latusikl.trackit.locationservice.locationservice.web.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.latusikl.trackit.locationservice.locationservice.exception.UserException;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.converters.UserDeviceToUserDeviceDtoConverter;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.converters.UserDtoToUserDataConverter;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.repository.UserDataRepository;
@@ -34,15 +35,14 @@ public class UserService {
 	@Transactional
 	public void addUser(final UserDto userDto) {
 		if (userDataRepository.existsByUserEmail(userDto.getUserEmail())) {
-			//TODO add exception
-			throw new RuntimeException("Change me to specific exception");
+			throw new UserException("User with given email address already exist.");
 		}
 		userDataRepository.save(userDtoToUserDataConverter.convert(userDto));
 	}
 
 	@Transactional
 	public void deleteUserById(final UUID userId) {
-		//TODO check if exists
+		//TODO Refactor
 		userDataRepository.deleteByUserId(userId);
 	}
 }

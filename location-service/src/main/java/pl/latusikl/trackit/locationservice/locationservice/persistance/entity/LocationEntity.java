@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "location_data")
+@Table(name = "location_data", schema = "track_it")
 @NoArgsConstructor
 public class LocationEntity {
 
