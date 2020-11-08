@@ -1,19 +1,18 @@
 /* eslint-disable */
 import http from "../http-commons";
 import {AccessDto} from "@/dto/AccessDto";
-import userInfo from "@/scripts/UserInfo";
 import {AxiosResponse} from "axios";
 import {DeviceInfoPage} from "@/dto/DeviceInfoPage";
 
 
 class DeviceAccessService {
     activate(deviceId: AccessDto) {
-        const url = "/devices/access/" + userInfo.userId + "/activate";
+        const url = "/devices/access/" + "test" + "/activate";
         return http.post(url, deviceId);
     }
 
     deactivate(deviceId: string) {
-        const url = "/devices/access/" + userInfo.userId + "/deactivate";
+        const url = "/devices/access/" + "test" + "/deactivate";
         return http.post(url, deviceId);
     }
 

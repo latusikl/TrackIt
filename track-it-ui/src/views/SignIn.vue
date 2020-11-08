@@ -1,5 +1,11 @@
 <template>
   <v-container class="green background container-width">
+    <alert
+      message="Invalid credentials. Unable to sign in."
+      :is-visible="isAlertVisible"
+      alert-type="error"
+      @invisible-event="makeAlertInvisible"
+    ></alert>
     <v-row>
       <vcard-subtitle
         img-path="account.svg"
@@ -33,10 +39,16 @@
         outlined
         color="accent"
         @click="logIn()"
-        :disabled="!signInForm.valid"
+        :disabled="!signInForm.valid && !isLogged"
+        v-if="!isLoading"
       >
         Sign In
       </v-btn>
+      <v-progress-circular
+        v-if="isLoading"
+        indeterminate
+        color="primary"
+      ></v-progress-circular>
     </v-row>
   </v-container>
 </template>
@@ -47,14 +59,19 @@ import Alert from "@/components/Alert.vue";
 import VcardSubtitle from "@/components/home/VcardSubtitle.vue";
 import { SignInForm } from "@/scripts/forms/SignInForm";
 import { emailFormat, requiredField } from "@/scripts/forms/FormValidators";
+import { namespace } from "vuex-class";
+import { SignInDto } from "@/dto/SignInDto";
+const Authentication = namespace("Authentication");
 
 @Component({
   components: { VcardSubtitle, Alert }
 })
 export default class SignIn extends Vue {
-  passwordVisible = false;
+  private passwordVisible = false;
+  private isLoading = false;
+  private isAlertVisible = false;
 
-  signInForm: SignInForm = {
+  private signInForm: SignInForm = {
     valid: false,
     fields: {
       email: "",
@@ -69,10 +86,32 @@ export default class SignIn extends Vue {
     }
   };
 
+  @Authentication.Getter
+  private isLogged!: boolean;
+
+  @Authentication.Action
+  private signIn!: (signInDto: SignInDto) => Promise<any>;
+
   private logIn() {
-    //TODO implement
-    console.log(this.signInForm.fields.email);
-    console.log(this.signInForm.fields.password);
+    this.isLoading = true;
+    this.signIn({
+      email: this.signInForm.fields.email,
+      password: this.signInForm.fields.password
+    }).then(
+      user => {
+        this.isLoading = false;
+        this.$router.push("/account");
+      },
+      error => {
+        this.isLoading = false;
+        this.isAlertVisible = true;
+        console.debug(error);
+      }
+    );
+  }
+
+  private makeAlertInvisible() {
+    this.isAlertVisible = false;
   }
 }
 </script>

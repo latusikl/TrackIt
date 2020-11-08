@@ -1,10 +1,14 @@
 /* eslint-disable */
 class UserInfo {
-    constructor() {
-        this.userId = "21ed34e2-190b-11eb-b105-0242c0a80002";
+    constructor(userId: string, email: string, token: string) {
+        this.userId = userId;
+        this.email = email;
+        this.token =token;
     }
 
-    userId: string
+    token: string;
+    userId: string;
+    email:string;
 }
 
-export default new UserInfo();
+export default new UserInfo("test","test","test");

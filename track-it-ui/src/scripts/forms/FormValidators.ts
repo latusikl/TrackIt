@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 export function requiredField(message: string): (value: any) => boolean | string {
     return (value) => (!!value || value === 0) || message;
 }
@@ -16,5 +16,3 @@ const emailRegex = new RegExp(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?
 export function emailFormat(message: string): (value: any) => boolean | string {
     return (value) => (emailRegex.test(value)) || message;
 }
-
-

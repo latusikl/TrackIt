@@ -38,7 +38,6 @@ import LastLocationInfo from "@/components/location/LastLocationInfo.vue";
 import LocationService from "@/sevices/LocationService";
 import { LastLocationDto } from "@/dto/LastLocationDto";
 import Alert from "@/components/Alert.vue";
-import { transformGeom2D } from "ol/geom/SimpleGeometry";
 
 @Component({
   components: { Alert, LastLocationInfo, GeoJsonMap }
