@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.locationservice.locationservice.security;
+package pl.latusikl.trackit.locationservice.locationservice.security.filters;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -24,6 +24,9 @@ import java.io.IOException;
 import java.time.ZoneId;
 import java.util.Date;
 
+/**
+ Generates JWT token for user, after validating passed credentials.
+ */
 @RequiredArgsConstructor
 public class CustomUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	private static final String CONTENT_HEADER = "Content-Type";
@@ -63,7 +66,7 @@ public class CustomUsernamePasswordAuthenticationFilter extends UsernamePassword
 													 .toString())
 								.withClaim(EMAIL_CLAIM, userData.getUserEmail())
 								.withExpiresAt(expirationDate)
-								.sign(Algorithm.HMAC256(securityProperties.getSecret()));
+								.sign(Algorithm.HMAC512(securityProperties.getSecret()));
 		return LoginResponseDto.of(expirationDate.toInstant()
 												 .atZone(ZoneId.of("UTC"))
 												 .toLocalDateTime(), token);

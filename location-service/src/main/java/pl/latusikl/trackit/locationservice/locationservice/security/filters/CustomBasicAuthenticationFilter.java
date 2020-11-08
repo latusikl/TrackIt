@@ -1,11 +1,10 @@
-package pl.latusikl.trackit.locationservice.locationservice.security;
+package pl.latusikl.trackit.locationservice.locationservice.security.filters;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,6 +21,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.UUID;
 
+/**
+ Decodes token from request. If token is invalid or expired then request is rejected.
+ */
 @Slf4j
 public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter {
 	private static final String AUTHORIZATION_HEADER = "Authorization";

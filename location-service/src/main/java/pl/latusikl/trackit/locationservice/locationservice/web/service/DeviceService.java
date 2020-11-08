@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.latusikl.trackit.locationservice.locationservice.exception.UserException;
 import pl.latusikl.trackit.locationservice.locationservice.messaging.OutboundSender;
 import pl.latusikl.trackit.locationservice.locationservice.messaging.dto.access.AccessRequestDto;
 import pl.latusikl.trackit.locationservice.locationservice.messaging.dto.access.AccessRequestType;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class DeviceService {
 
 	private final UserDeviceRepository userDevicesRepository;
+	private final UserToDeviceUtils userToDeviceUtils;
 	private final UserDataRepository userDataRepository;
 	private final DeviceInfoRepository deviceInfoRepository;
 	private final DeviceAccessConverter deviceAccessConverter;
@@ -32,16 +34,15 @@ public class DeviceService {
 	@Transactional
 	public void sendActivateAccessRequest(final DeviceAccessDto deviceAccessDto, final UUID userId) {
 		final var userDevice = deviceAccessConverter.convert(deviceAccessDto, userDataRepository.findById(userId)
-																								.orElseThrow(
-																										() -> new RuntimeException(
-																												"Change me to custom exception")));
+																								.orElseThrow(() -> new UserException(
+																										"User not found")));
 		userDevicesRepository.save(userDevice);
-
 		sendBrokerAccessRequest(deviceAccessDto.getDeviceId(), AccessRequestType.ADD);
 	}
 
 	@Transactional
-	public void sendRevokeAccessRequest(final String deviceId) {
+	public void sendRevokeAccessRequest(final UUID userId, final String deviceId) {
+		userToDeviceUtils.checkIfDeviceOwnedByUserOrElseThrow(deviceId, userId);
 		userDevicesRepository.deleteById(deviceId);
 		sendBrokerAccessRequest(deviceId, AccessRequestType.REMOVE);
 	}
@@ -56,7 +57,8 @@ public class DeviceService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<DeviceInfoDto> getDeviceLogsPage(final Pageable pageable, final String deviceId) {
+	public Page<DeviceInfoDto> getDeviceLogsPage(final Pageable pageable, final String deviceId, final UUID userId) {
+		userToDeviceUtils.checkIfDeviceOwnedByUserOrElseThrow(deviceId, userId);
 		return deviceInfoRepository.findAllByDeviceId(pageable, deviceId)
 								   .map(deviceInfoConverter::convert);
 	}

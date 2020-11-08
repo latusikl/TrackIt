@@ -15,7 +15,7 @@ public class UserDto {
 	private String userEmail;
 
 	@NotEmpty
-	@Length(max = 250)
+	@Length(max = 250, min = 8)
 	private String password;
 
 }

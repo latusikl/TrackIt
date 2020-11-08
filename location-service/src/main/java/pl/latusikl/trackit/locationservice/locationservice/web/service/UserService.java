@@ -1,6 +1,7 @@
 package pl.latusikl.trackit.locationservice.locationservice.web.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.latusikl.trackit.locationservice.locationservice.exception.UserException;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -42,7 +44,11 @@ public class UserService {
 
 	@Transactional
 	public void deleteUserById(final UUID userId) {
-		//TODO Refactor
+		//TODO Add cascading removal
+		if (!userDataRepository.existsById(userId)) {
+			log.warn("User which not exist in database was authenticated to access removal. User ID: {}", userId);
+			throw new UserException("User was already removed");
+		}
 		userDataRepository.deleteByUserId(userId);
 	}
 }

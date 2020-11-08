@@ -10,4 +10,6 @@ public interface UserDeviceRepository extends CrudRepository<UserDevice, String>
 
 	Collection<UserDevice> findAllByUserDataUserId(UUID userId);
 
+	boolean existsUserDeviceByDeviceIdAndUserDataUserId(String deviceId, UUID userId);
+
 }

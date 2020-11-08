@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.latusikl.trackit.locationservice.locationservice.exception.DeviceNotFoundException;
 import pl.latusikl.trackit.locationservice.locationservice.exception.LocationNotFoundException;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.entity.LocationEntity;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.repository.LocationRepository;
@@ -19,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,11 +26,12 @@ import java.util.stream.Collectors;
 public class LocationControllerService {
 
 	private final LocationRepository locationRepository;
+	private final UserToDeviceUtils userToDeviceUtils;
 	private final MapFeatureCreator mapFeatureCreator;
 
 	@Transactional(readOnly = true)
-	public LastLocationDto getLastKnown(final String deviceId) {
-		checkIfDeviceIdInDatabaseOrThrow(deviceId);
+	public LastLocationDto getLastKnown(final String deviceId, final UUID userId) {
+		userToDeviceUtils.checkIfDeviceOwnedByUserOrElseThrow(deviceId, userId);
 
 		final Optional<LocationEntity> lastKnownLocation = locationRepository.findFirstByDeviceIdOrderByDateTimeStartDesc(deviceId);
 
@@ -50,20 +51,21 @@ public class LocationControllerService {
 	}
 
 	@Transactional(readOnly = true)
-	public LocationRangeDto getFromRange(final String deviceId, final LocalDateTime rangeStart, final LocalDateTime rangeEnd) {
-		checkIfDeviceIdInDatabaseOrThrow(deviceId);
+	public LocationRangeDto getFromRange(final String deviceId, final UUID userId, final LocalDateTime rangeStart,
+										 final LocalDateTime rangeEnd) {
+		userToDeviceUtils.checkIfDeviceOwnedByUserOrElseThrow(deviceId, userId);
 
 		final Collection<LocationEntity> orderedLocationEntitiesFromRange = locationRepository.findInRange(deviceId, rangeStart,
 																										   rangeEnd);
 		if (orderedLocationEntitiesFromRange.isEmpty()) {
 			throw new LocationNotFoundException("None location has been saved in given range",
-												"No location data was registered so far.");
+												"Another possible cause is that no location data was registered so far.");
 		}
 
-		return prepareDtoResponse(orderedLocationEntitiesFromRange);
+		return createLocationRangeDto(orderedLocationEntitiesFromRange);
 	}
 
-	private LocationRangeDto prepareDtoResponse(final Collection<LocationEntity> orderedLocationEntitiesFromRange) {
+	private LocationRangeDto createLocationRangeDto(final Collection<LocationEntity> orderedLocationEntitiesFromRange) {
 		final List<LocationEntity> orderedLocationList = new ArrayList<>(orderedLocationEntitiesFromRange);
 
 		final var firstLocationEntity = orderedLocationList.get(0);
@@ -78,15 +80,11 @@ public class LocationControllerService {
 																							   .collect(Collectors.toList()));
 
 		return LocationRangeDto.builder()
-							   .mapStart(PointDto.of(firstLocationEntity.getLatitude(),firstLocationEntity.getLongitude()))
+							   .mapStart(PointDto.of(firstLocationEntity.getLatitude(), firstLocationEntity.getLongitude()))
 							   .rangeStart(firstLocationEntity.getDateTimeStart())
 							   .rangeEnd(lastLocationEntity.getDateTimeStart())
 							   .mapData(new MapFeatureCollectionDto(List.of(mapPointFeatureDto, mapFeatureLineString)))
 							   .build();
 	}
 
-	private void checkIfDeviceIdInDatabaseOrThrow(final String deviceId) {
-		locationRepository.findFirstByDeviceId(deviceId)
-						  .orElseThrow(() -> new DeviceNotFoundException("Device with given ID is not registered."));
-	}
 }

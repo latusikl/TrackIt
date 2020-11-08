@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.locationservice.locationservice.security;
+package pl.latusikl.trackit.locationservice.locationservice.security.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +16,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.latusikl.trackit.locationservice.locationservice.configuration.SecurityProperties;
+import pl.latusikl.trackit.locationservice.locationservice.security.filters.CustomBasicAuthenticationFilter;
+import pl.latusikl.trackit.locationservice.locationservice.security.filters.CustomUsernamePasswordAuthenticationFilter;
 
 import java.util.List;
 

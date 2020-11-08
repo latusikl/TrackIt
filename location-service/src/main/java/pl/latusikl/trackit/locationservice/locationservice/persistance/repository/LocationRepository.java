@@ -14,8 +14,6 @@ public interface LocationRepository extends CrudRepository<LocationEntity, Long>
 
 	Optional<LocationEntity> findFirstByDeviceIdOrderByDateTimeStartDesc(String deviceId);
 
-	Optional<LocationEntity> findFirstByDeviceId(String deviceId);
-
 	@Query("SELECT location FROM LocationEntity AS location WHERE location.deviceId = ?1 and location.dateTimeStart >= ?2 and location.dateTimeStart < ?3 ORDER BY location.dateTimeStart")
 	Collection<LocationEntity> findInRange(String deviceId, LocalDateTime rangeStart, LocalDateTime rangeEnd);
 }

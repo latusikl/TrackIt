@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.locationservice.locationservice.security;
+package pl.latusikl.trackit.locationservice.locationservice.security.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
