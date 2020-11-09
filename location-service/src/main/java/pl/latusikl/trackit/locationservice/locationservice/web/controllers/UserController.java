@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.latusikl.trackit.locationservice.locationservice.security.services.AuthenticationFacade;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.CreateUserDto;
+import pl.latusikl.trackit.locationservice.locationservice.web.dto.PasswordChangeDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.UserDeviceDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.UserDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.service.UserService;
@@ -32,6 +33,12 @@ public class UserController {
 	@ResponseStatus(HttpStatus.OK)
 	public void addUser(@RequestBody @Valid final CreateUserDto userDto) {
 		userService.addUser(userDto);
+	}
+
+	@PostMapping("/password")
+	@ResponseStatus(HttpStatus.OK)
+	public void changePassword(@RequestBody @Valid final PasswordChangeDto passwordChangeDto, @NotNull final AuthenticationFacade authenticationFacade){
+		userService.changePassword(authenticationFacade.getRequestingUserId(),passwordChangeDto);
 	}
 
 	@DeleteMapping

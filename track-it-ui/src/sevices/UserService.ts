@@ -22,6 +22,10 @@ class UserService {
     createAccount(accountCreationDto : AccountCreationDto){
         return http.post("/users", accountCreationDto);
     }
+
+    changePassword(password : string){
+        return http.post("users/password", {password: password});
+    }
 }
 
 export default new UserService();

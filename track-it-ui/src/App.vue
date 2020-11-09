@@ -62,7 +62,6 @@
 import { Component, Vue } from "vue-property-decorator";
 import { namespace } from "vuex-class";
 import { UserModel } from "@/dto/UserModel";
-import AuthService from "@/sevices/AuthService";
 
 const Authentication = namespace("Authentication");
 @Component
@@ -75,12 +74,5 @@ export default class App extends Vue {
 
   @Authentication.Action
   private signOut!: () => void;
-
-  @Authentication.Action
-  private reLogin!: () => void;
-
-  click() {
-    AuthService.triggerReLoginMutation();
-  }
 }
 </script>

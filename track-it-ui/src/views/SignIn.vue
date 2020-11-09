@@ -106,7 +106,7 @@ export default class SignIn extends Vue {
   private signIn!: (signInDto: SignInDto) => Promise<any>;
 
   @Authentication.Mutation
-  private removeReLogin: () => void;
+  private removeReLogin!: () => void;
 
   private logIn() {
     this.isLoading = true;
