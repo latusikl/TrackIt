@@ -3,6 +3,7 @@ import http from "../http-commons";
 import {SignInDto} from "@/dto/SignInDto";
 import {UserModel} from "@/dto/UserModel";
 import {TokenResponseDto} from "@/dto/TokenResponseDto";
+import store from "@/store";
 
 class AuthService {
 
@@ -22,6 +23,10 @@ class AuthService {
         localStorage.removeItem("userModel");
     }
 
+    triggerReLoginMutation(){
+        this.signOut()
+        store.commit("Authentication/reLogin");
+    }
 
 }
 

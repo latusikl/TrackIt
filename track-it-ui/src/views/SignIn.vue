@@ -1,9 +1,9 @@
 <template>
   <v-container class="green background container-width">
     <alert
-      message="Invalid credentials. Unable to sign in."
+      :message="message"
       :is-visible="isAlertVisible"
-      alert-type="error"
+      :alert-type="alertType"
       @invisible-event="makeAlertInvisible"
     ></alert>
     <v-row>
@@ -71,6 +71,14 @@ export default class SignIn extends Vue {
   private passwordVisible = false;
   private isLoading = false;
   private isAlertVisible = false;
+  private message = "";
+  private alertType = "";
+
+  private mounted() {
+    if (this.isReLogin) {
+      this.makeReLoginInfoVisible();
+    }
+  }
 
   private signInForm: SignInForm = {
     valid: false,
@@ -90,9 +98,15 @@ export default class SignIn extends Vue {
   @Authentication.Getter
   private isLogged!: boolean;
 
+  @Authentication.Getter
+  private isReLogin!: boolean;
+
   @Authentication.Action
   // eslint-disable-next-line
   private signIn!: (signInDto: SignInDto) => Promise<any>;
+
+  @Authentication.Mutation
+  private removeReLogin: () => void;
 
   private logIn() {
     this.isLoading = true;
@@ -107,13 +121,30 @@ export default class SignIn extends Vue {
       },
       error => {
         this.isLoading = false;
-        this.isAlertVisible = true;
+        this.makeAuthErrorVisible();
         console.debug(error);
       }
     );
   }
 
+  private makeAuthErrorVisible() {
+    this.makeAlertInvisible();
+    this.isAlertVisible = true;
+    this.alertType = "error";
+    this.message = "Invalid credentials. Unable to sign in.";
+  }
+
+  private makeReLoginInfoVisible() {
+    this.makeAlertInvisible();
+    this.isAlertVisible = true;
+    this.alertType = "info";
+    this.message = "Session expired. Please sign in again.";
+  }
+
   private makeAlertInvisible() {
+    if (this.isReLogin) {
+      this.removeReLogin();
+    }
     this.isAlertVisible = false;
   }
 }

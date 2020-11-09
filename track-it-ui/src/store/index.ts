@@ -5,9 +5,11 @@ import Vuex from "vuex";
 import Authentication from "./modules/authentication.module";
 
 Vue.use(Vuex);
-
-export default new Vuex.Store({
+const store =  new Vuex.Store({
     modules: {
         Authentication
     }
 });
+
+
+export default store
