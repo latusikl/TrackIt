@@ -1,5 +1,18 @@
 <template>
   <v-container class="green background container-width">
+    <alert
+      :message="successMessage"
+      :is-visible="isSuccessVisible"
+      alert-type="success"
+      @invisible-event="makeSuccessInvisible"
+    ></alert>
+
+    <alert
+      :message="errorMessage"
+      :is-visible="isFailedVisible"
+      alert-type="error"
+      @invisible-event="makeFailedInvisible"
+    ></alert>
     <v-row>
       <vcard-subtitle
         img-path="sign_in.svg"
@@ -62,12 +75,19 @@ import {
   minLength,
   requiredField
 } from "@/scripts/forms/FormValidators";
+import UserService from "@/sevices/UserService";
 
 @Component({
   components: { VcardSubtitle, Alert }
 })
 export default class SignIn extends Vue {
   private passwordVisible = false;
+  private isSuccessVisible = false;
+  private isFailedVisible = false;
+  private successMessage =
+    "Account was created successfully. Close this message and Sing In.";
+  private errorMessage =
+    "Something went wrong. Unable to create account with given credentials.";
 
   signUpForm: SignUpForm = {
     valid: false,
@@ -89,10 +109,35 @@ export default class SignIn extends Vue {
   };
 
   private createAccount() {
-    //TODO implement
-    console.log(this.signUpForm.fields.email);
-    console.log(this.signUpForm.fields.password);
-    console.log(this.signUpForm.fields.confirmPassword);
+    UserService.createAccount({
+      userEmail: this.signUpForm.fields.email,
+      password: this.signUpForm.fields.password
+    })
+      .then(() => {
+        this.makeFailedInvisible();
+        this.successVisible();
+      })
+      .catch(reason => {
+        console.debug(reason);
+        this.errorVisible();
+      });
+  }
+
+  private successVisible() {
+    this.isSuccessVisible = true;
+  }
+
+  private errorVisible() {
+    this.isFailedVisible = true;
+  }
+
+  private makeSuccessInvisible() {
+    this.$router.push("/sign-in");
+    this.isSuccessVisible = false;
+  }
+
+  private makeFailedInvisible() {
+    this.isFailedVisible = false;
   }
 }
 </script>

@@ -5,7 +5,7 @@ import {AxiosResponse} from "axios";
 import {DeviceInfoPage} from "@/dto/DeviceInfoPage";
 
 
-class DeviceAccessService {
+class DeviceService {
     activate(deviceId: AccessDto) {
         const url = "/devices/access/" + "test" + "/activate";
         return http.post(url, deviceId);
@@ -23,6 +23,10 @@ class DeviceAccessService {
         requestParams.set("size", String(pageSize));
         return http.get(url, {params: requestParams})
     }
+
+    getDeviceCount(): Promise<AxiosResponse<number>>{
+        return http.get("/devices/count");
+    }
 }
 
-export default new DeviceAccessService();
+export default new DeviceService();

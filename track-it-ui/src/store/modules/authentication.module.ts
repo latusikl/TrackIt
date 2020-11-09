@@ -15,7 +15,6 @@ class VuexUserAuth extends VuexModule {
     @Mutation
     public signInSuccess(user: any): void {
         this.loggedIn = true;
-        console.log(user)
         this.userModel= user;
     }
 
@@ -37,9 +36,8 @@ class VuexUserAuth extends VuexModule {
     signIn(signInDto: SignInDto): Promise<any> {
         return AuthService.signIn(signInDto).then(
             user => {
-                console.warn(user);
-                this.context.commit('signInSuccess', user.data);
-                return Promise.resolve(user.data);
+                this.context.commit('signInSuccess', user);
+                return Promise.resolve(user);
             },
             error => {
                 this.context.commit('signInFailure');

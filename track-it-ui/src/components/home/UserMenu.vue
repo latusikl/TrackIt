@@ -1,5 +1,17 @@
 <template>
   <v-card min-width="70%">
+    <alert
+      alert-type="warning"
+      :message="message"
+      :is-visible="isAlertVisible"
+      @invisible-event="makeAlertInvisible"
+    ></alert>
+    <alert
+      alert-type="info"
+      message="Your account was removed. After closing that info you will be redirected to home page."
+      :is-visible="isDeleteAlertVisible"
+      @invisible-event="finishRemoval"
+    ></alert>
     <v-toolbar flat color="primary" dark>
       <v-toolbar-title>Manage your account</v-toolbar-title>
     </v-toolbar>
@@ -28,7 +40,7 @@
           <v-card-text>
             <div>
               <div class="text-h6">E-mail address</div>
-              <v-text-field disabled outlined :value="email"> </v-text-field>
+              <v-text-field disabled outlined :value="email"></v-text-field>
             </div>
             <div>
               <div class="text-h6">Created at</div>
@@ -54,8 +66,8 @@
         <v-card flat v-bind:class="{ secondary: !isDangerEnabled }">
           <v-container>
             <v-row>
-              <v-col
-                ><v-card-title>Delete Your account</v-card-title>
+              <v-col>
+                <v-card-title>Delete Your account</v-card-title>
                 <v-card-text
                   ><p>
                     Deleting account will remove all saved devices and devices
@@ -69,8 +81,8 @@
                   class="float-right"
                   v-model="isDangerEnabled"
                   :label="isDangerEnabled ? 'Disable' : 'Enable'"
-                ></v-switch
-              ></v-col>
+                ></v-switch>
+              </v-col>
             </v-row>
           </v-container>
 
@@ -80,8 +92,9 @@
             color="accent"
             class="pa-5 mb-2"
             :disabled="!isDangerEnabled"
-            >delete account</v-btn
-          >
+            @click="removeAccount"
+            >delete account
+          </v-btn>
         </v-card>
       </v-tab-item>
     </v-tabs>
@@ -91,13 +104,87 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import PasswordChange from "@/components/home/PasswordChange.vue";
+import { UserModel } from "@/dto/UserModel";
+import { namespace } from "vuex-class";
+import Alert from "@/components/Alert.vue";
+import UserService from "@/sevices/UserService";
+import DeviceService from "@/sevices/DeviceService";
+
+const Authentication = namespace("Authentication");
 @Component({
-  components: { PasswordChange }
+  components: { Alert, PasswordChange }
 })
 export default class UserMenu extends Vue {
-  private email = "email@email.com";
-  private createdAt = "2020-11-05T15:48:00";
-  private totalDevices = 10;
+  private isAlertVisible = false;
+  private email = "";
+  private createdAt = "";
+  private totalDevices = 0;
   private isDangerEnabled = false;
+  private isDeleteAlertVisible = false;
+  private message = "";
+
+  @Authentication.Getter
+  private isLogged!: boolean;
+
+  @Authentication.Getter
+  private user!: UserModel;
+
+  @Authentication.Action
+  private signOut!: () => void;
+
+  mounted() {
+    if (this.isLogged) {
+      this.loadUserData();
+      this.loadNumberOfDevices();
+    } else {
+      this.isAlertVisible = true;
+    }
+    return;
+  }
+
+  private makeAlertInvisible() {
+    this.isAlertVisible = false;
+  }
+
+  private loadUserData() {
+    UserService.getUserData()
+      .then(response => {
+        this.email = response.data.email;
+        this.createdAt = response.data.accountCreation;
+      })
+      .catch(reason => {
+        console.debug(reason);
+        this.isAlertVisible = true;
+      });
+  }
+
+  private loadNumberOfDevices() {
+    DeviceService.getDeviceCount()
+      .then(response => {
+        this.totalDevices = response.data;
+      })
+      .catch(reason => {
+        console.debug(reason);
+        this.makeAlertInvisible();
+        this.isAlertVisible = true;
+        this.message = "Unable to retrieve data from server";
+      });
+  }
+
+  private removeAccount() {
+    UserService.deleteAccount()
+      .then(() => (this.isDeleteAlertVisible = true))
+      .catch(reason => {
+        console.debug(reason);
+        this.makeAlertInvisible();
+        this.isAlertVisible = true;
+        this.message = "Internal server error occurred";
+      });
+  }
+
+  private finishRemoval() {
+    this.signOut();
+    this.$router.push("/");
+  }
 }
 </script>

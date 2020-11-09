@@ -121,7 +121,7 @@ export default class DevicesInterval extends Vue {
       .catch(reason => {
         this.isErrorAlertVisible = true;
         this.isMapVisible = false;
-        console.warn(reason);
+        console.debug(reason);
       });
   }
 }

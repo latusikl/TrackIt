@@ -70,7 +70,6 @@ export default class GeoJsonMap extends Vue {
 
   @Watch("mapData")
   onMapDataChanged(mapData: FeatureCollection) {
-    console.log("Inside watch");
     this.updateMapData(mapData);
   }
 

@@ -71,7 +71,7 @@ export default class DevicesLast extends Vue {
         }
       })
       .catch(reason => {
-        console.warn(reason);
+        console.debug(reason);
         this.showError();
       });
   }
@@ -92,6 +92,7 @@ export default class DevicesLast extends Vue {
   }
 
   private showError() {
+    this.isMapVisible = false;
     this.alertMessage = "Unable to get location data for chosen device";
     this.alertType = "warning";
     this.isAlertVisible = true;

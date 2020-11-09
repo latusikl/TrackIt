@@ -51,7 +51,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import UserService from "@/sevices/UserService";
 import { UserDeviceDto } from "@/dto/UserDeviceDto";
-import DeviceAccessService from "@/sevices/DeviceAccessService";
+import DeviceAccessService from "@/sevices/DeviceService";
 import Alert from "@/components/Alert.vue";
 
 @Component({
@@ -85,7 +85,7 @@ export default class DeviceList extends Vue {
       })
       .catch(reason => {
         this.showError("Error occured when fetching your devices.");
-        console.warn(reason);
+        console.debug(reason);
       });
   }
 
@@ -101,7 +101,7 @@ export default class DeviceList extends Vue {
       })
       .catch(reason => {
         this.showError("Error occurred when trying to remove your devices.");
-        console.warn(reason);
+        console.debug(reason);
       });
   }
 

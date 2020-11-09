@@ -38,11 +38,11 @@ export default class DeviceChoice extends Vue {
         if (response.status == 200) {
           this.userDeviceDtoList = response.data;
         } else {
-          console.warn("Unable to fetch your device list.");
+          console.debug("Unable to fetch your device list.");
         }
       })
       .catch(reason => {
-        console.warn(reason);
+        console.debug(reason);
       });
   }
 }

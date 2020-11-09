@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import DeviceAccessService from "@/sevices/DeviceAccessService";
+import DeviceAccessService from "@/sevices/DeviceService";
 import Alert from "@/components/Alert.vue";
 import { AccessForm } from "@/scripts/forms/AccessForm.ts";
 import { maxLength, requiredField } from "@/scripts/forms/FormValidators";
@@ -135,7 +135,7 @@ export default class DeviceAccess extends Vue {
         }
       })
       .catch(reason => {
-        console.warn("Error in device activation. Value: " + reason);
+        console.debug("Error in device activation. Value: " + reason);
         this.clearStatuses();
         this.errorVisible();
       });

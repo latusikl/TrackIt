@@ -15,8 +15,8 @@
             DEVICES
           </v-tab>
         </v-tabs>
-        <div class="text-subtitle-1 mr-10" v-if="isLogged">
-          Welcome! {{ user.email }}
+        <div class="mr-10 text-center" v-if="isLogged">
+          {{ `Welcome! ${user.email.split("@")[0].toUpperCase()}` }}
         </div>
         <v-btn
           center
@@ -43,6 +43,7 @@
           elevation="2"
           class="mr-5"
           text
+          to="/"
           v-if="isLogged"
           @click="signOut"
         >
@@ -51,10 +52,8 @@
       </v-app-bar>
     </v-card>
     <v-main>
-      <!--      <v-container fluid class="fill-height rounded-0 pink">-->
       <!-- If using vue-router -->
       <router-view></router-view>
-      <!--      </v-container>-->
     </v-main>
   </v-app>
 </template>

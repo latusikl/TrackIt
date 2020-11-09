@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import DeviceAccessService from "@/sevices/DeviceAccessService";
+import DeviceAccessService from "@/sevices/DeviceService";
 import { DeviceInfoDto } from "@/dto/DeviceInfoDto";
 import Alert from "@/components/Alert.vue";
 import { InfoLevel } from "@/dto/InfoLevel";
@@ -81,7 +81,7 @@ export default class DevicesLast extends Vue {
       this.pageSize
     )
       .then(response => {
-        console.log(response);
+        console.debug(response);
         this.deviceInfoList = response.data.content;
         this.currentPage = response.data.number + 1;
         this.lastPage = response.data.totalPages;
@@ -93,7 +93,7 @@ export default class DevicesLast extends Vue {
         }
       })
       .catch(reason => {
-        console.log(reason);
+        console.debug(reason);
         this.showError();
       });
   }

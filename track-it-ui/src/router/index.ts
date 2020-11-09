@@ -8,6 +8,10 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
     {
         path: "/",
+        redirect: "/home"
+    },
+    {
+        path: "/home",
         name: "Home",
         component: Home
     },
@@ -55,6 +59,23 @@ const routes: Array<RouteConfig> = [
 
 const router = new VueRouter({
     routes
+});
+
+router.beforeEach((to, from, next) => {
+    const publicRoutes = ["/sign-in", "/sign-up", "/home"];
+    const authenticatedNotAllowedRoutes = ["/sign-in", "/sign-up"];
+    const currentPath = to.path;
+    const needsAuthentication = !publicRoutes.includes(currentPath);
+    const loggedIn = localStorage.getItem("userModel");
+    if (needsAuthentication && !loggedIn) {
+        next("/sign-in");
+    } else {
+        if (loggedIn && authenticatedNotAllowedRoutes.includes(currentPath)) {
+            next("/")
+        } else {
+            next();
+        }
+    }
 });
 
 export default router;

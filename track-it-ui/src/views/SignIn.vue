@@ -61,6 +61,7 @@ import { SignInForm } from "@/scripts/forms/SignInForm";
 import { emailFormat, requiredField } from "@/scripts/forms/FormValidators";
 import { namespace } from "vuex-class";
 import { SignInDto } from "@/dto/SignInDto";
+
 const Authentication = namespace("Authentication");
 
 @Component({
@@ -90,6 +91,7 @@ export default class SignIn extends Vue {
   private isLogged!: boolean;
 
   @Authentication.Action
+  // eslint-disable-next-line
   private signIn!: (signInDto: SignInDto) => Promise<any>;
 
   private logIn() {
@@ -98,9 +100,10 @@ export default class SignIn extends Vue {
       email: this.signInForm.fields.email,
       password: this.signInForm.fields.password
     }).then(
+      // eslint-disable-next-line
       user => {
         this.isLoading = false;
-        this.$router.push("/account");
+        this.$router.push("/");
       },
       error => {
         this.isLoading = false;
