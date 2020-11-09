@@ -5,7 +5,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -74,8 +76,7 @@ public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter {
 			return new UsernamePasswordAuthenticationToken(UserTokenInfo.of(userId, userEmail), jwtToken, Collections.emptyList());
 		}
 		catch (final TokenExpiredException e) {
-			log.info("Tried to access API with expired token");
-			return null;
+			throw new CredentialsExpiredException("Access token expired.",e);
 		}
 	}
 
