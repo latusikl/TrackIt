@@ -16,10 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.latusikl.trackit.locationservice.locationservice.security.services.AuthenticationFacade;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.DeviceAccessDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.DeviceInfoDto;
+import pl.latusikl.trackit.locationservice.locationservice.web.dto.UserDeviceDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.service.DeviceService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 @RestController
 @RequestMapping("/devices")
@@ -48,5 +51,18 @@ public class DeviceController {
 											 @PageableDefault(size = 15, sort = {"serverDateTime"}) final Pageable pageable,
 											 final AuthenticationFacade authenticationFacade) {
 		return deviceService.getDeviceLogsPage(pageable, deviceId, authenticationFacade.getRequestingUserId());
+	}
+
+	@GetMapping
+	@ResponseStatus(HttpStatus.OK)
+	Collection<UserDeviceDto> getAllUserDevices(@NotNull final AuthenticationFacade authenticationFacade) {
+		return deviceService.getAllDevicesForUser(authenticationFacade.getRequestingUserId());
+	}
+
+
+	@GetMapping("/count")
+	@ResponseStatus(HttpStatus.OK)
+	public Integer getDevicesCount(final AuthenticationFacade authenticationFacade){
+		return deviceService.getUserDevicesCount(authenticationFacade.getRequestingUserId());
 	}
 }

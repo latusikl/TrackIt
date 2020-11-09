@@ -12,4 +12,5 @@ public interface UserDeviceRepository extends CrudRepository<UserDevice, String>
 
 	boolean existsUserDeviceByDeviceIdAndUserDataUserId(String deviceId, UUID userId);
 
+	Integer countAllByUserDataUserId(UUID userId);
 }

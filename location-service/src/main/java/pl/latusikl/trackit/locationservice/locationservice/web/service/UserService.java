@@ -5,37 +5,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.latusikl.trackit.locationservice.locationservice.exception.UserException;
-import pl.latusikl.trackit.locationservice.locationservice.persistance.converters.UserDeviceToUserDeviceDtoConverter;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.converters.UserDtoToUserDataConverter;
+import pl.latusikl.trackit.locationservice.locationservice.persistance.converters.UserEntityToUserDtoConverter;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.repository.UserDataRepository;
-import pl.latusikl.trackit.locationservice.locationservice.persistance.repository.UserDeviceRepository;
-import pl.latusikl.trackit.locationservice.locationservice.web.dto.UserDeviceDto;
+import pl.latusikl.trackit.locationservice.locationservice.web.dto.CreateUserDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.UserDto;
 
-import java.util.Collection;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-	private final UserDeviceRepository userDeviceRepository;
 	private final UserDataRepository userDataRepository;
-	private final UserDeviceToUserDeviceDtoConverter userDeviceToUserDeviceDtoConverter;
 	private final UserDtoToUserDataConverter userDtoToUserDataConverter;
-
-	@Transactional(readOnly = true)
-	public Collection<UserDeviceDto> getAllDevicesForUser(final UUID userId) {
-		return userDeviceRepository.findAllByUserDataUserId(userId)
-								   .stream()
-								   .map(userDeviceToUserDeviceDtoConverter::convert)
-								   .collect(Collectors.toList());
-	}
+	private final UserEntityToUserDtoConverter userEntityToUserDtoConverter;
 
 	@Transactional
-	public void addUser(final UserDto userDto) {
+	public void addUser(final CreateUserDto userDto) {
 		if (userDataRepository.existsByUserEmail(userDto.getUserEmail())) {
 			throw new UserException("User with given email address already exist.");
 		}
@@ -51,4 +39,15 @@ public class UserService {
 		}
 		userDataRepository.deleteByUserId(userId);
 	}
+
+	@Transactional(readOnly = true)
+	public UserDto getUserInfo(final UUID userId) {
+		return userDataRepository.findById(userId)
+								 .map(userEntityToUserDtoConverter::convert)
+								 .orElseThrow(() -> {
+									 log.warn("Tried to access user data for user which doesn't exist. User ID: {}", userId);
+									 return new UserException("User was already removed");
+								 });
+	}
+
 }

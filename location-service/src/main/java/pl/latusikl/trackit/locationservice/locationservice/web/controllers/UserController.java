@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.latusikl.trackit.locationservice.locationservice.security.services.AuthenticationFacade;
+import pl.latusikl.trackit.locationservice.locationservice.web.dto.CreateUserDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.UserDeviceDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.UserDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.service.UserService;
@@ -29,19 +30,19 @@ public class UserController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.OK)
-	public void addUser(@RequestBody @Valid final UserDto userDto) {
+	public void addUser(@RequestBody @Valid final CreateUserDto userDto) {
 		userService.addUser(userDto);
-	}
-
-	@GetMapping("/devices")
-	@ResponseStatus(HttpStatus.OK)
-	Collection<UserDeviceDto> getAllUserDevices(@NotNull final AuthenticationFacade authenticationFacade) {
-		return userService.getAllDevicesForUser(authenticationFacade.getRequestingUserId());
 	}
 
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteUser(@NotNull final AuthenticationFacade authenticationFacade) {
 		userService.deleteUserById(authenticationFacade.getRequestingUserId());
+	}
+
+	@GetMapping("/me")
+	@ResponseStatus(HttpStatus.OK)
+	public UserDto getUserInfo(@NotNull final AuthenticationFacade authenticationFacade) {
+		return userService.getUserInfo(authenticationFacade.getRequestingUserId());
 	}
 }
