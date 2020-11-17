@@ -7,12 +7,12 @@ import {DeviceInfoPage} from "@/dto/DeviceInfoPage";
 
 class DeviceService {
     activate(deviceId: AccessDto) {
-        const url = "/devices/access/" + "test" + "/activate";
+        const url = "/devices/access/activate";
         return http.post(url, deviceId);
     }
 
     deactivate(deviceId: string) {
-        const url = "/devices/access/" + "test" + "/deactivate";
+        const url = "/devices/access/deactivate";
         return http.post(url, deviceId);
     }
 
