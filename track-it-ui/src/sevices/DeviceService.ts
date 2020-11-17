@@ -12,7 +12,7 @@ class DeviceService {
     }
 
     deactivate(deviceId: string) {
-        const url = "/devices/access/deactivate";
+        const url = "/devices/access/deactivate/" + deviceId;
         return http.post(url, deviceId);
     }
 
