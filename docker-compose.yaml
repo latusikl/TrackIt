@@ -15,15 +15,29 @@ services:
     networks:
       - tracker-network
     restart: on-failure
+
   trackit-rabbit:
-      image: "rabbitmq:3-management"
-      ports:
-          - "5672:5672"
-          - "8000:15672"
-      networks:
-        - tracker-network
-        - location-network
-      restart: on-failure
+    image: "rabbitmq:3-management"
+    ports:
+        - "5672:5672"
+        - "8000:15672"
+    networks:
+      - tracker-network
+      - location-network
+    restart: on-failure
+
+  trackit-postgres:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: user
+      POSTGRES_DB: TrackItDB
+    ports:
+      - 5432:5432
+    networks:
+      - location-network
+
   tracker-service:
     build:
       context: ./tracker-service
@@ -39,6 +53,8 @@ services:
     environment:
       - SPRING_REDIS_HOST=trackit-redis
       - SPRING_RABBITMQ_HOST=trackit-rabbit
+
+
   location-service:
     build:
       context: ./location-service
@@ -49,6 +65,20 @@ services:
       - location-network
     depends_on:
       - trackit-rabbit
+      - trackit-postgres
     restart: on-failure
     environment:
       - SPRING_RABBITMQ_HOST=trackit-rabbit
+      - DATABASE_HOST=trackit-postgres
+      - DATABASE_PASS=pass
+      - DATABASE_USER=user
+
+  trackit-ui:
+    build:
+      context: ./track-it-ui
+      dockerfile: Dockerfile
+    ports:
+    - "80:80"
+    networks:
+      - location-network
+    restart: on-failure
