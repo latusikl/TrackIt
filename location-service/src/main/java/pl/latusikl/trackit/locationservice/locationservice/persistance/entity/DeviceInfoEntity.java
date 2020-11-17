@@ -25,7 +25,7 @@ public class DeviceInfoEntity {
 	@Column(name = "device_info_id", nullable = false, updatable = false, insertable = false, unique = true)
 	private Long id;
 
-	@Column(name = "device_id", nullable = false, length = 30)
+	@Column(name = "device_id", nullable = false, length = 150)
 	private String deviceId;
 
 	@Column(name = "message", nullable = false, length = 300)

@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- Column length limited to 20 chars.
+ Column length limited to 30 chars.
  */
 @AllArgsConstructor
 @Getter(onMethod = @__({@JsonValue}))

@@ -23,7 +23,7 @@ public class LocationEntity {
 	@Column(name = "location_id", nullable = false, updatable = false, insertable = false, unique = true)
 	private Long id;
 
-	@Column(name = "device_id", nullable = false, length = 30)
+	@Column(name = "device_id", nullable = false, length = 150)
 	private String deviceId;
 
 	@Column(name = "date_time_start", nullable = false)

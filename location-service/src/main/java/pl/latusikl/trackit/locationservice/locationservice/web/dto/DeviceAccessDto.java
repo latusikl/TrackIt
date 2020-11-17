@@ -9,11 +9,11 @@ import javax.validation.constraints.NotEmpty;
 public class DeviceAccessDto {
 
 	@NotEmpty
-	@Length(min = 1, max = 30)
+	@Length(min = 1, max = 145)
 	private String deviceId;
 
 	@NotEmpty
-	@Length(min = 1, max = 25)
+	@Length(min = 1, max = 80)
 	private String deviceName;
 }
 

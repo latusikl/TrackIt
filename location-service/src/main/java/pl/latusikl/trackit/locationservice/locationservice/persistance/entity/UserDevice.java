@@ -26,10 +26,10 @@ import javax.persistence.Table;
 public class UserDevice {
 
 	@Id
-	@Column(name = "device_id", nullable = false, updatable = false, insertable = false, unique = true)
+	@Column(name = "device_id", nullable = false, updatable = false, insertable = false, unique = true,length = 150)
 	private String deviceId;
 
-	@Column(name = "device_name", nullable = false, length = 25)
+	@Column(name = "device_name", nullable = false, length = 80)
 	private String deviceName;
 
 	@OnDelete(action = OnDeleteAction.CASCADE)

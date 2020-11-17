@@ -30,7 +30,7 @@ public class UserData {
 	@Column(name = "user_id", insertable = false, updatable = false, unique = true)
 	@Type(type = "pg-id-uuid", parameters = @Parameter(name = "column", value = "user_id"))
 	private UUID userId;
-	@Column(name = "user_email", nullable = false, length = 100)
+	@Column(name = "user_email", nullable = false, length = 150)
 	private String userEmail;
 	@Column(name = "password", nullable = false, length = 250)
 	private String password;
