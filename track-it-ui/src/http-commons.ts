@@ -4,7 +4,8 @@ import getAuthHeader from "@/sevices/AuthorizationHeaderService";
 import AuthService from "@/sevices/AuthService";
 
 const configuredAxios = axios.create({
-    baseURL: "http://localhost:8090",
+
+    baseURL: process.env.VUE_APP_BACKEND_HOST + ":8090",
     headers: {
         "Content-type": "application/json"
     }

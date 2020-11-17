@@ -65,8 +65,8 @@ import { AccessDto } from "@/dto/AccessDto";
   components: { Alert, SuccessAlert: Alert }
 })
 export default class DeviceAccess extends Vue {
-  private maxDeviceIdLength = 36;
-  private maxDeviceNameLength = 30;
+  private maxDeviceIdLength = 145;
+  private maxDeviceNameLength = 80;
   private isSuccessVisible = false;
   private isFailedVisible = false;
   private successMessage =
