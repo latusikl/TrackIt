@@ -6,6 +6,12 @@ spring:
     application:
       name: location-service
 
+database:
+  host: localhost
+  name: TrackItDB
+  pass: pass
+  user: user
+
 ---
 spring:
   profiles: dev
@@ -34,9 +40,9 @@ spring:
       ddl-auto: none
       dialect: PostgreSQL9Dialect
   datasource:
-    url: jdbc:postgresql://localhost:5432/TrackItDB
-    username: user
-    password: pass
+    url: jdbc:postgresql://${database.host}:5432/${database.name}
+    username: ${database.user}
+    password: ${database.pass}
     initialization-mode: always
 
 logging:
