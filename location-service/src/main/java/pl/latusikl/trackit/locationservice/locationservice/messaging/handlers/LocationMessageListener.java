@@ -6,6 +6,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import pl.latusikl.trackit.locationservice.locationservice.messaging.InboundProcessor;
 import pl.latusikl.trackit.locationservice.locationservice.messaging.dto.location.LocationMessageDto;
+import pl.latusikl.trackit.locationservice.locationservice.messaging.services.LocationMessageProcessingService;
 
 @Slf4j
 @RequiredArgsConstructor

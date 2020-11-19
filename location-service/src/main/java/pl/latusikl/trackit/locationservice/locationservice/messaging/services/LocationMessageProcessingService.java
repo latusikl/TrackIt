@@ -1,4 +1,4 @@
-package pl.latusikl.trackit.locationservice.locationservice.messaging.handlers;
+package pl.latusikl.trackit.locationservice.locationservice.messaging.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

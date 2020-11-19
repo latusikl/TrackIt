@@ -25,14 +25,20 @@ spring:
   cloud:
     stream:
       bindings:
-        locationChannel:
-          destination: location
-          group: location-services
-        accessListChannel:
-          destination: accessList
-          group: location-services
-        accessListCallbackChannel:
-          destination: accessListCallback
+        input:
+          locationChannel:
+            destination: location
+            group: location-services
+          accessListCallbackChannel:
+            destination: accessListCallback
+            group: location-services
+          requestAllAllowedChannel:
+            destination: requestAllAllowed
+            group: location-services
+        output:
+          accessListChannel:
+            destination: accessList
+
 
 #Database
   jpa:

@@ -1,12 +1,26 @@
 spring:
   profiles:
-    active: dev
+    active: dev,non-dev
   main:
     web-application-type: none
   application:
     name: tracker-service
   redis:
     client-name: tracker-service
+  cloud:
+    stream:
+      bindings:
+        input:
+          accessListChannel:
+            destination: accessList
+            group: tracker-services
+        output:
+          locationChannel:
+            destination: location
+          accessListCallbackChannel:
+            destination: accessListCallback
+          requestAllAllowedChannel:
+            destination: requestAllAllowed
 
 #Common custom properties
 redis:
@@ -26,17 +40,6 @@ spring:
     port: 5672
     username: guest
     password: guest
-  cloud:
-    stream:
-      bindings:
-        locationChannel:
-          destination: location
-          group: tracker-services
-        accessListChannel:
-          destination: accessList
-          group: tracker-services
-        accessListCallbackChannel:
-          destination: accessListCallback
 
 logging:
   level:

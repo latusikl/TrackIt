@@ -34,7 +34,8 @@ public class AccessListMessageHandler {
 			accessRequestCallbackDto = handleInternal(accessRequestDto.getRequestType(), accessRequestDto.getImei());
 		}
 		else {
-			accessRequestCallbackDto = prepareErrorResponse("Request is invalid. Device ID or request type is missing");
+			accessRequestCallbackDto = prepareErrorResponse("Request is invalid. Device ID or request type is missing",
+															accessRequestDto.getRequestType());
 		}
 		outboundSender.sendDeviceAccessCallback(accessRequestCallbackDto);
 	}
@@ -44,44 +45,42 @@ public class AccessListMessageHandler {
 	}
 
 	private AccessRequestCallbackDto handleInternal(final AccessRequestType requestType, final String deviceId) {
-		final AccessRequestCallbackDto response;
 		switch (requestType) {
-			case ADD:
-				response = addToList(deviceId);
-				break;
+			case ADD_SINGLE:
+			case ADD_ALL:
+				return addToList(deviceId, requestType);
 			case REMOVE:
-				response = removeFromList(deviceId);
-				break;
+				return removeFromList(deviceId, requestType);
 			default:
-				response = prepareErrorResponse("Unknown request type.");
-				log.error("Unknown request type! Only REMOVE and ADD is allowed!");
+				throw new IllegalStateException("Unknown request type! Only REMOVE and ADD is allowed!");
 		}
-		return response;
 	}
 
-	private AccessRequestCallbackDto addToList(final String deviceId) {
+	private AccessRequestCallbackDto addToList(final String deviceId, final AccessRequestType accessRequestType) {
 		final Long numberOfAdded = imeiRepository.saveImeiToWhitelisted(deviceId);
 		return numberOfAdded.equals(ADDED_NUM) ?
-				prepareOkResponse() :
-				prepareErrorResponse(String.format(ADD_ERROR_MESSAGE, numberOfAdded));
+				prepareOkResponse(accessRequestType) :
+				prepareErrorResponse(String.format(ADD_ERROR_MESSAGE, numberOfAdded), accessRequestType);
 	}
 
-	private AccessRequestCallbackDto removeFromList(final String deviceId) {
+	private AccessRequestCallbackDto removeFromList(final String deviceId, final AccessRequestType accessRequestType) {
 		final Long numberOfRemoved = imeiRepository.removeImei(deviceId);
 		return numberOfRemoved.equals(REMOVED_NUM) ?
-				prepareOkResponse() :
-				prepareErrorResponse(String.format(REMOVE_ERROR_MESSAGE, numberOfRemoved));
+				prepareOkResponse(accessRequestType) :
+				prepareErrorResponse(String.format(REMOVE_ERROR_MESSAGE, numberOfRemoved), accessRequestType);
 	}
 
-	private AccessRequestCallbackDto prepareOkResponse() {
+	private AccessRequestCallbackDto prepareOkResponse(final AccessRequestType accessRequestType) {
 		return AccessRequestCallbackDto.builder()
+									   .accessRequestType(accessRequestType)
 									   .accessRequestStatus(AccessRequestStatus.FINISHED)
 									   .requestInformation("Device id was added successfully.")
 									   .build();
 	}
 
-	private AccessRequestCallbackDto prepareErrorResponse(final String message) {
+	private AccessRequestCallbackDto prepareErrorResponse(final String message, final AccessRequestType accessRequestType) {
 		return AccessRequestCallbackDto.builder()
+									   .accessRequestType(accessRequestType)
 									   .accessRequestStatus(AccessRequestStatus.ERROR)
 									   .requestInformation(message)
 									   .build();

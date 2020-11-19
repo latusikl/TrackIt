@@ -13,6 +13,7 @@ import pl.latusikl.trackit.trackerservice.messaging.dto.location.LocationMessage
 @EnableBinding(OutboundProcessor.class)
 public class OutboundSender {
 
+	private static final String REQUEST_ALL_MESSAGE = "REQUEST_ALL";
 	private final OutboundProcessor outboundProcessor;
 
 	public void sendDeviceAccessCallback(final AccessRequestCallbackDto accessRequestCallbackDto) {
@@ -29,6 +30,13 @@ public class OutboundSender {
 		outboundProcessor.locationChannel()
 						 .send(message);
 
+	}
+
+	public void sendAllAllowedDevicesRequest() {
+		final Message<String> message = MessageBuilder.withPayload(REQUEST_ALL_MESSAGE)
+													  .build();
+		outboundProcessor.requestAllAllowedChannel()
+						 .send(message);
 	}
 
 }

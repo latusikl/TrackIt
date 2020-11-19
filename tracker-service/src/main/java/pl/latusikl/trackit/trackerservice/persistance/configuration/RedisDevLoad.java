@@ -17,7 +17,6 @@ import javax.annotation.PostConstruct;
  */
 @Component
 @RequiredArgsConstructor
-@Profile("dev")
 @Slf4j
 public class RedisDevLoad {
 	private final RedisTemplate<String, Object> redisTemplate;
@@ -30,8 +29,8 @@ public class RedisDevLoad {
 
 	private final OutboundProcessor locationSource;
 
-	@PostConstruct
 	public void loadDevDataToRedis() {
-		imeiRepository.saveImeiToWhitelisted("864926030089768");
+		log.warn("This component should be active only in development environment.");
+		log.debug(imeiRepository.saveImeiToWhitelisted("864926030089768").toString());
 	}
 }

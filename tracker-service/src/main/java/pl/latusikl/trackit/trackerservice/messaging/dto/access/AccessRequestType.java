@@ -1,5 +1,5 @@
 package pl.latusikl.trackit.trackerservice.messaging.dto.access;
 
 public enum AccessRequestType {
-	ADD, REMOVE
+	ADD_SINGLE, REMOVE, ADD_ALL
 }
