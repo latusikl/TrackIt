@@ -34,7 +34,7 @@ public class AccessListMessageHandler {
 			accessRequestCallbackDto = handleInternal(accessRequestDto.getRequestType(), accessRequestDto.getImei());
 		}
 		else {
-			accessRequestCallbackDto = prepareErrorResponse("Request is invalid. Device ID or request type is missing",
+			accessRequestCallbackDto = prepareErrorResponse(null,"Request is invalid. Device ID or request type is missing",
 															accessRequestDto.getRequestType());
 		}
 		outboundSender.sendDeviceAccessCallback(accessRequestCallbackDto);
@@ -59,27 +59,29 @@ public class AccessListMessageHandler {
 	private AccessRequestCallbackDto addToList(final String deviceId, final AccessRequestType accessRequestType) {
 		final Long numberOfAdded = imeiRepository.saveImeiToWhitelisted(deviceId);
 		return numberOfAdded.equals(ADDED_NUM) ?
-				prepareOkResponse(accessRequestType) :
-				prepareErrorResponse(String.format(ADD_ERROR_MESSAGE, numberOfAdded), accessRequestType);
+				prepareOkResponse(deviceId,accessRequestType,"Device was added successfully.") :
+				prepareErrorResponse(deviceId,String.format(ADD_ERROR_MESSAGE, numberOfAdded), accessRequestType);
 	}
 
 	private AccessRequestCallbackDto removeFromList(final String deviceId, final AccessRequestType accessRequestType) {
 		final Long numberOfRemoved = imeiRepository.removeImei(deviceId);
 		return numberOfRemoved.equals(REMOVED_NUM) ?
-				prepareOkResponse(accessRequestType) :
-				prepareErrorResponse(String.format(REMOVE_ERROR_MESSAGE, numberOfRemoved), accessRequestType);
+				prepareOkResponse(deviceId,accessRequestType, "Device was removed from system.") :
+				prepareErrorResponse(deviceId,String.format(REMOVE_ERROR_MESSAGE, numberOfRemoved), accessRequestType);
 	}
 
-	private AccessRequestCallbackDto prepareOkResponse(final AccessRequestType accessRequestType) {
+	private AccessRequestCallbackDto prepareOkResponse(final String deviceId, final AccessRequestType accessRequestType, final String message) {
 		return AccessRequestCallbackDto.builder()
+									   .deviceId(deviceId)
 									   .accessRequestType(accessRequestType)
 									   .accessRequestStatus(AccessRequestStatus.FINISHED)
-									   .requestInformation("Device id was added successfully.")
+									   .requestInformation(message)
 									   .build();
 	}
 
-	private AccessRequestCallbackDto prepareErrorResponse(final String message, final AccessRequestType accessRequestType) {
+	private AccessRequestCallbackDto prepareErrorResponse(final String deviceId, final String message, final AccessRequestType accessRequestType) {
 		return AccessRequestCallbackDto.builder()
+									   .deviceId(deviceId)
 									   .accessRequestType(accessRequestType)
 									   .accessRequestStatus(AccessRequestStatus.ERROR)
 									   .requestInformation(message)
