@@ -28,6 +28,7 @@ public class LocationControllerService {
 	private final LocationRepository locationRepository;
 	private final UserToDeviceUtils userToDeviceUtils;
 	private final MapFeatureCreator mapFeatureCreator;
+	private final DeviceInfoMessageService deviceInfoMessageService;
 
 	@Transactional(readOnly = true)
 	public LastLocationDto getLastKnown(final String deviceId, final UUID userId) {
@@ -36,8 +37,12 @@ public class LocationControllerService {
 		final Optional<LocationEntity> lastKnownLocation = locationRepository.findFirstByDeviceIdOrderByDateTimeStartDesc(deviceId);
 
 		return lastKnownLocation.map(this::mapToLastLocationResponse)
-								.orElseThrow(() -> new LocationNotFoundException("Location for device with given ID was not found.",
-																				 "No location data was registered so far."));
+								.orElseThrow(() -> {
+									deviceInfoMessageService.saveInfoMessage(deviceId,
+																			 "Unable to return last device location. No location data was registered so far.");
+									return new LocationNotFoundException("Location for device with given ID was not found.",
+																		 "No location data was registered so far.");
+								});
 	}
 
 	private LastLocationDto mapToLastLocationResponse(final LocationEntity locationEntity) {
