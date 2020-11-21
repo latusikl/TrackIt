@@ -6,8 +6,8 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor(staticName = "of")
 public class PointDto {
 
-	private double latitude;
 	private double longitude;
+	private double latitude;
 
 	@JsonValue
 	public Double[] getJsonValue() {

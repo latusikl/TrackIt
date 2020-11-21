@@ -21,7 +21,7 @@ public class LocationCallbackProcessingService {
 	private final UserDeviceRepository userDeviceRepository;
 
 	public void handle(final AccessRequestCallbackDto callbackDto) {
-		if (callbackDto.getAccessRequestType() == AccessRequestType.ADD) {
+		if (callbackDto.getAccessRequestType() == AccessRequestType.ADD_SINGLE) {
 			determineMessageTypeAndSaveInfo(callbackDto);
 			updateDeviceStatus(callbackDto);
 		}

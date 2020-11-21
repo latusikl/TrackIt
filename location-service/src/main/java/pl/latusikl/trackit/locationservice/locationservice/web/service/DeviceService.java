@@ -45,7 +45,7 @@ public class DeviceService {
 																								.orElseThrow(() -> new UserException(
 																										"User not found")));
 		userDeviceRepository.save(userDevice);
-		sendBrokerAccessRequest(deviceAccessDto.getDeviceId(), AccessRequestType.ADD);
+		sendBrokerAccessRequest(deviceAccessDto.getDeviceId(), AccessRequestType.ADD_SINGLE);
 	}
 
 	@Transactional(readOnly = true)

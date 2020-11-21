@@ -1,5 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS track_it;
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS postgis;
 
 CREATE TABLE IF NOT EXISTS track_it.user_data (
                                                   user_id UUID PRIMARY KEY DEFAULT uuid_generate_v1(),
@@ -19,8 +20,7 @@ CREATE TABLE IF NOT EXISTS track_it.location_data (
                                                       location_id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                                                       device_id VARCHAR (150) NOT NULL REFERENCES track_it.user_devices(device_id) ON DELETE CASCADE,
                                                       date_time_start TIMESTAMP NOT NULL,
-                                                      longitude DOUBLE PRECISION NOT NULL,
-                                                      latitude DOUBLE PRECISION NOT NULL,
+                                                      location_value geography(POINT),
                                                       UNIQUE (device_id,date_time_start)
 );
 

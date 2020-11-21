@@ -44,7 +44,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-      dialect: PostgreSQL9Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
+
   datasource:
     url: jdbc:postgresql://${database.host}:5432/${database.name}
     username: ${database.user}

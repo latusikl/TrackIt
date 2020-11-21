@@ -3,6 +3,7 @@ package pl.latusikl.trackit.locationservice.locationservice.configuration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,5 +19,10 @@ public class LocationServiceConfig {
 		objectMapper.registerModule(new JavaTimeModule());
 		objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 		return objectMapper;
+	}
+
+	@Bean
+	GeometryFactory geometryFactory(){
+		return new GeometryFactory();
 	}
 }

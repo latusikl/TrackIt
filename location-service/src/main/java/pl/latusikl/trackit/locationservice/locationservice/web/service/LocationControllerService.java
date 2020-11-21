@@ -46,9 +46,12 @@ public class LocationControllerService {
 	}
 
 	private LastLocationDto mapToLastLocationResponse(final LocationEntity locationEntity) {
-		final var locationDto = LocationDto.of(locationEntity.getLongitude(), locationEntity.getLatitude(),
-											   locationEntity.getDateTimeStart());
-		final JsonNode mapPointFeature = mapFeatureCreator.createPoint(locationEntity.getLatitude(), locationEntity.getLongitude());
+		final var locationDto = LocationDto.of(locationEntity.getLocation()
+															 .getX(), locationEntity.getLocation()
+																					.getY(), locationEntity.getDateTimeStart());
+		final JsonNode mapPointFeature = mapFeatureCreator.createPoint(locationEntity.getLocation()
+																					 .getX(), locationEntity.getLocation()
+																											.getY());
 
 		final var mapFeatureCollectionDto = new MapFeatureCollectionDto(List.of(mapPointFeature));
 
@@ -76,16 +79,21 @@ public class LocationControllerService {
 		final var firstLocationEntity = orderedLocationList.get(0);
 		final var lastLocationEntity = orderedLocationList.get(orderedLocationList.size() - 1);
 
-		final var mapPointFeatureDto = mapFeatureCreator.createPoint(firstLocationEntity.getLatitude(),
-																	 firstLocationEntity.getLongitude());
+		final var mapPointFeatureDto = mapFeatureCreator.createPoint(firstLocationEntity.getLocation()
+																						.getX(), firstLocationEntity.getLocation()
+																													.getY());
 		final var mapFeatureLineString = mapFeatureCreator.createLineString(orderedLocationList.stream()
 																							   .map(locationEntity -> PointDto.of(
-																									   locationEntity.getLatitude(),
-																									   locationEntity.getLongitude()))
+																									   locationEntity.getLocation()
+																													 .getX(),
+																									   locationEntity.getLocation()
+																													 .getY()))
 																							   .collect(Collectors.toList()));
 
 		return LocationRangeDto.builder()
-							   .mapStart(PointDto.of(firstLocationEntity.getLatitude(), firstLocationEntity.getLongitude()))
+							   .mapStart(PointDto.of(firstLocationEntity.getLocation()
+																		.getX(), firstLocationEntity.getLocation()
+																									.getY()))
 							   .rangeStart(firstLocationEntity.getDateTimeStart())
 							   .rangeEnd(lastLocationEntity.getDateTimeStart())
 							   .mapData(new MapFeatureCollectionDto(List.of(mapPointFeatureDto, mapFeatureLineString)))

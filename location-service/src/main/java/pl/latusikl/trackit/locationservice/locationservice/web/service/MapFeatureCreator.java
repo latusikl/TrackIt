@@ -19,9 +19,9 @@ public class MapFeatureCreator {
 	private final UuidGenerator uuidGenerator;
 	private final ObjectMapper objectMapper;
 
-	JsonNode createPoint(final double latitude, final double longitude) {
+	JsonNode createPoint(final double longitude, final double latitude) {
 		final var pointFeatureDto = MapPointFeatureDto.builder()
-													  .geometry(new PointGeometry(PointDto.of(latitude, longitude)))
+													  .geometry(new PointGeometry(PointDto.of(longitude, latitude)))
 													  .id(uuidGenerator.randomUuid())
 													  .build();
 		return objectMapper.valueToTree(pointFeatureDto);

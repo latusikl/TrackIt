@@ -16,7 +16,7 @@ public class RequestAllAllowedDevicesProcessor {
 
 	@StreamListener(InboundProcessor.REQUEST_ALL_ALLOWED)
 	public void handleAccessMessageCallback(final String value) {
-		log.error(value);
+		log.info("Requested all active devices.");
 		allAllowedSendingService.sendAllAllowedDevicesAccessRequest();
 	}
 }
