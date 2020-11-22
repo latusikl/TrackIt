@@ -10,9 +10,12 @@ import pl.latusikl.trackit.locationservice.locationservice.persistance.repositor
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.LastLocationDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.LocationDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.LocationRangeDto;
+import pl.latusikl.trackit.locationservice.locationservice.web.dto.MonthYearDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.PointDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.geojson.MapFeatureCollectionDto;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -100,4 +103,17 @@ public class LocationControllerService {
 							   .build();
 	}
 
+	@Transactional(readOnly = true)
+	public Collection<LocalDate> findAllDatesWithLocationInMonth(final String deviceId, final MonthYearDto monthYearDto,
+																 final UUID userId) {
+		userToDeviceUtils.checkIfDeviceOwnedByUserOrElseThrow(deviceId, userId);
+		final var yearString = String.valueOf(monthYearDto.getYear());
+		final var startYearMonth = yearString + monthYearDto.getMonth();
+		final var endYearMonth = yearString + (monthYearDto.getMonth() + 1);
+
+		return locationRepository.findDatesWhereLocationInMonth(startYearMonth, endYearMonth, deviceId)
+								 .stream()
+								 .map(Date::toLocalDate)
+								 .collect(Collectors.toUnmodifiableList());
+	}
 }
