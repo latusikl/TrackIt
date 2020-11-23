@@ -8,6 +8,7 @@ import pl.latusikl.trackit.locationservice.locationservice.persistance.entity.Lo
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface LocationRepository extends CrudRepository<LocationEntity, Long> {
@@ -21,5 +22,5 @@ public interface LocationRepository extends CrudRepository<LocationEntity, Long>
 												   @Param("id") String deviceId);
 
 	@Query("SELECT location FROM LocationEntity AS location WHERE location.deviceId = ?1 and location.dateTimeStart >= ?2 and location.dateTimeStart < ?3 ORDER BY location.dateTimeStart")
-	Collection<LocationEntity> findInRange(String deviceId, LocalDateTime rangeStart, LocalDateTime rangeEnd);
+	List<LocationEntity> findInRange(String deviceId, LocalDateTime rangeStart, LocalDateTime rangeEnd);
 }

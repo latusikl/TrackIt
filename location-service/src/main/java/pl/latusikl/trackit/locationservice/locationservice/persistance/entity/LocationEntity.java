@@ -3,8 +3,6 @@ package pl.latusikl.trackit.locationservice.locationservice.persistance.entity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.geolatte.geom.codec.Wkt;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 
 import javax.persistence.Column;
@@ -32,7 +30,7 @@ public class LocationEntity {
 	@Column(name = "date_time_start", nullable = false)
 	private LocalDateTime dateTimeStart;
 
-	@Column(name = "location_value",nullable = false)
+	@Column(name = "location_value", nullable = false)
 	private Point location;
 
 	@Builder

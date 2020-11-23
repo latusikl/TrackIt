@@ -24,12 +24,12 @@ import java.util.UUID;
 @NoArgsConstructor
 @TypeDefs({@TypeDef(name = "pg-id-uuid", typeClass = PostgresIdAsUuid.class)})
 public class UserData {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id", insertable = false, updatable = false, unique = true)
 	@Type(type = "pg-id-uuid", parameters = @Parameter(name = "column", value = "user_id"))
 	private UUID userId;
+
 	@Column(name = "user_email", nullable = false, length = 150)
 	private String userEmail;
 	@Column(name = "password", nullable = false, length = 250)

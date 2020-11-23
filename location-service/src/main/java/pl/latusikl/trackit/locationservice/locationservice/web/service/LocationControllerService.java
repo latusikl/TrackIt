@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.latusikl.trackit.locationservice.locationservice.exception.LocationNotFoundException;
+import pl.latusikl.trackit.locationservice.locationservice.exception.MalformedRequestException;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.entity.LocationEntity;
 import pl.latusikl.trackit.locationservice.locationservice.persistance.repository.LocationRepository;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.LastLocationDto;
@@ -12,6 +13,7 @@ import pl.latusikl.trackit.locationservice.locationservice.web.dto.LocationDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.LocationRangeDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.MonthYearDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.PointDto;
+import pl.latusikl.trackit.locationservice.locationservice.web.dto.TrackDto;
 import pl.latusikl.trackit.locationservice.locationservice.web.dto.geojson.MapFeatureCollectionDto;
 
 import java.sql.Date;
@@ -21,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,14 +30,12 @@ import java.util.stream.Collectors;
 public class LocationControllerService {
 
 	private final LocationRepository locationRepository;
-	private final UserToDeviceUtils userToDeviceUtils;
 	private final MapFeatureCreator mapFeatureCreator;
 	private final DeviceInfoMessageService deviceInfoMessageService;
+	private final TrackGeneratorService trackGeneratorService;
 
 	@Transactional(readOnly = true)
-	public LastLocationDto getLastKnown(final String deviceId, final UUID userId) {
-		userToDeviceUtils.checkIfDeviceOwnedByUserOrElseThrow(deviceId, userId);
-
+	public LastLocationDto getLastKnown(final String deviceId) {
 		final Optional<LocationEntity> lastKnownLocation = locationRepository.findFirstByDeviceIdOrderByDateTimeStartDesc(deviceId);
 
 		return lastKnownLocation.map(this::mapToLastLocationResponse)
@@ -62,9 +61,7 @@ public class LocationControllerService {
 	}
 
 	@Transactional(readOnly = true)
-	public LocationRangeDto getFromRange(final String deviceId, final UUID userId, final LocalDateTime rangeStart,
-										 final LocalDateTime rangeEnd) {
-		userToDeviceUtils.checkIfDeviceOwnedByUserOrElseThrow(deviceId, userId);
+	public LocationRangeDto getFromRange(final String deviceId, final LocalDateTime rangeStart, final LocalDateTime rangeEnd) {
 
 		final Collection<LocationEntity> orderedLocationEntitiesFromRange = locationRepository.findInRange(deviceId, rangeStart,
 																										   rangeEnd);
@@ -104,9 +101,7 @@ public class LocationControllerService {
 	}
 
 	@Transactional(readOnly = true)
-	public Collection<LocalDate> findAllDatesWithLocationInMonth(final String deviceId, final MonthYearDto monthYearDto,
-																 final UUID userId) {
-		userToDeviceUtils.checkIfDeviceOwnedByUserOrElseThrow(deviceId, userId);
+	public Collection<LocalDate> findAllDatesWithLocationInMonth(final String deviceId, final MonthYearDto monthYearDto) {
 		final var yearString = String.valueOf(monthYearDto.getYear());
 		final var startYearMonth = yearString + monthYearDto.getMonth();
 		final var endYearMonth = yearString + (monthYearDto.getMonth() + 1);
@@ -115,5 +110,16 @@ public class LocationControllerService {
 								 .stream()
 								 .map(Date::toLocalDate)
 								 .collect(Collectors.toUnmodifiableList());
+	}
+
+	public Collection<TrackDto> getTracks(final String deviceId, final LocalDateTime rangeStart, final LocalDateTime rangeEnd) {
+		return trackGeneratorService.generateTracks(deviceId, rangeStart, rangeEnd);
+	}
+
+	public void checkIfRangeNotToBigOrThrow(final LocalDateTime rangeStart, final LocalDateTime rangeEnd, final int limit) {
+		if (!rangeEnd.isBefore(rangeStart.plusHours(limit)
+										 .plusSeconds(1))) {
+			throw new MalformedRequestException("Date range limit was exceeded", "Maximum range size is: " + limit + "h");
+		}
 	}
 }
