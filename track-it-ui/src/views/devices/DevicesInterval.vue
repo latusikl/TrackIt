@@ -30,8 +30,10 @@
             v-on:device-chosen="handleDeviceChosenEvent"
           ></device-choice>
           <date-range-stepper
+            :key="stepperKey"
             v-if="isStepperActive"
             v-on:range-chosen="handleRangeChoice"
+            :device-id="chosenDeviceId"
           ></date-range-stepper>
         </v-row>
         <v-row class="align-center justify-center" v-if="isMapVisible">
@@ -86,13 +88,16 @@ export default class DevicesInterval extends Vue {
   private mapData: FeatureCollection | undefined = undefined;
   private mapStartLongitude = 0.0;
   private mapStartLatitude = 0.0;
+  private stepperKey = 0;
 
   private handleDeviceChosenEvent(userDeviceId: string) {
     this.chosenDeviceId = userDeviceId;
+    this.refreshStepper();
     this.isStepperActive = true;
   }
 
   private handleRangeChoice(range: string) {
+    console.debug("Handled new location range" + range);
     const rangeSplit = range.split("_");
     this.fetchData(rangeSplit[0], rangeSplit[1]);
     this.scrollDown();
@@ -105,6 +110,10 @@ export default class DevicesInterval extends Vue {
 
   private makeErrorInvisible() {
     this.isErrorAlertVisible = false;
+  }
+
+  private refreshStepper() {
+    this.stepperKey++;
   }
 
   private fetchData(rangeStart: string, rangeEnd: string) {

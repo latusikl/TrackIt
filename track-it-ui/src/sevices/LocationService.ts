@@ -3,20 +3,31 @@ import http from "../http-commons";
 import {AxiosResponse} from "axios";
 import {LastLocationDto} from "@/dto/LastLocationDto";
 import LocationRangeDto from "@/dto/LocationRangeDto";
+import {TrackDto} from "@/dto/TrackDto";
 
 
 class LocationService {
-    getLastLocation(deviceId: String): Promise<AxiosResponse<LastLocationDto>> {
-        const url = "/locations/" + deviceId + "/last";
-        return http.get(url);
+    getLastLocation(deviceId: string): Promise<AxiosResponse<LastLocationDto>> {
+        return http.get(`${this.locationUrlWithId(deviceId)}/last`);
     }
 
-    getLocationRange(deviceId: String, rangeStart: string, rangeEnd: string): Promise<AxiosResponse<LocationRangeDto>> {
-        const url = "/locations/" + deviceId;
+    getLocationRange(deviceId: string, rangeStart: string, rangeEnd: string): Promise<AxiosResponse<LocationRangeDto>> {
+        return http.get(`${this.locationUrlWithId(deviceId)}/range`, {params: this.createRangeParams(rangeStart, rangeEnd)});
+    }
+
+    getTracksForPage(deviceId: string, rangeStart: string, rangeEnd: string): Promise<AxiosResponse<Array<TrackDto>>> {
+        return http.get(`${this.locationUrlWithId(deviceId)}/tracks`, {params: this.createRangeParams(rangeStart, rangeEnd)});
+    }
+
+    private locationUrlWithId(deviceId: string) {
+        return `/locations/${deviceId}`
+    }
+
+    private createRangeParams(rangeStart: string, rangeEnd: string): URLSearchParams {
         const requestParams = new URLSearchParams()
         requestParams.set("rangeStart", rangeStart);
         requestParams.set("rangeEnd", rangeEnd);
-        return http.get(url, {params: requestParams});
+        return requestParams
     }
 
 }
