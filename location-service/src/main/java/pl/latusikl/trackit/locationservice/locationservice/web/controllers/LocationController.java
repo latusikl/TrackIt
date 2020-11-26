@@ -44,7 +44,7 @@ public class LocationController {
 		return locationControllerService.getLastKnown(deviceId);
 	}
 
-	@GetMapping("/{deviceId}")
+	@GetMapping("/{deviceId}/range")
 	@ResponseStatus(HttpStatus.OK)
 	public LocationRangeDto getFromTimeRange(@NotEmpty @PathVariable final String deviceId,
 											 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam final LocalDateTime rangeStart,

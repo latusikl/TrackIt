@@ -20,9 +20,9 @@ public class TrackGeneratorService {
 	private static final int MAX_HOURS_PER_TRACK = 1;
 	private static final int MAX_HOURS_PER_OPERATION = 2;
 	private static final int MAX_MINUTE_BREAK = 10;
-	private static final String TRACK_NAME = "track_";
 
 	private final LocationRepository locationRepository;
+	private final UuidGenerator uuidGenerator;
 
 	@Transactional(readOnly = true)
 	public Collection<TrackDto> generateTracks(final String deviceId, final LocalDateTime rangeStart, final LocalDateTime rangeEnd) {
@@ -38,12 +38,12 @@ public class TrackGeneratorService {
 		if (locationEntities.size() == 1) {
 			final var singleLocationDateTime = locationEntities.get(0)
 															   .getDateTimeStart();
-			return List.of(TrackDto.of(singleLocationDateTime, singleLocationDateTime, TRACK_NAME + 1));
+			return List.of(TrackDto.of(singleLocationDateTime, singleLocationDateTime, uuidGenerator.randomUuid()));
 		}
 
 		final List<TrackDto> trackDtos = new ArrayList<>();
 		TrackDto lastTrack = TrackDto.of(locationEntities.get(0)
-														 .getDateTimeStart(), null, TRACK_NAME + 1);
+														 .getDateTimeStart(), null, uuidGenerator.randomUuid());
 		final var locationListSize = locationEntities.size();
 
 		for (int i = 1; i < locationListSize; i++) {
@@ -62,7 +62,7 @@ public class TrackGeneratorService {
 					previousLocationDateTime.plusMinutes(MAX_MINUTE_BREAK))) {
 				lastTrack.setEnd(previousLocationDateTime);
 				trackDtos.add(lastTrack);
-				lastTrack = TrackDto.of(locationDateTime, null, TRACK_NAME + (trackDtos.size() + 1));
+				lastTrack = TrackDto.of(locationDateTime, null, uuidGenerator.randomUuid());
 			}
 
 		}

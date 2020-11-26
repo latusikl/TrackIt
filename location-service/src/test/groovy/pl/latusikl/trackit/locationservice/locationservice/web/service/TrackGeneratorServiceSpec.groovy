@@ -17,7 +17,8 @@ class TrackGeneratorServiceSpec extends Specification {
 	static deviceId = "123345567"
 	static GeometryFactory geometryFactory = new GeometryFactory()
 	LocationRepository locationRepository = Stub(LocationRepository.class)
-	TrackGeneratorService trackGeneratorService = new TrackGeneratorService(locationRepository)
+	UuidGenerator uuidGenerator = Mock(UuidGenerator.class)
+	TrackGeneratorService trackGeneratorService = new TrackGeneratorService(locationRepository, uuidGenerator)
 
 
 	def 'Should return empty list when no location data returned from database'() {
@@ -31,6 +32,7 @@ class TrackGeneratorServiceSpec extends Specification {
 
 		then:
 		trackDtoList.size() == 0
+		0 * uuidGenerator.randomUuid()
 	}
 
 	def 'Should return track where end date is equal to beginning for single point in database'() {
@@ -49,6 +51,7 @@ class TrackGeneratorServiceSpec extends Specification {
 		def track = trackDtoList.iterator().next()
 		track.getStart() == locationDate
 		track.getEnd() == locationDate
+		1 * uuidGenerator.randomUuid()
 	}
 
 	def 'Should throw error when range is to big'() {
@@ -82,7 +85,7 @@ class TrackGeneratorServiceSpec extends Specification {
 		def track = trackDtoList.iterator().next()
 		track.getStart() == startLocationDateTime
 		track.getEnd() == lastLocationInTrackDateTime
-
+		1 * uuidGenerator.randomUuid()
 	}
 
 	def 'Should return two tracks when data are more frequent than per 10 minutes and from more than hour'() {
@@ -109,6 +112,7 @@ class TrackGeneratorServiceSpec extends Specification {
 		trackDtoList.get(0).getEnd() == firstTrackEnd
 		trackDtoList.get(1).getStart() == secondTrackStart
 		trackDtoList.get(1).getEnd() == secondTrackEnd
+		2 * uuidGenerator.randomUuid()
 	}
 
 	def 'Should return return three tracks when break is bigger than 10 minutes'() {
@@ -146,6 +150,7 @@ class TrackGeneratorServiceSpec extends Specification {
 		trackDtoList.get(1).getEnd() == secondTrackEnd
 		trackDtoList.get(2).getStart() == thirdTrackStart
 		trackDtoList.get(2).getEnd() == thirdTrackEnd
+		3 * uuidGenerator.randomUuid()
 	}
 
 	static LocationEntity singleLocation(LocalDateTime localDateTime) {
