@@ -13,9 +13,7 @@
         <v-divider></v-divider>
         <v-row class="align-center justify-center mt-5">
           <v-alert type="info" width="68.5%">
-            Please remember! <br />
-            Date range will be limited if there is not enough data for full
-            range.
+            Tracks are limited up to one hour with length.
           </v-alert>
         </v-row>
         <v-row class="align-center justify-center">

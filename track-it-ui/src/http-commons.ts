@@ -2,10 +2,11 @@
 import axios from "axios";
 import getAuthHeader from "@/sevices/AuthorizationHeaderService";
 import AuthService from "@/sevices/AuthService";
+import EnvInfo from "@/env-info";
 
 const configuredAxios = axios.create({
 
-    baseURL:"http://localhost:8090",
+    baseURL: EnvInfo.baseUrl,
     headers: {
         "Content-type": "application/json"
     }

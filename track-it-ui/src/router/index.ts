@@ -35,11 +35,11 @@ const routes: Array<RouteConfig> = [
         name: "DevicesLogs",
         component: () => import( "@/views/devices/DevicesLogs.vue")
     },
-    {
-        path: "/devices/live",
-        name: "DevicesLive",
-        component: () => import( "@/views/devices/DevicesLive.vue")
-    },
+    // {
+    //     path: "/devices/live",
+    //     name: "DevicesLive",
+    //     component: () => import( "@/views/devices/DevicesLive.vue")
+    // },
     {
         path: "/sign-in",
         name: "SignIn",

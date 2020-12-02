@@ -31,9 +31,9 @@
           Device logs
         </v-list-item>
 
-        <v-list-item link to="/devices/live">
-          Live mode
-        </v-list-item>
+        <!--        <v-list-item link to="/devices/live">-->
+        <!--          Live mode-->
+        <!--        </v-list-item>-->
       </v-list>
     </v-navigation-drawer>
   </v-card>

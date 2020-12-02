@@ -14,6 +14,12 @@
           <v-divider class="mb-5"></v-divider>
         </v-row>
         <v-row justify="center">
+          <device-server-info min-width="70%"></device-server-info>
+        </v-row>
+        <v-row>
+          <v-divider class="mb-5 mt-5"></v-divider>
+        </v-row>
+        <v-row justify="center">
           <device-access></device-access>
         </v-row>
         <v-row>
@@ -34,9 +40,11 @@ import DeviceAccess from "@/components/devices/DeviceAccess.vue";
 import DeviceSubmenu from "@/components/devices/DeviceSubmenu.vue";
 import VcardSubtitle from "@/components/home/VcardSubtitle.vue";
 import DeviceList from "@/components/devices/DeviceList.vue";
+import DeviceServerInfo from "@/components/devices/DeviceServerInfo.vue";
 
 @Component({
   components: {
+    DeviceServerInfo,
     DeviceAccess,
     DeviceSubmenu,
     DeviceList,
