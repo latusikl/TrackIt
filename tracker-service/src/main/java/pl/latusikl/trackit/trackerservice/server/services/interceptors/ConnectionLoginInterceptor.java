@@ -26,6 +26,7 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 	private final Predicate<String> locationMessageValidator;
 	private final Predicate<String> loginMessageValidator;
 	private final LoginPacketConstants loginPacketConstants;
+
 	private HandshakeState handshakeState = HandshakeState.NOT_STARTED;
 	private int loginRetryCounter = 0;
 
@@ -121,7 +122,6 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 			connectionEntity.setDeviceImei(imei);
 			connectionRepository.save(connectionEntity);
 		}
-
 	}
 
 	private void closeConnectionWithError(final String errorMessage) {

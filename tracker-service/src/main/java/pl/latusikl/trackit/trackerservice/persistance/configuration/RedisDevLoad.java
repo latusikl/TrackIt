@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Profile("device-test")
 public class RedisDevLoad {
 	private final RedisTemplate<String, Object> redisTemplate;
 

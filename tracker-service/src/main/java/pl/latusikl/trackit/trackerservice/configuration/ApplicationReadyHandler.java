@@ -27,8 +27,7 @@ public class ApplicationReadyHandler implements ApplicationRunner {
 
 	private final LettuceConnectionFactory redisLettuceConnectionFactory;
 	private final OutboundSender outboundSender;
-	private final RedisDevLoad redisDevLoad;
-	private final Environment environment;
+//	private final RedisDevLoad redisDevLoad;
 
 	@Override
 	public void run(final ApplicationArguments args) {
@@ -43,7 +42,7 @@ public class ApplicationReadyHandler implements ApplicationRunner {
 
 	private void executeRefreshProcess(){
 		refreshRedisValuesOnStartup();
-		loadAdditionalIfDevProfile();
+//		loadAdditionalIfDevProfile();
 	}
 
 	public void refreshRedisValuesOnStartup() {
@@ -52,10 +51,10 @@ public class ApplicationReadyHandler implements ApplicationRunner {
 		log.info("Clean Redis and send all devices request.");
 	}
 
-	private void loadAdditionalIfDevProfile() {
-		if (Arrays.stream(environment.getActiveProfiles())
-				  .anyMatch(Predicate.isEqual("dev"))) {
-			redisDevLoad.loadDevDataToRedis();
-		}
-	}
+//	private void loadAdditionalIfDevProfile() {
+//		if (Arrays.stream(environment.getActiveProfiles())
+//				  .anyMatch(Predicate.isEqual("dev"))) {
+//			redisDevLoad.loadDevDataToRedis();
+//		}
+//	}
 }

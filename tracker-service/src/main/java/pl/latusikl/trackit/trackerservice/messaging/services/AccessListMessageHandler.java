@@ -13,6 +13,7 @@ import pl.latusikl.trackit.trackerservice.messaging.dto.access.AccessRequestDto;
 import pl.latusikl.trackit.trackerservice.messaging.dto.access.AccessRequestStatus;
 import pl.latusikl.trackit.trackerservice.messaging.dto.access.AccessRequestType;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
+import pl.latusikl.trackit.trackerservice.server.services.ConnectionRemovalService;
 
 @Slf4j
 @Component
@@ -27,6 +28,7 @@ public class AccessListMessageHandler {
 
 	private final OutboundSender outboundSender;
 	private final ImeiRepository imeiRepository;
+	private final ConnectionRemovalService connectionRemovalService;
 
 	@StreamListener(InboundProcessor.ACCESS_LIST_CHANNEL)
 	public void handleDeviceAccessRequest(final AccessRequestDto accessRequestDto) {
@@ -37,7 +39,7 @@ public class AccessListMessageHandler {
 			accessRequestCallbackDto = handleInternal(accessRequestDto.getRequestType(), accessRequestDto.getImei());
 		}
 		else {
-			accessRequestCallbackDto = prepareErrorResponse(null,"Request is invalid. Device ID or request type is missing",
+			accessRequestCallbackDto = prepareErrorResponse(null, "Request is invalid. Device ID or request type is missing",
 															accessRequestDto.getRequestType());
 		}
 		outboundSender.sendDeviceAccessCallback(accessRequestCallbackDto);
@@ -62,18 +64,20 @@ public class AccessListMessageHandler {
 	private AccessRequestCallbackDto addToList(final String deviceId, final AccessRequestType accessRequestType) {
 		final Long numberOfAdded = imeiRepository.saveImeiToWhitelisted(deviceId);
 		return numberOfAdded.equals(ADDED_NUM) ?
-				prepareOkResponse(deviceId,accessRequestType,"Device was added successfully.") :
-				prepareErrorResponse(deviceId,String.format(ADD_ERROR_MESSAGE, numberOfAdded), accessRequestType);
+				prepareOkResponse(deviceId, accessRequestType, "Device was added successfully.") :
+				prepareErrorResponse(deviceId, String.format(ADD_ERROR_MESSAGE, numberOfAdded), accessRequestType);
 	}
 
 	private AccessRequestCallbackDto removeFromList(final String deviceId, final AccessRequestType accessRequestType) {
 		final Long numberOfRemoved = imeiRepository.removeImei(deviceId);
+		connectionRemovalService.closeConnection(deviceId);
 		return numberOfRemoved.equals(REMOVED_NUM) ?
-				prepareOkResponse(deviceId,accessRequestType, "Device was removed from system.") :
-				prepareErrorResponse(deviceId,String.format(REMOVE_ERROR_MESSAGE, numberOfRemoved), accessRequestType);
+				prepareOkResponse(deviceId, accessRequestType, "Device was removed from system.") :
+				prepareErrorResponse(deviceId, String.format(REMOVE_ERROR_MESSAGE, numberOfRemoved), accessRequestType);
 	}
 
-	private AccessRequestCallbackDto prepareOkResponse(final String deviceId, final AccessRequestType accessRequestType, final String message) {
+	private AccessRequestCallbackDto prepareOkResponse(final String deviceId, final AccessRequestType accessRequestType,
+													   final String message) {
 		return AccessRequestCallbackDto.builder()
 									   .deviceId(deviceId)
 									   .accessRequestType(accessRequestType)
@@ -82,7 +86,8 @@ public class AccessListMessageHandler {
 									   .build();
 	}
 
-	private AccessRequestCallbackDto prepareErrorResponse(final String deviceId, final String message, final AccessRequestType accessRequestType) {
+	private AccessRequestCallbackDto prepareErrorResponse(final String deviceId, final String message,
+														  final AccessRequestType accessRequestType) {
 		return AccessRequestCallbackDto.builder()
 									   .deviceId(deviceId)
 									   .accessRequestType(accessRequestType)

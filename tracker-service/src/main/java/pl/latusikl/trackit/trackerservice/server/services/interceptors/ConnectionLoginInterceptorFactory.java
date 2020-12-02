@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ConnectionRepository;
 import pl.latusikl.trackit.trackerservice.persistance.repositories.ImeiRepository;
 import pl.latusikl.trackit.trackerservice.server.constatns.LoginPacketConstants;
+import pl.latusikl.trackit.trackerservice.server.services.ConnectionRemovalService;
 
 import java.util.function.Predicate;
 
