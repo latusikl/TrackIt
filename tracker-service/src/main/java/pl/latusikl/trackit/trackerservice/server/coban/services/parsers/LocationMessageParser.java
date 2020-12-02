@@ -3,6 +3,7 @@ package pl.latusikl.trackit.trackerservice.server.coban.services.parsers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pl.latusikl.trackit.trackerservice.messaging.dto.location.CoordinatesDto;
 import pl.latusikl.trackit.trackerservice.messaging.dto.location.LocationMessageDto;
 import pl.latusikl.trackit.trackerservice.server.coban.constatns.LocationPacketConstants;
 import pl.latusikl.trackit.trackerservice.server.coban.excpetions.MessageParsingException;
@@ -23,13 +24,13 @@ public class LocationMessageParser {
 	public LocationMessageDto parse(final String message) {
 		final String[] splitMessage = message.split(locationPacketConstants.getPacketSplitChar());
 		try {
-			return LocationMessageDto.builder()
-									 .id(extractImei(splitMessage))
-									 .dateTime(localizationDateTimeParser.extractDateAndTime(splitMessage))
-									 .gpsConnectionStatus(extractGpsConnectionStatus(splitMessage))
-									 .latitude(latitudeParser.parse(splitMessage))
-									 .longitude(longitudeParser.parse(splitMessage))
-									 .build();
+			final var isGpsConnection = extractGpsConnectionStatus(splitMessage);
+			if (isGpsConnection) {
+				return buildLocationMessage(splitMessage);
+			}
+			else {
+				return buildNoLocationMessage(splitMessage);
+			}
 		}
 		catch (final RuntimeException e) {
 			throw new MessageParsingException("Unable to process recieved message", LocationMessageParser.class,
@@ -37,6 +38,26 @@ public class LocationMessageParser {
 																														.getSimpleName(),
 																								e.getMessage()));
 		}
+	}
+
+	private LocationMessageDto buildLocationMessage(final String[] splitMessage) {
+		return LocationMessageDto.builder()
+								 .id(extractImei(splitMessage))
+								 .dateTime(localizationDateTimeParser.extractDateAndTime(splitMessage))
+								 .gpsConnectionStatus(true)
+								 .latitude(latitudeParser.parse(splitMessage))
+								 .longitude(longitudeParser.parse(splitMessage))
+								 .build();
+	}
+
+	private LocationMessageDto buildNoLocationMessage(final String[] splitMessage) {
+		return LocationMessageDto.builder()
+								 .id(extractImei(splitMessage))
+								 .dateTime(localizationDateTimeParser.extractDateAndTime(splitMessage))
+								 .longitude(CoordinatesDto.empty())
+								 .latitude(CoordinatesDto.empty())
+								 .gpsConnectionStatus(false)
+								 .build();
 	}
 
 	private String extractImei(final String[] splitMessage) {

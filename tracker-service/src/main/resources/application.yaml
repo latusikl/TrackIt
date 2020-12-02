@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev,non-dev
+    active: dev
   main:
     web-application-type: none
   application:

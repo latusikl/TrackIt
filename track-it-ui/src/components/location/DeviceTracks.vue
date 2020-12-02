@@ -81,8 +81,8 @@ export default class DeviceTracks extends Vue {
   private tableVisible = false;
 
   private trackDtos: TrackDto[] | undefined;
-  private pageStartRange: string;
-  private pageEndRange: string;
+  private pageStartRange: string | undefined;
+  private pageEndRange: string | undefined;
 
   @Emit("track-chosen")
   private emitRange(rangeStart: string, rangeEnd: string) {

@@ -30,8 +30,8 @@ public class DeviceInfoMessageService {
 													 .deviceId(deviceId)
 													 .serverDateTime(timeUtcUtils.getUtcNow())
 													 .message(
-															 "Unable to save received location. Location for given timestamp already exists in system.")
-													 .infoLevel(InfoLevel.ERROR)
+															 message)
+													 .infoLevel(infoLevel)
 													 .build();
 		deviceInfoRepository.save(deviceInfoEntity);
 	}

@@ -34,7 +34,7 @@ public class LocationControllerService {
 	private final DeviceInfoMessageService deviceInfoMessageService;
 	private final TrackGeneratorService trackGeneratorService;
 
-	@Transactional(readOnly = true)
+	@Transactional
 	public LastLocationDto getLastKnown(final String deviceId) {
 		final Optional<LocationEntity> lastKnownLocation = locationRepository.findFirstByDeviceIdOrderByDateTimeStartDesc(deviceId);
 
