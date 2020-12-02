@@ -21,13 +21,26 @@ public class LocationCallbackProcessingService {
 	private final UserDeviceRepository userDeviceRepository;
 
 	public void handle(final AccessRequestCallbackDto callbackDto) {
-		if (callbackDto.getAccessRequestType() == AccessRequestType.ADD_SINGLE) {
+		final var requestType = callbackDto.getAccessRequestType();
+		if (requestType == AccessRequestType.ADD_SINGLE) {
 			determineMessageTypeAndSaveInfo(callbackDto);
 			updateDeviceStatus(callbackDto);
 		}
-		else if (callbackDto.getAccessRequestType() == AccessRequestType.REMOVE) {
+		else if (requestType == AccessRequestType.REMOVE) {
 			determineMessageTypeAndSaveInfo(callbackDto);
 		}
+		else if (requestType == AccessRequestType.ADD_ALL) {
+			if (isNotAdded(callbackDto.getDeviceId())) {
+				determineMessageTypeAndSaveInfo(callbackDto);
+				updateDeviceStatus(callbackDto);
+			}
+		}
+	}
+
+	private boolean isNotAdded(final String deviceId) {
+		return userDeviceRepository.findById(deviceId)
+								   .map(device -> device.getDeviceStatus() == DeviceStatus.CONNECTED)
+								   .orElse(false);
 	}
 
 	private void updateDeviceStatus(final AccessRequestCallbackDto callbackDto) {
