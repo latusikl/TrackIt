@@ -7,6 +7,8 @@ spring:
     name: tracker-service
   redis:
     client-name: tracker-service
+  rabbitmq:
+    port: 5672
   cloud:
     stream:
       bindings:
@@ -29,23 +31,33 @@ tcp:
   server:
     port: 9000
 
+logging:
+  level:
+    pl.latusikl.trackit.trackerservice: DEBUG
 ---
-
 spring:
   profiles: dev
   redis:
     host: localhost
   rabbitmq:
     host: localhost
-    port: 5672
     username: guest
     password: guest
 
-logging:
-  level:
-    pl.latusikl.trackit.trackerservice: DEBUG
-
 ---
+
+spring:
+  profiles: deploy
+
+  #Rabbit and Spring Cloud Streams
+  rabbitmq:
+    host: trackit-rabbit
+    username: dath
+    password: rxpFm6!st3C089
+  redis:
+    host: trackit-redis
+---
+
 spring:
   profiles: test
 

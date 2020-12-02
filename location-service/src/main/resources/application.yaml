@@ -6,22 +6,9 @@ spring:
     application:
       name: location-service
 
-database:
-  host: localhost
-  name: TrackItDB
-  pass: pass
-  user: user
-
----
-spring:
-  profiles: dev
-
-#Rabbit and Spring Cloud Streams
   rabbitmq:
-    host: localhost
     port: 5672
-    username: guest
-    password: guest
+
   cloud:
     stream:
       bindings:
@@ -39,20 +26,18 @@ spring:
           accessListChannel:
             destination: accessList
 
-
-#Database
   jpa:
     hibernate:
       ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
-
   datasource:
-    url: jdbc:postgresql://${database.host}:5432/${database.name}
-    username: ${database.user}
-    password: ${database.pass}
     initialization-mode: always
+
+
+database:
+  name: TrackItDB
 
 logging:
   level:
@@ -63,6 +48,38 @@ security:
   allowed-hosts:
     - '*'
   expiration-time: 1800000
+---
+
+spring:
+  profiles: dev
+
+#Rabbit and Spring Cloud Streams
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+
+#Database
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${database.name}
+    username: user
+    password: pass
+
+---
+spring:
+  profiles: deploy
+
+  #Rabbit and Spring Cloud Streams
+  rabbitmq:
+    host: trackit-rabbit
+    username: dath
+    password: rxpFm6!st3C089
+
+  #Database
+  datasource:
+    url: jdbc:postgresql://trackit-postgres:5432/${database.name}
+    username: dath
+    password: p2X3hP2Hfn61%h
 ---
 spring:
   profiles: test

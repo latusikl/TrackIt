@@ -27,7 +27,7 @@ public class LocationCallbackProcessingService {
 			updateDeviceStatus(callbackDto);
 		}
 		else if (requestType == AccessRequestType.REMOVE) {
-			determineMessageTypeAndSaveInfo(callbackDto);
+			determineMessageTypeAndSaveInfoForRemoval(callbackDto);
 		}
 		else if (requestType == AccessRequestType.ADD_ALL) {
 			if (isNotAdded(callbackDto.getDeviceId())) {
@@ -70,6 +70,13 @@ public class LocationCallbackProcessingService {
 													 String.format(PROCESS_MESSAGE_TEMPLATE, callbackDto.getRequestInformation()));
 		}
 		else if (callbackDto.getAccessRequestStatus() == AccessRequestStatus.ERROR) {
+			deviceInfoMessageService.saveErrorMessage(callbackDto.getDeviceId(),
+													  String.format(PROCESS_MESSAGE_TEMPLATE, callbackDto.getRequestInformation()));
+		}
+	}
+
+	private void determineMessageTypeAndSaveInfoForRemoval(final AccessRequestCallbackDto callbackDto) {
+		if(callbackDto.getAccessRequestStatus() == AccessRequestStatus.ERROR) {
 			deviceInfoMessageService.saveErrorMessage(callbackDto.getDeviceId(),
 													  String.format(PROCESS_MESSAGE_TEMPLATE, callbackDto.getRequestInformation()));
 		}

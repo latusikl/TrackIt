@@ -22,15 +22,18 @@ services:
       - tracker-network
       - location-network
     restart: on-failure
+    environment:
+      - RABBITMQ_DEFAULT_USER=dath
+      - RABBITMQ_DEFAULT_PASS=rxpFm6!st3C089
 
   trackit-postgres:
     container_name: trackit-postgres
     image: postgis/postgis:12-2.5-alpine
     restart: always
     environment:
-      POSTGRES_PASSWORD: pass
-      POSTGRES_USER: user
-      POSTGRES_DB: TrackItDB
+      - POSTGRES_PASSWORD=p2X3hP2Hfn61%h
+      - POSTGRES_USER=dath
+      - POSTGRES_DB=TrackItDB
     ports:
       - "5432:5432"
     networks:
@@ -49,8 +52,7 @@ services:
       - trackit-rabbit
     restart: on-failure
     environment:
-      - SPRING_REDIS_HOST=trackit-redis
-      - SPRING_RABBITMQ_HOST=trackit-rabbit
+      - SPRING_PROFILES_ACTIVE=deploy
 
 
   location-service:
@@ -66,10 +68,7 @@ services:
       - trackit-postgres
     restart: on-failure
     environment:
-      - SPRING_RABBITMQ_HOST=trackit-rabbit
-      - DATABASE_HOST=trackit-postgres
-      - DATABASE_PASS=pass
-      - DATABASE_USER=user
+      - SPRING_PROFILES_ACTIVE=deploy
 
   trackit-ui:
     build:
