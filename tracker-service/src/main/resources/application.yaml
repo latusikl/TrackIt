@@ -27,7 +27,7 @@ redis:
   imei-set-name: ImeiAllowed
 tcp:
   server:
-    coban-port: 9000
+    port: 9000
 
 ---
 

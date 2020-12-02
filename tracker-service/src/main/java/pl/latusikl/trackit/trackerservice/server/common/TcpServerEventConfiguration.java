@@ -8,9 +8,9 @@ import org.springframework.integration.ip.tcp.connection.TcpConnectionCloseEvent
 import org.springframework.integration.ip.tcp.connection.TcpConnectionExceptionEvent;
 import org.springframework.integration.ip.tcp.connection.TcpConnectionOpenEvent;
 import org.springframework.integration.ip.tcp.serializer.SoftEndOfStreamException;
-import pl.latusikl.trackit.trackerservice.server.coban.constatns.CobanConstants;
-import pl.latusikl.trackit.trackerservice.server.coban.services.CobanConnectionEventService;
-import pl.latusikl.trackit.trackerservice.server.coban.services.CobanExceptionEventService;
+import pl.latusikl.trackit.trackerservice.server.constatns.ServerConstants;
+import pl.latusikl.trackit.trackerservice.server.services.ConnectionEventService;
+import pl.latusikl.trackit.trackerservice.server.services.ExceptionEventService;
 
 @Slf4j
 @Configuration
@@ -18,16 +18,16 @@ import pl.latusikl.trackit.trackerservice.server.coban.services.CobanExceptionEv
 public class TcpServerEventConfiguration
 {
 
-    private final CobanExceptionEventService cobanExceptionEventService;
-    private final CobanConnectionEventService cobanConnectionEventService;
-    private final CobanConstants cobanConstants;
+    private final ExceptionEventService exceptionEventService;
+    private final ConnectionEventService connectionEventService;
+    private final ServerConstants serverConstants;
 
     @EventListener
     public void open(final TcpConnectionOpenEvent event)
     {
-        if (event.getConnectionFactoryName().equals(cobanConstants.getServerBeanName())) {
+        if (event.getConnectionFactoryName().equals(serverConstants.getServerBeanName())) {
             log.debug("New connection established Connection id: {}", event.getConnectionId());
-            cobanConnectionEventService.handleConnectionOpen(event.getConnectionId());
+            connectionEventService.handleConnectionOpen(event.getConnectionId());
         }
     }
 
@@ -38,8 +38,8 @@ public class TcpServerEventConfiguration
         if (exceptionEvent.getCause() instanceof SoftEndOfStreamException) {
             log.debug(exceptionEvent.getCause().getMessage());
         }
-        if (exceptionEvent.getConnectionFactoryName().equals(cobanConstants.getServerBeanName())) {
-            cobanExceptionEventService.handleExceptionEvent(exceptionEvent);
+        if (exceptionEvent.getConnectionFactoryName().equals(serverConstants.getServerBeanName())) {
+            exceptionEventService.handleExceptionEvent(exceptionEvent);
         }
 
     }
@@ -47,8 +47,8 @@ public class TcpServerEventConfiguration
     @EventListener
     public void close(final TcpConnectionCloseEvent event)
     {
-        if (event.getConnectionFactoryName().equals(cobanConstants.getServerBeanName())) {
-            cobanConnectionEventService.handleConnectionClosed(event.getConnectionId());
+        if (event.getConnectionFactoryName().equals(serverConstants.getServerBeanName())) {
+            connectionEventService.handleConnectionClosed(event.getConnectionId());
         }
     }
 

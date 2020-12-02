@@ -8,5 +8,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @Setter
 public class ServerProperties {
-	private int cobanPort;
+	private int port;
 }
