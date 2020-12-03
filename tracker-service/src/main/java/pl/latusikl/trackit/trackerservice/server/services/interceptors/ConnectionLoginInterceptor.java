@@ -15,6 +15,7 @@ import pl.latusikl.trackit.trackerservice.server.excpetions.InterceptorException
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 @Slf4j
 public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport {
@@ -26,6 +27,8 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 	private final Predicate<String> locationMessageValidator;
 	private final Predicate<String> loginMessageValidator;
 	private final LoginPacketConstants loginPacketConstants;
+	private final static String HEARTBEAT_PATTERN = "[0-9]+;";
+	private static final String HEARTBEAT_RESPONSE = "ON";
 
 	private HandshakeState handshakeState = HandshakeState.NOT_STARTED;
 	private int loginRetryCounter = 0;
@@ -53,7 +56,11 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 			}
 			synchronized (this) {
 				try {
-					if (handshakeState == HandshakeState.NOT_STARTED) {
+					log.info("Message: {}",payloadTransformer.doTransform(message));
+					if(isHeartBeatMessage(message)){
+						handleHeartbeatPackage(message);
+					}
+					else if (handshakeState == HandshakeState.NOT_STARTED) {
 						handleNotStartedStatus(message);
 					}
 					else if (handshakeState == HandshakeState.LOGIN_RESPONSE_SEND) {
@@ -71,6 +78,18 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 			}
 		}
 		return super.onMessage(message);
+	}
+
+	private void handleHeartbeatPackage(final Message<?> message) {
+		final String messagePayload = payloadTransformer.doTransform(message);
+		log.debug("Handling heartbeat package");
+		logDebugReceivedMessage(messagePayload);
+		sendMessage(HEARTBEAT_RESPONSE);
+	}
+
+	private boolean isHeartBeatMessage(final Message<?> message) {
+		final String messagePayload = payloadTransformer.doTransform(message);
+		return Pattern.matches(HEARTBEAT_PATTERN,messagePayload);
 	}
 
 	private void handleNotStartedStatus(final Message<?> message) {

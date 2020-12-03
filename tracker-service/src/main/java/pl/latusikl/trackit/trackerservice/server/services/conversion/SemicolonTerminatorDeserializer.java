@@ -11,7 +11,7 @@ import java.io.InputStream;
 public class SemicolonTerminatorDeserializer implements Deserializer<String> {
 
 	private static final char TERMINATOR = ';';
-	private static final int MAX_MESSAGE_SIZE = 2048;
+	private static final int MAX_MESSAGE_SIZE = 8192;
 	private static final int AVERAGE_MESSAGE_SIZE = 95;
 
 	@Override
@@ -20,7 +20,7 @@ public class SemicolonTerminatorDeserializer implements Deserializer<String> {
 		int charNumber;
 		do {
 			charNumber = inputStream.read();
-			checkIfReadable(charNumber);
+//			checkIfReadable(charNumber);
 			messageBuilder.append((char) charNumber);
 			checkIfLengthNotExceeded(messageBuilder);
 		} while ((char) charNumber != TERMINATOR);
