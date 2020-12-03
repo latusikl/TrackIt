@@ -14,11 +14,11 @@ class TimeService {
     }
 
     currentDate(): string {
-        return new Date().toLocaleDateString().split("/").reverse().join("-");
+        return new Date().toISOString().substr(0, 10);
     }
 
     currentUserTime(): string {
-        return new Date().toLocaleTimeString().substr(0, 5);
+        return new Date().toTimeString().substr(0,5)
     }
 
     currentUserTimePlusMinute(): string {
