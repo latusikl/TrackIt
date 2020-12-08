@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.3.2.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
+	id 'groovy'
 }
 
 group = 'pl.latusikl.trackit'
@@ -25,12 +26,13 @@ ext {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 
-//	Added by myself
 	implementation 'org.springframework.cloud:spring-cloud-stream'
 	implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
 
 	implementation 'org.springframework.boot:spring-boot-starter-integration'
 	implementation 'org.springframework.integration:spring-integration-ip'
+
+	implementation 'org.codehaus.groovy:groovy:3.0.5'
 
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -43,6 +45,10 @@ dependencies {
 	}
 
 	testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+	testImplementation('org.spockframework:spock-core:2.0-M3-groovy-3.0')
+	testImplementation('org.spockframework:spock-spring:2.0-M3-groovy-3.0')
+	testImplementation('org.testcontainers:spock:1.15.0')
+
 }
 
 dependencyManagement {
