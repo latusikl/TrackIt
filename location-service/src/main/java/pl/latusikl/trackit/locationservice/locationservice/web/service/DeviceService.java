@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class DeviceService {
 
-	//TODO Lower complexity
 	private final UserDeviceRepository userDeviceRepository;
 	private final UserDataRepository userDataRepository;
 	private final DeviceInfoRepository deviceInfoRepository;

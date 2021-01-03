@@ -15,7 +15,7 @@ class ImeiRepositoryImplSpec extends TestContainerSpecification {
 
 	static final IMEI = '446303941458077'
 	static final UUID = '9b7a1033-311e-4b0f-801f-139e5f586d8a'
-
+	
 
 	@Unroll
 	def 'Should save #value to Redis'(String value) {

@@ -5,7 +5,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -62,7 +61,6 @@ public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter {
 		return authorizationHeader != null && authorizationHeader.startsWith(BEARER_PREFIX);
 	}
 
-	//TODO Add some field with UUID of last valid token for user
 	private Authentication extractUserAuthenticationFromToken(final HttpServletRequest request) {
 		final String authorizationHeader = getAuthorizationHeaderValue(request);
 		final String jwtToken = authorizationHeader.substring(BEARER_PREFIX.length());
@@ -76,7 +74,7 @@ public class CustomBasicAuthenticationFilter extends BasicAuthenticationFilter {
 			return new UsernamePasswordAuthenticationToken(UserTokenInfo.of(userId, userEmail), jwtToken, Collections.emptyList());
 		}
 		catch (final TokenExpiredException e) {
-			throw new CredentialsExpiredException("Access token expired.",e);
+			throw new CredentialsExpiredException("Access token expired.", e);
 		}
 	}
 

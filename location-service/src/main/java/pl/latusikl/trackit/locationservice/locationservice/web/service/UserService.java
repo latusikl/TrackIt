@@ -35,7 +35,6 @@ public class UserService {
 
 	@Transactional
 	public void deleteUserById(final UUID userId) {
-		//TODO Add cascading removal
 		checkIfExistsOrElseThrow(userId);
 		userDataRepository.deleteByUserId(userId);
 	}

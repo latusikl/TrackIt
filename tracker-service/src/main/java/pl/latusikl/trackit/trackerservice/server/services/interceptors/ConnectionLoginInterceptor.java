@@ -57,10 +57,7 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 			synchronized (this) {
 				try {
 					log.info("Message: {}",payloadTransformer.doTransform(message));
-					if(isHeartBeatMessage(message)){
-						handleHeartbeatPackage(message);
-					}
-					else if (handshakeState == HandshakeState.NOT_STARTED) {
+					if (handshakeState == HandshakeState.NOT_STARTED) {
 						handleNotStartedStatus(message);
 					}
 					else if (handshakeState == HandshakeState.LOGIN_RESPONSE_SEND) {
@@ -68,6 +65,9 @@ public class ConnectionLoginInterceptor extends TcpConnectionInterceptorSupport 
 					}
 					else if (handshakeState == HandshakeState.LOGIN_FAILED) {
 						handleLoginFailed(message);
+					}
+					if(isHeartBeatMessage(message)){
+						handleHeartbeatPackage(message);
 					}
 				}
 				catch (final Exception e) {

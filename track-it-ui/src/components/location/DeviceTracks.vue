@@ -152,7 +152,6 @@ export default class DeviceTracks extends Vue {
       })
       .catch(reason => {
         console.debug(reason);
-        //TODO Add dialog window
       });
   }
 

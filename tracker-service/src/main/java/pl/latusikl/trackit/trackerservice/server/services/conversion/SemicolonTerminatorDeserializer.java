@@ -20,21 +20,12 @@ public class SemicolonTerminatorDeserializer implements Deserializer<String> {
 		int charNumber;
 		do {
 			charNumber = inputStream.read();
-//			checkIfReadable(charNumber);
 			messageBuilder.append((char) charNumber);
 			checkIfLengthNotExceeded(messageBuilder);
 		} while ((char) charNumber != TERMINATOR);
 
 		return messageBuilder.toString()
 							 .trim();
-	}
-
-	private void checkIfReadable(final int charNumber) {
-		if (charNumber < 0) {
-			throw new DeserializationException("Unable to finish message serialization.", SemicolonTerminatorDeserializer.class,
-											   "Socket was closed during deserialization",
-											   String.format("Received byte with number: %s", charNumber));
-		}
 	}
 
 	private void checkIfLengthNotExceeded(final StringBuilder messageBuilder) {

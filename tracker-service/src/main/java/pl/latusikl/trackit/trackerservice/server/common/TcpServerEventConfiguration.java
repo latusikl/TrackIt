@@ -31,7 +31,6 @@ public class TcpServerEventConfiguration
         }
     }
 
-    //TODO Improve
     @EventListener
     public void exception(final TcpConnectionExceptionEvent exceptionEvent)
     {
@@ -41,7 +40,6 @@ public class TcpServerEventConfiguration
         if (exceptionEvent.getConnectionFactoryName().equals(serverConstants.getServerBeanName())) {
             exceptionEventService.handleExceptionEvent(exceptionEvent);
         }
-
     }
 
     @EventListener
