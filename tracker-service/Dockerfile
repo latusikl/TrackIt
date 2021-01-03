@@ -1,7 +1,7 @@
 FROM adoptopenjdk/openjdk11:alpine as appBuild
 WORKDIR opt
 COPY . .
-RUN ./gradlew build
+RUN ./gradlew build -xtest
 
 FROM adoptopenjdk/openjdk11:latest
 ARG JAR="/opt/build/libs/tracker-service.jar"
