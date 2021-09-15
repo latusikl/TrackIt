@@ -11,10 +11,10 @@ Currently supported devices:
 
 ### Demo
 
-<iframe width="560" height="315" src="https://youtu.be/QnfsEWAAMbQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in picture" allowfullscreen></iframe>
-
+[![GIF demo](trackit.gif)](https://youtu.be/QnfsEWAAMbQ)
 
 ### Architecture overview
+
 
 
 
