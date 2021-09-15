@@ -3,23 +3,30 @@
 
 ### About 
 
-Server which allows You to save information from Your tracker and display them on map. Main target for now are trackers from COBAN company e.g. their version of TK-108 tracker.
+TrackIt is application that allows You to save location data and visualise them on map. This application was a part of my Bacherol degree thesis.
 
-### Ports
+Currently supported devices:
+- COBAN trackers (tested with TK-108)
+- Preapared Android application - [TrackMe](https://github.com/latusikl/TrackMe)
 
-**Tracker-Service:** 9000 (TCP Server)
+### Demo
 
-**Location-Service:** 8090 (Tomcat)
-
-**RabbitMq:**
-
-    - 5672 (Rabbit) 
-    - 8000 (Management)
-
-**PostgreSQL:**
-
-    - 5432 (Database)
-    - 7000 (Management)
+<iframe width="560" height="315" src="https://youtu.be/QnfsEWAAMbQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in picture" allowfullscreen></iframe>
 
 
-##### More will come here in near feature... 
+### Architecture overview
+
+
+
+
+
+
+### Technology stack
+
+
+
+
+
+### Run it
+
+
