@@ -26,7 +26,7 @@ Java, Spring Boot, Vue.js, PostgreSQL, Redis, RabbitMQ
 <summary>
 Prerequisites
 </summary>
-The simplest way to run whole application is to use provided `docker-compose` file. For this purpose it is required that You have *Docker* and *docker-compose* installed. See how to instal required software [here](https://docs.docker.com/compose/install/).
+The simplest way to run whole application is to use provided `docker-compose` file. For this purpose it is required that You have *Docker* and *docker-compose* installed. See how to instal required software here: https://docs.docker.com/compose/install/.
 </details>
 </br>
 <details>
@@ -53,6 +53,7 @@ PostgreSQL (database) | 5432
 </br>
 <details>
 <summary> Sample data </summary>
+  
 Inside `sample` directory there are sample data provided as SQL file that you can execute to insert them to database.
 
 After adding sample data to application there are 2 users available;
