@@ -18,13 +18,13 @@ class TestContainerSpecification extends Specification {
 	static final REDIS_PORT = 6379
 
 	static {
-		redisContainer = new GenericContainer<>("redis:alpine").withExposedPorts(REDIS_PORT).withReuse(true)
+		redisContainer = new GenericContainer<>("redis:6.0.19-alpine").withExposedPorts(REDIS_PORT).withReuse(true)
 		redisContainer.start()
 	}
 
 	@DynamicPropertySource
 	protected static void redisProperties(DynamicPropertyRegistry registry) {
-		registry.add("spring.redis.host", redisContainer::getContainerIpAddress)
+		registry.add("spring.redis.host", () -> redisContainer::getHost())
 		registry.add("spring.redis.port", () -> redisContainer.getMappedPort(REDIS_PORT))
 	}
 }

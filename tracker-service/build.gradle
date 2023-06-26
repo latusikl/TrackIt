@@ -1,13 +1,14 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.2.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'org.springframework.boot' version '2.7.13'
+	id 'io.spring.dependency-management' version '1.1.0'
 	id 'java'
 	id 'groovy'
 }
 
 group = 'pl.latusikl.trackit'
-version = '0.0.1'
-sourceCompatibility = '11'
+version = '1.0.0'
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
 configurations {
 	compileOnly {
@@ -20,7 +21,7 @@ repositories {
 }
 
 ext {
-	set('springCloudVersion', "Hoxton.SR8")
+	set('springCloudVersion', "2021.0.7")
 }
 
 dependencies {
@@ -32,7 +33,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-integration'
 	implementation 'org.springframework.integration:spring-integration-ip'
 
-	implementation 'org.codehaus.groovy:groovy:3.0.5'
+	implementation 'org.codehaus.groovy:groovy:3.0.17'
 
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -45,9 +46,9 @@ dependencies {
 	}
 
 	testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
-	testImplementation('org.spockframework:spock-core:2.0-M3-groovy-3.0')
-	testImplementation('org.spockframework:spock-spring:2.0-M3-groovy-3.0')
-	testImplementation('org.testcontainers:spock:1.15.0')
+	testImplementation('org.spockframework:spock-core:2.3-groovy-3.0')
+	testImplementation('org.spockframework:spock-spring:2.3-groovy-3.0')
+	testImplementation('org.testcontainers:spock:1.18.3')
 
 }
 

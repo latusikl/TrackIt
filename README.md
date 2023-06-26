@@ -56,6 +56,14 @@ PostgreSQL (database) | 5432
   
 Inside `sample` directory there are sample data provided as SQL file that you can execute to insert them to database.
 
+You can import that data using e.g. `psql` command.
+
+```shell
+cd sample
+export PGPASSWORD='p2X3hP2Hfn61%h' && psql -h 127.0.0.1 -U dath -d TrackItDB -f sample_data.sql
+```
+
+
 After adding sample data to application there are 2 users available;
 
 |e-mail | password |

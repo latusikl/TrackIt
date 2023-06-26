@@ -32,8 +32,9 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.spatial.dialect.postgis.PostgisPG95Dialect
-  datasource:
-    initialization-mode: always
+  sql:
+    init:
+      mode: always
 
 
 database:

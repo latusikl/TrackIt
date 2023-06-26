@@ -7,7 +7,7 @@ networks:
 services:
   trackit-redis:
     container_name: trackit-redis
-    image: "redis:alpine"
+    image: "redis:6.0.19-alpine"
     networks:
       - tracker-network
     restart: on-failure
